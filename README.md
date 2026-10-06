@@ -5,9 +5,10 @@ incelemenin canlı, kronolojik kaydıdır. Amaç cihaza kendi Linux dağıtımı
 bir ortam (USB/microSD) üzerinden çalıştırabilmek; Pay-TV içerik koruması (Verimatrix CA) ya da
 imza doğrulamasını aşmak **kapsam dışıdır** ve bu repoda bulunmaz.
 
-Kayıtlar kendi cihazımda, kendi masamda, tamamen non-destrüktif (yalnızca okuma) yöntemlerle
-tutuldu. Hiçbir noktada flash'a yazma, ortam değişkeni kaydetme (`saveenv`) ya da içerik koruması
-ile ilgili bir müdahale yapılmadı.
+UART kayıtları kendi cihazımda, kendi masamda tutuldu. Linux bring-up devamında kullanıcı
+izniyle harici REI USB hazırlandı; dahili NAND'a yazma komutu veya `saveenv` uygulanmadı.
+USB/ext4 stok Q11 tarafından bağlandı; özel Linux boot henüz doğrulanmadı. İçerik korumasına
+müdahale yapılmadı. Güncel deney ve sonraki fiziksel adım: [BRINGUP](docs/BRINGUP.md).
 
 ## İçindekiler
 
@@ -92,6 +93,9 @@ Tamamlanmış UART kesme denemeleri tekrarlanmaz; mevcut loglar korunur.
   açılışlarda kart algılanmadı; microSD desteği yok sonucu çıkarılamaz.
 - USB platform denetleyicileri S90modules sonrasında açılıyor; harici USB root için gerekli modüller
   initramfs içinde bulunmalı veya çekirdeğe gömülü olmalı.
+- REI ile gerçek cihaz deneyi tamamlandı: xhci USB disk `/dev/sda1` olarak algılandı;
+  ext4 superblock sayacı0→3 ve journal biti değişimi stok sistemin bölümü bağlayıp yazdığını doğruladı.
+  Debian/özel initramfs çalışmadı. USB PC'de; güç kesildiği için journal recovery bekliyor.
 - Debian bookworm armhf/SysV rootfs, ext4 imajı, MBR USB imajı ve deterministik RAM initramfs
   oluşturma araçları eklendi. Bunlar host tarafı hazırlıktır; imaj yükleme/başlatma yolu hâlâ UNKNOWN.
 - NAND yedeği çalışması yok. Factory/CA/DRM bölümleri ve imza atlatma kapsam dışı.
@@ -115,7 +119,8 @@ python -m unittest discover -s tests -v
 python tools/analysis/boot_report.py logs --output artifacts/boot-report.json
 ```
 
-İlk yeni donanım adımı USB/microSD algılama kaydıdır; [tam bağlantı ve komut](docs/BRINGUP.md).
+Sonraki farklı fiziksel aday kumanda OK ile stok recovery girişidir; bizim yazılımda UNKNOWN.
+Kullanıcıda kumanda yok, bu test yapılmadı; [tam bağlantı ve komut](docs/BRINGUP.md).
 Belleğe rootfs koymak tek başına boot sağlamaz. Stok mount/init betikleri veya yetkili RAM loader
 yolu incelenmeden USB üzerinde rastgele "autorun" / güncelleme dosyaları kullanılmaz.
 

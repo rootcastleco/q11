@@ -46,6 +46,19 @@ DTB is absent. No UART or memory access is performed.
 
 ## Card slot
 
+## Confirmed external USB/ext4 transport
+
+The 2026-10-06 media probe enumerated the authorized REI stick through xhci-hcd at
+`5-1`, high speed, as `/dev/sda1`; reported capacity15,833,497,600 bytes. The
+read-only USB prefix comparison afterward found Q11ROOT's original UUID unchanged,
+mount_count0→3 and journal recovery bitset: stock3.18.13_s40 mounted/wrote this
+ext4 format. This does not establish filesystem driver availability before
+S90modules, a mount path, or custom rootfs boot. The physical socket label was not
+recorded; do not infer mapping for every socket or SuperSpeed performance. See
+[BRINGUP](BRINGUP.md) for private capture names and precise evidence.
+
+## Card slot
+
 The driver is present and probes **before** the root mount. A card inserted with
 power removed is the next way to establish wiring/card detection. No card in the
 previous log does not prove absent eMMC or a disconnected slot. Photographing the

@@ -18,6 +18,25 @@ options are enabled in Q11, or that a consumer USB-upgrade path is RAM-only.
 HiSilicon "fastboot" partition naming does not establish Android fastboot protocol.
 No confirmed Huawei Q11 official recovery package is locally available.
 
+## Stock recovery candidate after USB detection
+
+[Q11 owner callagne, 2025-08-11, post29](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/#post-7524681)
+reports remote OK at startup led to recovery and UART root access. [Owner g-man,
+2026-06-12, post32](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/page-2)
+reports failure with OK on another Q11. These primary accounts are not proof for
+our firmware: entry remains UNKNOWN. [BRINGUP](BRINGUP.md) specifies one bounded
+IR-only capture with update media/network absent. The user has no remote, so it
+has not run. No package, reset selection or NAND command is involved.
+
+The pinned [HiLoot implementation](https://github.com/histb-mainline/hiloot/blob/56b598ab7fd62a2b7ddce6e7b3770d93c40f4801/hiloot.py)
+was reviewed for an identification-only path: TYPE/BOARD query methods exist, but
+CLI has no chip-info-only mode; it requires a boot-image argument even for `--break`.
+`wait_boot` first requires `Bootrom start\r\n`; `connect` then sends a zero-length
+HEAD before queries. No captured Q11 log contains that greeting. `--timeout`
+bounds frame communication, not the initial indefinite boot wait. Thus the
+unmodified CLI is not a bounded identification experiment for current evidence.
+No binary protocol packet or loader image was transmitted in this session.
+
 | Question | Current status |
 |---|---|
 | Can ROM be interrupted by the documented binary bootstrap protocol? | UNKNOWN; different mechanism from the completed UART key tests |

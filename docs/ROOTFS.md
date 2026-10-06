@@ -114,3 +114,9 @@ The capacity above is the observed authorized REI stick in this session, not a
 generic Q11 value. Other media requires its own verified capacity/authorization.
 Windows cannot mount ext4 afterwards; decline formatting prompts. Booting custom
 Linux remains conditional on [BOOT_FLOW](BOOT_FLOW.md); this is not an auto-upgrade stick.
+
+The Q11 stock USB/ext4 mount was subsequently confirmed; see [BRINGUP](BRINGUP.md).
+After that trial the stick's journal recovery flag is set. `read-usb-probe.ps1`
+captures only its first2 MiB with a read-only handle; `ext4_super.py` compares the
+superblock against a regular baseline image without mounting/replaying a journal.
+These evidence tools do not clean the stick or prove that its Debian init ran.

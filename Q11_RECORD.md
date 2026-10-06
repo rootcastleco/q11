@@ -223,3 +223,17 @@ alanı tükendi. Kalan yollar Faz 6 sonundaki A/B/C seçenekleri (Güvenlik Değ
   sonrasında PVR dosya/eşleştirme ve unmount hataları var. Gerçek mount tipi/yolu UNKNOWN.
   Debian/özel initramfs/shell başarısı yok. Sonraki kontrol USB'nin yalnızca ilk 2 MiB'sini PC'de
   okuyup ext4 superblock sayaçlarını ilk imajla karşılaştırmak; NAND'a erişim/yazma yok.
+- 2026-10-06 23:45: REI PC'ye geri takıldı; yalnızca ilk 2 MiB salt-okunur alındı (exit0).
+  `logs/experiment_20261006_234545_usb-read.json` ve özel superblock karşılaştırması:
+  UUID/etiket aynı, mount_count0→3, ext journal recovery biti0→1. CONFIRMED: stok Q11
+  hazırladığımız ext4'ü bağladı ve yazdı. Mount yolu/erken boot modülleri/hook hâlâ UNKNOWN;
+  son mount yolu boş, stok saat geçersiz. USB journal recovery bekliyor; host okuyucu onarım yapmadı.
+  Bu NAND yedeği veya özel Linux boot başarısı değildir.
+- Recovery için yeni fiziksel aday: [Q11 kullanıcısının ilk elden raporu](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/#post-7524681),
+  açılışta kumanda OK ile recovery/seri erişim bildirmiş; başka Q11 kullanıcısı başarısız olmuş.
+  Bizim yazılımda UNKNOWN; kullanıcıda kumanda olmadığından test yapılmadı. Bir defalık IR OK
+  testi ve 120 sn salt-okunur kayıt tarifi docs/BRINGUP.md'de; USB/microSD/Ethernet çıkarılır,
+  flash/reset seçilmez. UART tuş denemeleri tekrarlanmaz.
+- HiLoot çip tanıma yolu kaynakta incelendi: TYPE/BOARD sorguları mevcut; CLI chip-info-only
+  seçeneği sunmuyor, önce Bootrom start selamlamasını bekliyor. Q11 kayıtlarında bu selamlama yok.
+  Bounded identification deneyi doğrulanamadı; binary UART paket veya loader gönderilmedi.

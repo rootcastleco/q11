@@ -8,7 +8,7 @@ No NAND backup is a prerequisite for this work. No internal flash writer is prov
 existing HiSilicon boot chain [firmware implementation UNKNOWN]
   -> stock 3.18.13_s40 kernel [CONFIRMED]
   -> replacement /init in RAM [implemented; loading mechanism UNKNOWN]
-  -> external ext4, LABEL=Q11ROOT [host-build tooling implemented]
+  -> external ext4, LABEL=Q11ROOT [stock mount confirmed; custom handoff untested]
   -> Debian bookworm armhf, SysV init
      -> ttyAMA0 local administrative shell
      -> eth0 DHCP -> developer SSH public-key login
@@ -18,6 +18,10 @@ existing HiSilicon boot chain [firmware implementation UNKNOWN]
 The first unresolved dependency is **authorized execution/loading control**, not a
 missing ARM distribution. A rootfs image on a USB stick does not change the stock
 boot sequence. A mounted stick does not prove that firmware executes its scripts.
+The actual USB/ext4 stock mount is now confirmed by UART enumeration and the
+superblock mount counter, not just a vendor application event. A remote OK recovery
+candidate has conflicting first-hand reports; it is untested on our unit because
+the user has no remote. Details and all loading boundaries remain in [BRINGUP](BRINGUP.md).
 
 | Rank | Approach | Feasibility now | Reversibility | Proprietary dependency / complexity |
 |---|---|---|---|---|

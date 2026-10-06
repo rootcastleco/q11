@@ -24,6 +24,19 @@ Line references here count LF-delimited raw lines, without expanding extra CRs.
   ext4 runtime compatibility, and any legitimate removable-media execution hook.
   No custom-initramfs marker, switch_root, Debian shell, or SSH success was seen.
 
+The follow-up read-only prefix capture at23:45 resolves part of that uncertainty:
+`logs/experiment_20261006_234545_usb-read.json` (2,097,152 bytes, exit0) and
+`artifacts/q11-usb-super_20261006_234545.json`, compared to `artifacts/q11-usb.img`.
+The filesystem UUID and Q11ROOT label match; mount_count changed from0 to3,
+mount/write times changed to1, and the ext journal recovery bit changed toset.
+**CONFIRMED:** stock Q11 mounted and wrote this ext4 filesystem. **UNKNOWN:** mount
+path (last_mounted remains empty), exact options, file changes, early-root module
+availability and execution hook. The stock clock is unset; these timestamps must
+not be interpreted as wall-clock time. The stick now requires journal recovery
+after power removal; do not call it a fresh/clean image. No device write or journal
+recovery was performed by the host reader. A clean lab image can later be rewritten
+once this evidence is preserved and a loading path is established.
+
 The next host check reads just a 2 MiB prefix of this external USB and compares
 its ext superblock with the prepared image. It neither mounts the filesystem nor
 replays its journal. With Q11 power removed, move the REI stick to a normal PC USB
@@ -43,6 +56,44 @@ Return the printed `logs/experiment_TIMESTAMP_usb-read.json` and superblock repo
 Snapshots stay private/gitignored. A changed mount count/path can establish a
 stock mount, but not loading control or switch_root. If the superblock no longer
 matches the baseline UUID, stop interpreting it as the prepared filesystem.
+
+## Next distinct physical probe: remote-control recovery entry
+
+[Q11 owner callagne, 2025-08-11, post29](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/#post-7524681)
+reports recovery and UART access using remote OK during startup on MTS/m:tel
+firmware. [Owner g-man, 2026-06-12, post32](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/page-2)
+reports OK failed on another Q11. Entry is **UNKNOWN** for our firmware. No image
+was obtained. Unrelated EC6108 Android packages are not Q11 loading evidence.
+
+**Current physical blocker:** the user has no Q11 remote. This trial has not run;
+there is no speculative strap/flash substitute. Obtain a compatible original Q11
+IR remote before proceeding. UART capture is already functional on COM8.
+
+Prerequisites: compatible remote, optional HDMI display. Q11 stays off while
+wiring. Remove USB/microSD and Ethernet so no removable/network upgrade package
+is present. Keep REI on the PC. Preserve existing CH341 crossed RX/TX and GND;
+never attach VCC/5 V, a PC-host A-to-A cable, or short a pad.
+
+1. If available, connect Q11 HDMI to an ordinary HDMI input with Q11 power removed;
+   select that input. HDMI is useful for identifying a recovery menu.
+2. Start the receive-only120-second capture below before powering Q11.
+3. After COM8 opens, point the remote at the front IR receiver; restore Q11's own
+   power adapter and press only OK about twice per second for20 seconds. Stop
+   when a recovery menu appears. Leave it idle; do not choose update/reset/erase/
+   format. This is one bounded IR trial, with no UART TX.
+4. Expected result: recovery/loader output or an alternate startup trace. If stock
+   boot continues, record failed entry; do not try random keys.
+5. Return the printed `.log`, `.timing.tsv`, `.metadata.json`, and exact HDMI menu
+   text if visible. Inspect a genuine console prompt before sending commands.
+
+```powershell
+cd C:\Appdev\q11
+pwsh -NoProfile -File tools/uart/capture_experiment.ps1 -Port auto -Operation recovery-probe -DurationSec 120
+```
+
+Codex can start/collect the capture when physical setup is ready; do not start a
+second capture against an occupied port. A legitimate Q11 stock-rootfs or loading
+artifact remains an alternative offline dependency; none is currently available.
 
 ## Reproducing USB storage detection (completed once; no repeat needed)
 

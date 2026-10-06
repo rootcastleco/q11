@@ -3,7 +3,7 @@
 param(
     [string]$Port = 'auto',
     [ValidateRange(5,300)][int]$DurationSec = 120,
-    [ValidateSet('media-probe','passive')][string]$Operation = 'media-probe',
+    [ValidateSet('media-probe','recovery-probe','passive')][string]$Operation = 'media-probe',
     [string]$OutputDirectory = (Join-Path $PSScriptRoot '..\..\logs'),
     [switch]$DryRun
 )

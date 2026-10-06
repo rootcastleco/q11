@@ -12,7 +12,7 @@ Session:2026-10-06. Hardware custom boot is **not** validated.
 | Windows USB writer dry-run |REI/E:, one USB/MBR disk,15,833,497,600 bytes, non-system/non-boot,512-byte sectors, image checksum/header/capacity checks passed |
 | Windows physical USB write |2,148,532,224 bytes written and readback SHA256 matched at23:36 Istanbul; result `written-and-verified`, exit0; user-authorized REI stick only |
 | Q11 receive-only USB boot probe |COM8/115200,120 seconds,116,547 bytes; SHA256/timing continuity checked, exit0; one stock boot, USB xhci mass-storage `/dev/sda1` detected; HAL MOUNTED callback does not prove ext4 or custom boot |
-| USB prefix reader |Unique capacity/non-system/non-boot/USB selection and missing/ambiguous/system/non-USB failures tested; real REI selection dry-run passed; physical reader uses FileAccess.Read only and a fixed2 MiB extent |
+| USB prefix reader |Selection/failure tests and real REI dry-run passed; physical fixed2 MiB capture at23:45 used FileAccess.Read only, exit0. Baseline UUID matches, mount_count0→3, journal recovery bitset: stock ext4 mount/write confirmed; no host journal replay |
 | PowerShell transfer regression |Int64 sizing at >2 GiB and1 TiB, zero/final512-byte chunk, invalid negative size and missing module checks passed |
 | Debian rootfs |Release signature verified; package installation completed; SysV init/SSH/serial/DHCP/key configuration checked under QEMU; no private keys in Git |
 |2 GiB populated ext4 |e2fsck -fn passed,9,072 inodes,87,630 blocks used at creation; exact files can change on a rebuild |

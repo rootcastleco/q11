@@ -12,6 +12,7 @@ param(
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
+Import-Module (Join-Path $PSScriptRoot 'port-report.psm1') -Force
 if (-not (Test-Path -LiteralPath $LeaseLog -PathType Leaf) -or (Get-Item -LiteralPath $LeaseLog).Length -gt 65536) { throw 'Missing/oversized lease record.' }
 if (-not (Test-Path -LiteralPath $NmapPath -PathType Leaf)) { throw 'Nmap executable missing.' }
 $lease=Get-Content -LiteralPath $LeaseLog -Raw | ConvertFrom-Json
@@ -46,10 +47,11 @@ try {
     & $NmapPath -sS -Pn -n -p $ports -T4 --max-rate 1500 --max-retries 0 --max-parallelism 256 --host-timeout 60s --reason -oX $xmlPath $lease.client 2>&1 | Set-Content -LiteralPath $rawPath -Encoding utf8
     $resultCode=$LASTEXITCODE
     if ($resultCode -ne 0) { throw "Nmap exit $resultCode; see private raw output." }
-    [xml]$scan=Get-Content -LiteralPath $xmlPath -Raw
-    if ($scan.nmaprun.runstats.finished.exit -ne 'success') { throw 'Nmap XML does not report successful completion.' }
+    $inventory=Read-Q11PortInventory -Path $xmlPath
+    $record['covered_ports']=$inventory.CoveredPorts
+    $record['open_ports']=$inventory.OpenPorts
     $record.result='completed'
-    $record['xml_sha256']=(Get-FileHash -LiteralPath $xmlPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    $record['xml_sha256']=$inventory.XmlSha256
 }
 catch { $resultCode=2; $record.result='error'; $record['error']=$_.Exception.Message; Write-Error -ErrorAction Continue $_ }
 finally {

@@ -83,7 +83,7 @@ cihazın flash'ına yazmaz; "kalıcı değişiklik" riski taşıyan komutlar kod
 Tüm kanıtlar `CONFIRMED` / `LIKELY` / `UNKNOWN` etiketleriyle [`Q11_RECORD.md`](Q11_RECORD.md)
 içinde, log satır numaralarına referansla birlikte kayıtlı.
 
-## Güncel Linux bring-up çalışması (2026-10-06)
+## Güncel Linux bring-up çalışması (2026-10-07)
 
 Proje devam ediyor. **Henüz Q11 üzerinde özel Linux açılışı veya kullanılabilir shell doğrulanmadı.**
 Tamamlanmış UART kesme denemeleri tekrarlanmaz; mevcut loglar korunur.
@@ -99,6 +99,10 @@ Tamamlanmış UART kesme denemeleri tekrarlanmaz; mevcut loglar korunur.
 - Debian bookworm armhf/SysV rootfs, ext4 imajı, MBR USB imajı ve deterministik RAM initramfs
   oluşturma araçları eklendi. Bunlar host tarafı hazırlıktır; imaj yükleme/başlatma yolu hâlâ UNKNOWN.
 - NAND yedeği çalışması yok. Factory/CA/DRM bölümleri ve imza atlatma kapsam dışı.
+- Doğrudan PC LAN deneyi:100Mbps bağlantı, stok DHCP/ARP/ping doğrulandı. TCP7547/56789/56790
+  açık; DIAL açıklaması okundu, SSH/telnet konsolu bulunmadı. PC ağ ayarları geri alındı.
+- Xiaomi IR kumandasıyla bir açılış denemesi yapıldı; UART tuş olaylarını ve normal IPTV
+  açılışını gördü. Kullanıcı HDMI'da recovery'ye girmediğini doğruladı; shell elde edilmedi.
 
 | Belge | İçerik |
 |---|---|
@@ -109,9 +113,10 @@ Tamamlanmış UART kesme denemeleri tekrarlanmaz; mevcut loglar korunur.
 | [HARDWARE](docs/HARDWARE.md) | Kanıtlı adresler, SD ve grafik/DTB adayları |
 | [KERNEL](docs/KERNEL.md) | 3.18.24/4.4.35 kaynak adayları ve build aracı |
 | [BOOTROM](docs/BOOTROM.md) | UART bootstrap ile native USB ayrımı; bilinmeyenler |
+| [NETWORK](docs/NETWORK.md) | İzole DHCP, stok Ethernet/HTTP/DIAL bulguları ve sınırlı inceleme araçları |
 | [MEMORY](docs/MEMORY.md) | MMZ hesabı ve RAM bölgesi doğrulama ihtiyacı |
 
-Yeni araçlar `tools/analysis`, `tools/dtb`, `tools/rootfs`, `tools/kernel`, `tools/uart`
+Yeni araçlar `tools/analysis`, `tools/dtb`, `tools/rootfs`, `tools/kernel`, `tools/uart`, `tools/network`
 altında; büyük/generated dosyalar gitignored `artifacts/` altında tutulur.
 
 ```powershell
@@ -119,8 +124,9 @@ python -m unittest discover -s tests -v
 python tools/analysis/boot_report.py logs --output artifacts/boot-report.json
 ```
 
-Sonraki farklı fiziksel aday kumanda OK ile stok recovery girişidir; bizim yazılımda UNKNOWN.
-Kullanıcıda kumanda yok, bu test yapılmadı; [tam bağlantı ve komut](docs/BRINGUP.md).
+OK denemesi tamamlandı; rastgele tuşlarla tekrarlanmaz. Sonraki fiziksel adım, Q11 PCB'sinin
+iki yüzünü güç/kablolar çıkarılmış halde fotoğraflayıp kart revizyonu ve etiketli padleri
+tanımlamak; [tam tarif](docs/BRINGUP.md). Doğrulanmış BootROM pad/strap veya RAM loader henüz yok.
 Belleğe rootfs koymak tek başına boot sağlamaz. Stok mount/init betikleri veya yetkili RAM loader
 yolu incelenmeden USB üzerinde rastgele "autorun" / güncelleme dosyaları kullanılmaz.
 

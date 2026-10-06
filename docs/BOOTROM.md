@@ -24,9 +24,13 @@ No confirmed Huawei Q11 official recovery package is locally available.
 reports remote OK at startup led to recovery and UART root access. [Owner g-man,
 2026-06-12, post32](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/page-2)
 reports failure with OK on another Q11. These primary accounts are not proof for
-our firmware: entry remains UNKNOWN. [BRINGUP](BRINGUP.md) specifies one bounded
-IR-only capture with update media/network absent. The user has no remote, so it
-has not run. No package, reset selection or NAND command is involved.
+our firmware. Our one Xiaomi IR trial on2026-10-07 reached the stock kernel and
+IPTV application; the user subsequently connected HDMI and reported no recovery.
+UART saw application key events, no alternate loader or console. This records a
+failed entry trial, not proof that every recovery mechanism is disabled. The
+direct LAN remained active in this actual trial (DHCP ACK during boot), despite
+the isolation instructions; no router/update service was present. No package,
+reset selection or NAND command was involved. See [BRINGUP](BRINGUP.md).
 
 The pinned [HiLoot implementation](https://github.com/histb-mainline/hiloot/blob/56b598ab7fd62a2b7ddce6e7b3770d93c40f4801/hiloot.py)
 was reviewed for an identification-only path: TYPE/BOARD query methods exist, but

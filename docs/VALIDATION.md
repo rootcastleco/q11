@@ -1,10 +1,10 @@
 # Host validation record
 
-Session:2026-10-06. Hardware custom boot is **not** validated.
+Session:2026-10-06/07. Hardware custom boot is **not** validated.
 
 | Check | Result / boundary |
 |---|---|
-| Python unittest suite |25 tests: captured boot/timing fixtures; valid/truncated/false-positive FDT; SquashFS/environment fixtures; CRC redaction; bounded I/O; newc device nodes/reproducibility; MBR; ext superblock comparison/UUID/short-input guards; CLI success/invalid/missing/no-overwrite |
+| Python unittest suite |29 tests: previous25 plus actual loopback banner/HEAD/DIAL requests, silent deadline/absent listener, input/XML guards, CLI dry-run/missing/invalid/no-overwrite |
 | Linux host suite |Real256 MiB ext4 checked by e2fsck; actual MBR image generated; ARM static root-probe exercised under QEMU; shell tool valid dry-runs/invalid/missing checks |
 | ShellCheck |Build, configure, filesystem, kernel and test scripts; POSIX init separately |
 | PowerShell parser |All `.ps1` files parsed; receive-only dry-run passed |
@@ -18,6 +18,10 @@ Session:2026-10-06. Hardware custom boot is **not** validated.
 |2 GiB populated ext4 |e2fsck -fn passed,9,072 inodes,87,630 blocks used at creation; exact files can change on a rebuild |
 |RAM archive |Uncompressed newc,1,740,288 bytes; real ARM BusyBox plus static root-probe; no stock storage modules available |
 |Kernel build |Source/defconfig and driver/DT candidates inspected; CLI guards tested; complete compilation/hardware boot unverified |
+|Isolated DHCP |Synthetic valid/malformed/foreign/relay/duplicate fixtures, reply/selection/no-routing-option tests and real UDP loopback packet-information test; three actual Q11 ACK sessions completed exit0/restored=true |
+|TCP XML inventory |Success/coverage/timeout/wrong-target/malformed/missing fixtures; actual XML independently validated65,535 port states,7547/56789/56790 open; original wrapper error retained |
+|Service inspection |Actual private banner/HEAD reports and read-only DIAL descriptor HTTP200; identifiers kept out of Git, no application launch/control/authentication |
+|IR recovery capture |180-second RX-only COM8 log,106,805 bytes; stock boot/key events, no console; user HDMI report no recovery. Late UART loss at00:18:21 means incomplete tail despite metadata exit0 |
 
 Actual generated images and manifests are private/gitignored under `artifacts/`;
 build logs and device experiments under `logs/experiment_*` are not published.

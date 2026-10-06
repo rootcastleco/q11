@@ -1,6 +1,6 @@
 # Linux bring-up architecture
 
-Status as of 2026-10-06: host tools implemented; no custom code has booted on Q11.
+Status as of 2026-10-07: host tools implemented; no custom code has booted on Q11.
 Captured evidence remains in `logs/`; historical experiments remain in `Q11_RECORD.md`.
 No NAND backup is a prerequisite for this work. No internal flash writer is provided.
 
@@ -19,9 +19,11 @@ The first unresolved dependency is **authorized execution/loading control**, not
 missing ARM distribution. A rootfs image on a USB stick does not change the stock
 boot sequence. A mounted stick does not prove that firmware executes its scripts.
 The actual USB/ext4 stock mount is now confirmed by UART enumeration and the
-superblock mount counter, not just a vendor application event. A remote OK recovery
-candidate has conflicting first-hand reports; it is untested on our unit because
-the user has no remote. Details and all loading boundaries remain in [BRINGUP](BRINGUP.md).
+superblock mount counter, not just a vendor application event. A Xiaomi IR remote
+trial reached stock IPTV startup and the user confirmed no recovery on HDMI.
+Isolated wired DHCP and TCP inventory found HTTP/DIAL services, no SSH/telnet
+console. The network does not supply loading control. Details remain in
+[BRINGUP](BRINGUP.md) and [NETWORK](NETWORK.md).
 
 | Rank | Approach | Feasibility now | Reversibility | Proprietary dependency / complexity |
 |---|---|---|---|---|

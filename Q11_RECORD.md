@@ -237,3 +237,34 @@ alanı tükendi. Kalan yollar Faz 6 sonundaki A/B/C seçenekleri (Güvenlik Değ
 - HiLoot çip tanıma yolu kaynakta incelendi: TYPE/BOARD sorguları mevcut; CLI chip-info-only
   seçeneği sunmuyor, önce Bootrom start selamlamasını bekliyor. Q11 kayıtlarında bu selamlama yok.
   Bounded identification deneyi doğrulanamadı; binary UART paket veya loader gönderilmedi.
+
+## İzole Ethernet ve IR recovery deneyi — 2026-10-07
+
+- Kullanıcı Q11 LAN'ın doğrudan bu PC'nin fiziksel Ethernet portuna bağlı olduğunu doğruladı.
+  CONFIRMED:100Mbps link; yalnız bu arayüzde geçici192.168.73.1/24 DHCP sunucusu Q11'e
+  192.168.73.2 verdi. Stok udhcpc ACK/ARP çakışma kontrolü ve iki ping TTL64 yanıtı görüldü.
+  Gateway/DNS/update parametresi veya forwarding yok; Wi-Fi değiştirilmedi. Stok Ethernet
+  doğrulandı, hazırlanan Debian üzerinde Ethernet henüz denenmedi. MAC kaynağı UNKNOWN.
+- CONFIRMED: tek hedefli TCP SYN taraması65.535 portun tamamını sınıflandırdı:
+  7547,56789,56790 açık,65.532 closed/reset. İlk common-port taramasının filtered sonucu
+  closed sayılmadı. Nmap başarıyla bitti; wrapper XML-property hatasıyla exit2 verdi.
+  Orijinal hata kaydı korundu; XPath düzeltmesi ve bağımsız XML kontrolü kapsamı doğruladı.
+  SSH/telnet portları kapalı; authenticated bakım/komut yolu bulunmadı.
+- CONFIRMED:56790 `/dd.xml` HTTP200/DIAL Application-URL, aynı cihazda56789 `/apps/`.
+  Birincil Netflix referansı kullanıldı; uygulama başlatma/SOAP/kimlik bilgisi denenmedi.
+  7547 rolü LIKELY CWMP, kontrol edilmedi. Ayrıntılar [NETWORK](docs/NETWORK.md).
+  Üç DHCP oturumu exit0/restored=true bitti; son00:17:58. PC DHCP enabled/forwarding
+  disabled/APIPA durumuna döndü; geçici firewall/IP kaldırıldığı ayrıca kontrol edildi.
+- Kullanıcı Xiaomi telefonuyla Q11'i kontrol edebildiğini belirtti; HDMI sonradan bağlandı.
+  Tek salt-okunur COM8/115200 IR açılış kaydı00:15:44–00:18:44,106.805 bayt:
+  `logs/experiment_20261007_001544_recovery-probe.log` (özel/gitignored).
+  SHA256 `97274b4e70c088fac13facbc81d56a838cdc874c60e0aa88cd408d6fadf8c13c`.
+  CONFIRMED L135–146 aynı stok kernel/cmdline; L741/L1002+ browser key0x300 olayları;
+  OK eşlemesi LIKELY, ham IR kodu çözümlenmedi. Kullanıcı OK/Home göstergeleri tepki verdi,
+  recovery açılmadı dedi. Stok uygulama çalıştı; UART shell/recovery istemi yok.
+  LAN çıkarılmamıştı (00:17:10 DHCP ACK); yalnız PC, güncelleme sunucusu yok.
+  00:18:21 COM8 erişimi kesildi, son23 sn eksik; metadata exit0 tek başına tam capture
+  kanıtı değil. Önceki boot ve tuş olaylarının hash/zamanlama kapsamı doğrulandı.
+- Sonraki fiziksel bağımlılık Q11 PCB fotoğraflarıyla revizyon/pad tanımlaması;
+  mevcut `photos/` yalnız CH341 gösteriyor. Güç ve tüm kablolar çıkarılır, hiçbir
+  pad kısa devre edilmez. RAM loader/DDR/entry hâlâ UNKNOWN; [BRINGUP](docs/BRINGUP.md).

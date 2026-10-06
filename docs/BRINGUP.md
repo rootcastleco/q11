@@ -57,7 +57,7 @@ Snapshots stay private/gitignored. A changed mount count/path can establish a
 stock mount, but not loading control or switch_root. If the superblock no longer
 matches the baseline UUID, stop interpreting it as the prepared filesystem.
 
-## Next distinct physical probe: remote-control recovery entry
+## Remote-control recovery entry: one trial completed
 
 [Q11 owner callagne, 2025-08-11, post29](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/#post-7524681)
 reports recovery and UART access using remote OK during startup on MTS/m:tel
@@ -65,9 +65,20 @@ firmware. [Owner g-man, 2026-06-12, post32](https://forum.benchmark.rs/threads/h
 reports OK failed on another Q11. Entry is **UNKNOWN** for our firmware. No image
 was obtained. Unrelated EC6108 Android packages are not Q11 loading evidence.
 
-**Current physical blocker:** the user has no Q11 remote. This trial has not run;
-there is no speculative strap/flash substitute. Obtain a compatible original Q11
-IR remote before proceeding. UART capture is already functional on COM8.
+**Actual result,2026-10-07:** the user found a Xiaomi IR remote profile that
+controls Q11. COM8 receive-only capture ran00:15:44–00:18:44 Istanbul,106,805 bytes,
+SHA256 `97274b4e70c088fac13facbc81d56a838cdc874c60e0aa88cd408d6fadf8c13c`.
+Private files: `logs/experiment_20261007_001544_recovery-probe.log`, timing TSV and
+metadata. L135–146 show the same stock kernel/cmdline; L741 and L1002 onward show
+application key events (`0x300`; association with reported OK is likely, no raw IR
+decode). The user connected HDMI and reported OK/Home indicators but no recovery.
+No UART shell appeared. The direct PC LAN remained connected, evidenced by a
+DHCP ACK at00:17:10; no network upgrade endpoint/package was provided. At00:18:21
+UART access was lost, so the tail is incomplete despite the capture's exit0.
+The earlier boot/application evidence remains usable. Do not repeat random keys.
+
+The following is the historical recipe for the completed bounded trial, not an
+instruction to repeat it. Recovery remains firmware-dependent.
 
 Prerequisites: compatible remote, optional HDMI display. Q11 stays off while
 wiring. Remove USB/microSD and Ethernet so no removable/network upgrade package
@@ -94,6 +105,26 @@ pwsh -NoProfile -File tools/uart/capture_experiment.ps1 -Port auto -Operation re
 Codex can start/collect the capture when physical setup is ready; do not start a
 second capture against an occupied port. A legitimate Q11 stock-rootfs or loading
 artifact remains an alternative offline dependency; none is currently available.
+
+## Next physical evidence: identify this Q11 board
+
+Existing photos show only the CH341 adapter, not the Q11 PCB. Board-specific
+BootROM entry and a compatible DDR loader remain unknown. Obtain sharp overview
+photos of both Q11 PCB faces and close-ups of labelled buttons/test pads/header
+areas. This is identification only; no strap/short/upload is specified.
+
+* Power: unplug Q11's own adapter first, then disconnect HDMI, LAN, UART leads,
+  USB/microSD. Disconnect the CH341 from PC while moving its leads.
+* Device: Q11 PCB itself. Photograph silkscreen revision and connectors/pad labels.
+* Connect: nothing for the photo step. Do not short pads or connect VCC/5 V/A-to-A.
+* Command: none; keep Q11 unpowered. Existing logs already cover the failed trial.
+* Expected output: two clear board overview photos plus readable label close-ups.
+  Keep serial numbers/unique labels private. Photos can establish a candidate pad
+  identity; they do not establish voltage, entry semantics or loader compatibility.
+* After identification, specify a separately justified bounded experiment only
+  if a documented entry mechanism and compatible loader/identification protocol
+  can be established. A legitimate Q11 firmware artifact can instead be inspected
+  offline with the existing rootfs/DTB tools; no NAND backup is required.
 
 ## Reproducing USB storage detection (completed once; no repeat needed)
 

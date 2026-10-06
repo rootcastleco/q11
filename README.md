@@ -1,154 +1,179 @@
-# Huawei Q11 — UART Reverse Engineering Günlüğü
+[![Q11 Linux Bring-up — Batuhan Ayrıbaş](assets/brand/q11-header.svg)](https://batuhanayribas.com)
 
-Bu repo, bir **Huawei Q11** IPTV set-top box'ını (HiSilicon Hi3798MV100 tabanlı) UART üzerinden
-incelemenin canlı, kronolojik kaydıdır. Amaç cihaza kendi Linux dağıtımını (Debian/Alpine) harici
-bir ortam (USB/microSD) üzerinden çalıştırabilmek; Pay-TV içerik koruması (Verimatrix CA) ya da
-imza doğrulamasını aşmak **kapsam dışıdır** ve bu repoda bulunmaz.
+# Huawei Q11 Linux Bring-up
 
-UART kayıtları kendi cihazımda, kendi masamda tutuldu. Linux bring-up devamında kullanıcı
-izniyle harici REI USB hazırlandı; dahili NAND'a yazma komutu veya `saveenv` uygulanmadı.
-USB/ext4 stok Q11 tarafından bağlandı; özel Linux boot henüz doğrulanmadı. İçerik korumasına
-müdahale yapılmadı. Güncel deney ve sonraki fiziksel adım: [BRINGUP](docs/BRINGUP.md).
+An embedded Linux research project by **[Batuhan Ayrıbaş](https://batuhanayribas.com)**.
+The goal is to turn a Huawei Q11 IPTV set-top box into a general-purpose ARMv7
+Linux computer, using an external root filesystem and preserving its existing
+boot chain where practical.
 
-## İçindekiler
+**Current status: custom Linux has not booted on the Q11, and no usable shell has
+been obtained.** Debian rootfs and RAM initramfs tooling are ready. Stock firmware
+has successfully mounted the prepared USB ext4 filesystem and used isolated
+wired Ethernet. The remaining blocker is a verified execution or RAM-loading path.
 
-- [`Q11_RECORD.md`](Q11_RECORD.md) — canlı teknik kayıt: donanım envanteri, NAND bölüm haritası,
-  ölçüm günlüğü, olay günlüğü. Her satır `CONFIRMED` / `LIKELY` / `UNKNOWN` etiketiyle işaretli.
-- [`logs/`](logs) — ham ve temizlenmiş UART yakalamaları (açılış logları, kesme/stop-string
-  denemeleri), zamanlama dosyaları, SHA-256 hash manifesti (`HASHES.txt`).
-- [`photos/`](photos) — kullanılan CH341A UART adaptörünün header/jumper fotoğrafları.
-- [`tools/`](tools) — Windows PowerShell araçları (aşağıda açıklanıyor).
+[Technical record](Q11_RECORD.md) · [Bring-up procedure](docs/BRINGUP.md) ·
+[Rootfs guide](docs/ROOTFS.md) · [Project website](https://batuhanayribas.com)
 
-## Donanım
+[![Host validation](https://github.com/rootcastleco/q11/actions/workflows/validate.yml/badge.svg)](https://github.com/rootcastleco/q11/actions/workflows/validate.yml)
 
-| Bileşen | Bilgi |
+## What works today
+
+| Area | Evidence | Status |
+|---|---|---|
+| UART capture | CH341A, 3.3 V, 115200 8N1; raw bytes, timing and checksums | **CONFIRMED on Q11** |
+| Stock platform | Hi3798MV100, four Cortex-A7 cores, 1 GiB RAM, 256 MiB raw NAND | **CONFIRMED on Q11** |
+| USB storage | xHCI mass storage enumerated the prepared stick as `/dev/sda1` | **CONFIRMED on Q11** |
+| External ext4 | Mount count changed from 0 to 3; journal recovery bit changed | **CONFIRMED stock mount/write** |
+| Stock Ethernet | Direct 100 Mbps link, DHCP lease, ARP and ICMP responses | **CONFIRMED on Q11** |
+| Network services | TCP 7547/56789/56790 open; DIAL device descriptor read | **CONFIRMED; no shell** |
+| Debian armhf | Bookworm/SysV userspace, SSH public-key configuration and serial console | **HOST VALIDATED** |
+| RAM initramfs | Deterministic newc archive, bounded external-root wait and `switch_root` | **HOST VALIDATED** |
+| Custom boot / SSH | Image loading, kernel handoff and hardware compatibility | **UNKNOWN / NOT ACHIEVED** |
+| Recovery entry | One Xiaomi IR trial reached stock IPTV; HDMI showed no recovery | **FAILED IN THIS TRIAL** |
+
+Experiments use **CONFIRMED**, **LIKELY** and **UNKNOWN** labels. A build result,
+mounted filesystem or open TCP port is not evidence of arbitrary code execution.
+See the [validation record](docs/VALIDATION.md) for test boundaries and limitations.
+
+## Hardware at a glance
+
+| Component | Observed configuration |
 |---|---|
-| Cihaz | Huawei Q11 set-top box (middleware `STB_model=Q11`) |
-| SoC | HiSilicon **Hi3798MV100**, 4× ARM Cortex-A7 |
-| RAM | 1 GiB DDR |
-| Flash | Ham NAND, Toshiba 256 MiB, 8 bit, 3.3 V (ID `98 DA 90 15 F6 16`) |
-| UART adaptörü | CH341A (siyah "mini programmer" kartı), jumper UART modunda (2-3), 3.3 V mantık seviyesi doğrulanmış |
-| Seri port | 115200 8N1, `ttyAMA0` (PL011) |
+| Device | Huawei Q11 IPTV set-top box |
+| SoC / CPU | HiSilicon Hi3798MV100; 4 × ARM Cortex-A7; ARMv7 SMP |
+| Memory | 1 GiB DDR; stock firmware reserves 380 MiB for MMZ/CMA |
+| Storage | Toshiba 256 MiB raw NAND; 2 KiB pages; 64 B OOB; hinfc610 |
+| Stock kernel | Linux `3.18.13_s40`; HiSTBLinuxV100R003C00SPC065 family |
+| Stock root | SquashFS loaded into RAM and mounted as `/dev/ram` |
+| Writable application data | YAFFS2 `appdata` |
+| UART | PL011 `ttyAMA0`; 115200 8N1; measured 3.3 V signaling |
+| Ethernet | `hieth`; PHY address 1; isolated stock link tested |
+| Graphics | Vendor `hi_fb`, `hi_tde`, HIGO and `hi_hdmi`; custom framebuffer untested |
 
-Tam donanım envanteri, NAND bölüm haritası (offset/boyut/hex/MiB) ve tüm ölçümler için
-[`Q11_RECORD.md`](Q11_RECORD.md) dosyasına bakın.
+The [hardware guide](docs/HARDWARE.md) separates addresses printed in Q11 logs
+from public SDK candidates. Generic eMMC-box recipes are not Q11 NAND recipes.
 
-## Bağlantı şeması
+## Intended boot path
 
-PCB üzerindeki header soldan sağa `GND | RX | TX | VCC` (cihaz tarafı etiketi) olarak dizili.
-TX/RX çapraz bağlanır (her uç kendi gönderdiği/dinlediği hattı kendi bakış açısıyla adlandırır):
-
+```text
+Existing HiSilicon boot chain
+        │  verified loading control still required
+        ▼
+Stock or board-compatible Linux kernel
+        ▼
+RAM initramfs → external USB / microSD ext4
+        ▼
+Debian armhf / SysV init
+        ├── serial administrative console
+        ├── wired Ethernet and public-key SSH
+        ├── persistent external storage
+        └── later: HDMI framebuffer and a lightweight desktop
 ```
-Q11 GND ─────────── CH341A GND
-Q11 TX  ──────────▶ CH341A RX
-Q11 RX  ◀────────── CH341A TX
-Q11 VCC     BAĞLANMAZ (cihaz kendi adaptöründen beslenir)
-```
 
-**Güvenlik kuralları** (tüm oturum boyunca uygulandı):
-- Q11 VCC hiçbir zaman adaptöre bağlanmadı; cihaz her zaman kendi güç adaptöründen beslendi.
-- TX hattı bağlanmadan önce hem CH341A hem Q11 tarafında gerilim ölçüldü, 3.3 V olduğu doğrulandı
-  (5 V UART adaptörleriyle doğrudan bağlantı SoC'yi geri dönüşsüz zarar verebilir).
-- Dahili NAND'a gereksiz yazma/silme yapılmaz. Güncel kullanıcı kararı: tam NAND yedeği Linux bring-up için önkoşul değildir; yedek projesi başlatılmayacak. Açıkça izin verilen harici USB hazırlığı ayrı bir işlemdir.
-- Kablolama her zaman cihaz güçsüzken yapıldı; açma sırası önce adaptör USB'si, sonra cihaz gücü.
+The first option is to reuse the stock kernel and its board support. A removable
+rootfs alone cannot change boot arguments or replace the stock initrd. Public
+BootROM tools and MV100 pin-short reports are research candidates; Q11 entry,
+electrical pin identity and a compatible DDR loader remain unverified.
 
-## Araçlar (`tools/`)
+## Start with the host tools
 
-Hepsi Windows PowerShell 7 ile yazıldı, .NET `System.IO.Ports.SerialPort` kullanır. Hiçbiri
-cihazın flash'ına yazmaz; "kalıcı değişiklik" riski taşıyan komutlar kod seviyesinde reddedilir.
-
-| Betik | İşlev |
-|---|---|
-| `uart_capture.ps1` | Salt-okunur açılış logu yakalayıcı. Porta **hiçbir zaman** yazmaz. Adaptör USB'den çıkıp tekrar takılırsa otomatik yeniden bağlanır, `-Port auto` ile CH341'in o anki COM numarasını kendisi bulur. |
-| `uart_send.ps1` | Konsola tek satır (veya yalnızca Enter) gönderir. Gönderilen veri + cevap bir log dosyasına eklenir. `saveenv`, `erase`, `nand write`, `dd`, `reboot` gibi kalıcı/riskli komutları içeren bir regex **denylist** ile varsayılan olarak reddeder (`-Override` yalnızca kullanıcı açıkça onaylarsa). |
-| `uart_interrupt.ps1` | Açılış penceresinde **tek bir** kesme karakteri (Ctrl+C, boşluk, Esc, vb.) tekrar tekrar gönderir — amaç, bootloader'ın "herhangi bir tuşa basın" tipi autoboot durdurmasını tetiklemek. Komut göndermez, yalnızca tek bayt. |
-| `uart_string_flood.ps1` | Açılış penceresinde kısa bir **metni** (örn. `"set"`) CR eklemeden tekrar tekrar gönderir — U-Boot tarzı `CONFIG_AUTOBOOT_STOP_STR` ("stop string") ihtimalini test etmek için. CR eklenmediği sürece hiçbir komut çalışmaz. |
-
-## Bulgular özeti
-
-- Açılış logu tam olarak yakalandı (bkz. `logs/boot_01.log` / `boot_01.clean.txt`): kernel sürümü,
-  NAND geometrisi, 18 parçalık MTD bölüm haritası, USB/Ethernet/HDMI denetleyicileri, middleware
-  sürümü ve operatör profili (Turkcell Superonline IPTV) netleşti.
-- **Bootloader UART çıktısı tamamen kapalı**: güç verilmesinden kernel'in ilk satırına kadar 16.8
-  saniye boyunca tek bir bayt bile gelmiyor.
-- Çalışan Linux konsolunda girilen karakterler yankılanıyor (tty katmanı okuyor) ama hiçbir komut
-  **çalışmıyor** — kullanılabilir bir shell yok.
-- Bootloader'ın autoboot'unu durdurmak için üç bağımsız yöntem denendi, **üçü de başarısız**:
-  `Ctrl+C`, boşluk tuşu, ve `"set"` stop-string'i (120'şer saniye, tam güç döngüsü boyunca sürekli
-  gönderildi). Sonuç: UART üzerinden bootloader'a kesmeyle girme bu imajda devre dışı bırakılmış
-  görünüyor (muhtemelen `bootdelay=0`).
-- Secure-boot/CA göstergeleri var (`hi_advca.ko`, OTP `DieID is locked!`, Verimatrix `vmx_ca`),
-  kesin doğrulanmadı.
-
-Tüm kanıtlar `CONFIRMED` / `LIKELY` / `UNKNOWN` etiketleriyle [`Q11_RECORD.md`](Q11_RECORD.md)
-içinde, log satır numaralarına referansla birlikte kayıtlı.
-
-## Güncel Linux bring-up çalışması (2026-10-07)
-
-Proje devam ediyor. **Henüz Q11 üzerinde özel Linux açılışı veya kullanılabilir shell doğrulanmadı.**
-Tamamlanmış UART kesme denemeleri tekrarlanmaz; mevcut loglar korunur.
-
-- Stok cmdline sonunda `root=/dev/ram` var; yalnızca ilk `root=` değerini değiştirmek yeterli değil.
-- `himciv200` MMC/SD sürücüsü mevcut ve root mount öncesinde iki denetleyiciyi deniyor. Önceki
-  açılışlarda kart algılanmadı; microSD desteği yok sonucu çıkarılamaz.
-- USB platform denetleyicileri S90modules sonrasında açılıyor; harici USB root için gerekli modüller
-  initramfs içinde bulunmalı veya çekirdeğe gömülü olmalı.
-- REI ile gerçek cihaz deneyi tamamlandı: xhci USB disk `/dev/sda1` olarak algılandı;
-  ext4 superblock sayacı0→3 ve journal biti değişimi stok sistemin bölümü bağlayıp yazdığını doğruladı.
-  Debian/özel initramfs çalışmadı. USB PC'de; güç kesildiği için journal recovery bekliyor.
-- Debian bookworm armhf/SysV rootfs, ext4 imajı, MBR USB imajı ve deterministik RAM initramfs
-  oluşturma araçları eklendi. Bunlar host tarafı hazırlıktır; imaj yükleme/başlatma yolu hâlâ UNKNOWN.
-- NAND yedeği çalışması yok. Factory/CA/DRM bölümleri ve imza atlatma kapsam dışı.
-- Doğrudan PC LAN deneyi:100Mbps bağlantı, stok DHCP/ARP/ping doğrulandı. TCP7547/56789/56790
-  açık; DIAL açıklaması okundu, SSH/telnet konsolu bulunmadı. PC ağ ayarları geri alındı.
-- Xiaomi IR kumandasıyla bir açılış denemesi yapıldı; UART tuş olaylarını ve normal IPTV
-  açılışını gördü. Kullanıcı HDMI'da recovery'ye girmediğini doğruladı; shell elde edilmedi.
-
-| Belge | İçerik |
-|---|---|
-| [ARCHITECTURE](docs/ARCHITECTURE.md) | Önceliklendirilmiş yollar ve mevcut engel |
-| [BOOT_FLOW](docs/BOOT_FLOW.md) | Stok initrd, bootargs/loader ve rootfs inceleme hedefleri |
-| [ROOTFS](docs/ROOTFS.md) | Debian/initramfs oluşturma ve izinli USB hazırlığı |
-| [BRINGUP](docs/BRINGUP.md) | Kesin fiziksel deney, loglar ve kabul ölçütleri |
-| [HARDWARE](docs/HARDWARE.md) | Kanıtlı adresler, SD ve grafik/DTB adayları |
-| [KERNEL](docs/KERNEL.md) | 3.18.24/4.4.35 kaynak adayları ve build aracı |
-| [BOOTROM](docs/BOOTROM.md) | UART bootstrap ile native USB ayrımı; bilinmeyenler |
-| [NETWORK](docs/NETWORK.md) | İzole DHCP, stok Ethernet/HTTP/DIAL bulguları ve sınırlı inceleme araçları |
-| [MEMORY](docs/MEMORY.md) | MMZ hesabı ve RAM bölgesi doğrulama ihtiyacı |
-
-Yeni araçlar `tools/analysis`, `tools/dtb`, `tools/rootfs`, `tools/kernel`, `tools/uart`, `tools/network`
-altında; büyük/generated dosyalar gitignored `artifacts/` altında tutulur.
+Requirements: Python 3.10+, Git and PowerShell 7 for Windows lab tools. Linux or
+WSL is required for rootfs/image builds. Complete dependencies are in the
+[rootfs guide](docs/ROOTFS.md). Nmap is optional for the isolated TCP inventory.
 
 ```powershell
+git clone https://github.com/rootcastleco/q11.git
+cd q11
 python -m unittest discover -s tests -v
+pwsh -NoProfile -File tests/test_powershell.ps1
+pwsh -NoProfile -File tests/test_dhcp.ps1
+pwsh -NoProfile -File tests/test_port_report.ps1
 python tools/analysis/boot_report.py logs --output artifacts/boot-report.json
+pwsh -NoProfile -File tools/uart/capture_experiment.ps1 -DryRun
 ```
 
-OK denemesi tamamlandı; rastgele tuşlarla tekrarlanmaz. Sonraki fiziksel adım, Q11 PCB'sinin
-iki yüzünü güç/kablolar çıkarılmış halde fotoğraflayıp kart revizyonu ve etiketli padleri
-tanımlamak; [tam tarif](docs/BRINGUP.md). Doğrulanmış BootROM pad/strap veya RAM loader henüz yok.
-Belleğe rootfs koymak tek başına boot sağlamaz. Stok mount/init betikleri veya yetkili RAM loader
-yolu incelenmeden USB üzerinde rastgele "autorun" / güncelleme dosyaları kullanılmaz.
+These commands validate and analyze on the host; they do not boot or flash Q11.
+Generated reports refuse to overwrite an existing output. Use a new report name
+when repeating analysis. Physical captures require the verified wiring below.
 
-## Önceki durum değerlendirmesi (tarihsel)
+### UART wiring
 
-UART yoluyla makul deneme alanı (standart kesme tuşları + stop-string) tükendi. Kalan, daha
-invazif seçenekler:
+The measured lab unit's header is `GND | RX | TX | VCC` in the recorded board
+orientation. Establish pin identity and voltage on any other unit first.
 
-1. **HiSilicon USB BootROM kurtarma modu** — SoC'yi güç verme anında USB indirme moduna düşürüp
-   RAM'e geçici bir bootloader yüklemek. RAM-only olduğu için güç kesilince iz bırakmaz, ama
-   vendor aracı ve dikkatli donanım müdahalesi gerektirir; secure-boot aktifse imzasız imaj
-   reddedilebilir.
-2. **Harici NAND programlayıcı (TSOP48 soket)** — çipi sökmeden/sökerek tam offline yedek ve
-   analiz. En invazif seçenek, son çare.
-3. Hedefi bu cihazdan ayırıp resmi Linux desteği olan başka bir kart (Raspberry Pi vb.) üzerinde
-   sürdürmek.
+```text
+Q11 GND ─────────── CH341A GND
+Q11 TX  ──────────► CH341A RX
+Q11 RX  ◄────────── CH341A TX
+Q11 VCC             NOT CONNECTED
+```
 
-Bu bölüm önceki oturumun değerlendirmesidir; yukarıdaki Linux bring-up devamı güncel çalışma
-kararlarını açıklar. Önceki USB BootROM ve NAND seçenekleri doğrulanmış yöntem olarak okunmamalıdır.
+Use the Q11's own power adapter. Change wiring with Q11 power disconnected. The
+tested CH341A uses jumper 2–3 for UART mode; neither its 3.3 V nor 5 V supply is
+connected to Q11. The [bring-up guide](docs/BRINGUP.md) gives bounded captures,
+physical steps and expected output. Default experiment capture is receive-only.
 
-## Sorumluluk reddi
+## Documentation
 
-Bu çalışma kendime ait bir cihaz üzerinde, eğitim/hobi amaçlı gömülü Linux bring-up çalışmasıdır.
-Verimatrix CA ya da başka bir içerik koruma/imza doğrulama mekanizmasını atlatmaya yönelik hiçbir
-içerik, araç ya da yöntem bu repoda yer almaz ve alınmayacaktır.
+| Guide | Contents |
+|---|---|
+| [Technical record](Q11_RECORD.md) | Hardware inventory, complete NAND map, measurements and experiment chronology |
+| [Architecture](docs/ARCHITECTURE.md) | Ranked boot paths and the current execution-control blocker |
+| [Boot flow](docs/BOOT_FLOW.md) | Exact cmdline, legacy initrd, bootargs and stock startup inspection |
+| [Rootfs](docs/ROOTFS.md) | Debian build, deterministic initramfs, external image and USB preparation |
+| [Bring-up](docs/BRINGUP.md) | Completed physical trials, next board-identification step and acceptance criteria |
+| [Hardware](docs/HARDWARE.md) | Register addresses, DTB detection, card slot and graphics evidence |
+| [Kernel](docs/KERNEL.md) | Public vendor source candidates, configuration and build tooling |
+| [BootROM](docs/BOOTROM.md) | UART bootstrap, USB host boot, pin-short reports and loader requirements |
+| [Network](docs/NETWORK.md) | Isolated DHCP, stock Ethernet, TCP inventory and HTTP/DIAL inspection |
+| [Memory](docs/MEMORY.md) | MMZ/CMA accounting and limits on changing memory reservations |
+| [Validation](docs/VALIDATION.md) | Tests, physical evidence and what each check does not establish |
+| [Tool reference](tools/README.md) | Tool groups, inputs, outputs and historical UART utilities |
+| [Contributing](CONTRIBUTING.md) | Evidence standards, testing and handling private captures |
+| [Branding](docs/BRANDING.md) | Project identity, attribution and visual assets |
+
+## Repository layout
+
+```text
+assets/brand/       Batuhan Ayrıbaş project header
+docs/              Architecture, evidence and reproducible lab guides
+tools/analysis/    Boot, stock-image, rootfs and filesystem evidence parsers
+tools/dtb/         Validated FDT discovery and extraction
+tools/rootfs/      Debian, initramfs, external image and USB lab tools
+tools/kernel/      Vendor-kernel build wrapper and bring-up config
+tools/network/     Bounded DHCP, TCP and read-only service inspection
+tools/uart/        Receive-only experiment capture with metadata
+tests/             Fixtures and host tests without a connected Q11
+logs/              Existing historical UART evidence and hash manifest
+photos/            Historical CH341A adapter photos
+artifacts/         Generated outputs; ignored by Git
+```
+
+Historical Ctrl+C, space and `set` experiments did not expose a bootloader shell.
+They are retained as evidence and are not repeated. The IR trial and isolated
+network inspection also produced no maintenance console. The next physical
+dependency is an unpowered Q11 PCB/package/pad inspection, documented in
+[BRINGUP](docs/BRINGUP.md); no verified shorting instruction is available.
+
+## Scope and publication
+
+This project focuses on Linux bring-up on a personally owned device. It does not
+develop Pay-TV/CA/DRM bypasses, extract protected credentials or defeat signature
+checks. No internal NAND writer or full-NAND backup workflow is supplied. The
+external USB writer is a separate, explicit operation with disk-selection guards
+and full readback verification; normal build commands write image files only.
+
+Existing historical captures remain byte-for-byte evidence. New raw experiments,
+device identifiers, firmware binaries, private SSH keys and generated rootfs
+images are kept out of Git. Hardware milestones are documented using non-unique
+details and checksums. This is a research repository, not a completed installer.
+
+---
+
+**Batuhan Ayrıbaş · Engineering & Research**
+
+[batuhanayribas.com](https://batuhanayribas.com)
+
+Huawei and HiSilicon names identify the investigated hardware. This is an
+independent project, with no claim of vendor affiliation.

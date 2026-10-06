@@ -68,3 +68,7 @@ maintenance hook accepts an external script, how its path is chosen, and whether
 it writes internal partitions. No such hook is established yet. No supplied file
 is executed by the audit tool. CA, protected credentials and signature bypass
 remain outside scope.
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

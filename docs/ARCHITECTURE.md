@@ -38,3 +38,7 @@ conditional on the dependency in its feasibility column. Internal flashing is no
 an automatic fallback. Public eMMC installation recipes do not describe this raw-NAND Q11.
 
 See [BOOT_FLOW](BOOT_FLOW.md), [BRINGUP](BRINGUP.md), [ROOTFS](ROOTFS.md), and [KERNEL](KERNEL.md).
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

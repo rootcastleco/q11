@@ -1,32 +1,34 @@
 <#
-  uart_send.ps1 - Q11 konsoluna TEK bir satir (ya da yalnizca Enter) gonderir ve cevabi kaydeder.
+  Q11 Linux Bring-up | Batuhan Ayribas | https://batuhanayribas.com
+  uart_send.ps1 - Historical one-line/Enter transmit and response capture.
 
-  Kalici durumu degistirebilecek komutlari varsayilan olarak REDDEDER (asagidaki $deny listesi).
-  -Override yalnizca kullanici o komutu acikca onayladiginda kullanilir.
-  Gonderilen veri ve gelen cevap <OutFile> dosyasina EKLENIR (### ile baslayan satirlar not).
+  Rejects a broad set of state-changing commands by default. A denylist is a
+  guard, not proof of harmless behavior on an unknown console. Use -Override only
+  for an explicitly authorized command. Appends data and ### notes to OutFile.
+  No usable console has been obtained on the current Q11 firmware.
 
-  Ornekler:
+  Historical examples, not instructions for another trial:
     pwsh -NoProfile -File tools\uart_send.ps1 -Port COM10 -Enter
     pwsh -NoProfile -File tools\uart_send.ps1 -Port COM10 -Line 'cat /proc/mtd'
 #>
 param(
     [Parameter(Mandatory = $true)][string]$Port,
-    [string]$Line,                 # gonderilecek komut (sonuna CR eklenir)
-    [switch]$Enter,                # yalnizca CR gonder
-    [switch]$Override,             # denylist'i atla (yalnizca acik kullanici onayiyla)
-    [switch]$DryRun,               # yalnizca denylist kontrolu yap, porta dokunma
+    [string]$Line,                 # Transmit this line with a trailing CR.
+    [switch]$Enter,                # Transmit CR only.
+    [switch]$Override,             # Explicitly authorized denylist override.
+    [switch]$DryRun,               # Check the denylist without opening the port.
     [int]$Baud = 115200,
-    [double]$PreListenSec = 1,     # gondermeden once dinleme
-    [double]$ListenSec = 8,        # gonderdikten sonra dinleme
+    [double]$PreListenSec = 1,     # Receive before transmission.
+    [double]$ListenSec = 8,        # Receive after transmission.
     [string]$HideRegex = 'HMW_network_getIpAddr|HMW_connectivity\.cpp|msgCallback execute failed|fdisk: can.t open',
     [string]$OutFile = (Join-Path $PSScriptRoot '..\logs\session_01.log')
 )
 
 $ErrorActionPreference = 'Stop'
-if (-not $Enter -and [string]::IsNullOrEmpty($Line)) { throw 'Ya -Enter ya da -Line verilmeli.' }
-if ($Enter -and $Line) { throw '-Enter ve -Line birlikte kullanilamaz.' }
+if (-not $Enter -and [string]::IsNullOrEmpty($Line)) { throw 'Specify either -Enter or -Line.' }
+if ($Enter -and $Line) { throw '-Enter and -Line cannot be combined.' }
 
-# Bilerek genis tutulmus red listesi: flash/ortam yazma, silme, dosya degistirme, yeniden baslatma vb.
+# Broad guard: flash/environment writes, deletion, file changes, restart and more.
 $deny = @(
     'saveenv', 'setenv', 'resetenv', '\benv\b', 'erase', 'nand\s+(write|scrub)', 'nandwrite', 'flash_',
     'flashcp', 'mtd\s+write', 'mtd_debug', 'mmc\s+write', 'sf\s+(write|update)', 'fastboot', '\bdd\b',
@@ -37,19 +39,19 @@ $deny = @(
 )
 if ($Line -and -not $Override) {
     foreach ($p in $deny) {
-        if ($Line -match "(?i)$p") { throw "REDDEDILDI: '$Line' komutu '$p' kuralina takildi (kalici degisiklik riski)." }
+        if ($Line -match "(?i)$p") { throw "REJECTED: '$Line' matches '$p' (risk of persistent changes)." }
     }
 }
-if ($DryRun) { Write-Output "DRYRUN: izin verilir -> $(if ($Enter) { '<Enter>' } else { $Line })"; return }
+if ($DryRun) { Write-Output "DRY RUN: allowed by guard -> $(if ($Enter) { '<Enter>' } else { $Line })"; return }
 
 $OutFile = [System.IO.Path]::GetFullPath($OutFile)
 New-Item -ItemType Directory -Force -Path (Split-Path $OutFile) | Out-Null
 
-# -Port auto: CH341 (VID_1A86&PID_5523) hangi COM numarasini aldiysa onu kullan
+# Select the currently enumerated CH341 UART COM port.
 if ($Port -eq 'auto') {
     $d = Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
         Where-Object { $_.InstanceId -match 'VID_1A86&PID_5523' } | Select-Object -First 1
-    if (-not ($d -and $d.FriendlyName -match '\((COM\d+)\)')) { throw 'CH341 (VID_1A86&PID_5523) bulunamadi.' }
+    if (-not ($d -and $d.FriendlyName -match '\((COM\d+)\)')) { throw 'CH341 UART (VID_1A86&PID_5523) not found.' }
     $Port = $Matches[1]
 }
 
@@ -79,16 +81,16 @@ function Pump([double]$sec) {
 
 try {
     $label = if ($Enter) { '<Enter>' } else { $Line }
-    if ($Override) { Note "UYARI: denylist kullanici onayiyla atlandi" }
-    Note "dinleme ($PreListenSec sn)"
+    if ($Override) { Note "WARNING: denylist overridden with explicit authorization" }
+    Note "listening ($PreListenSec seconds)"
     Pump $PreListenSec
     $mark = $rx.Length
     $payload = if ($Enter) { "`r" } else { "$Line`r" }
     $bytes = [System.Text.Encoding]::ASCII.GetBytes($payload)
-    Note "GONDERILDI: $label"
+    Note "SENT: $label"
     $sp.Write($bytes, 0, $bytes.Length)
     Pump $ListenSec
-    Note "bitti"
+    Note "completed"
 }
 finally {
     $fs.Close()
@@ -100,5 +102,5 @@ $post = if ($all.Length -gt $mark) { $all[$mark..($all.Length - 1)] } else { @()
 $text = [System.Text.Encoding]::ASCII.GetString([byte[]]$post) -replace "`r", '' -replace '[\x00-\x08\x0B\x0C\x0E-\x1F]', ''
 $lines = $text -split "`n"
 $shown = $lines | Where-Object { $_ -notmatch $HideRegex }
-Write-Output "=== GONDERILDI: $label | cevap: $($post.Length) bayt, $($lines.Count) satir ($(($lines.Count) - ($shown.Count)) spam satiri gizlendi) ==="
+Write-Output "=== SENT: $label | response: $($post.Length) bytes, $($lines.Count) lines ($(($lines.Count) - ($shown.Count)) noisy lines hidden) ==="
 $shown

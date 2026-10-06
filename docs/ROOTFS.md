@@ -22,7 +22,7 @@ device nodes, owners and Unix links. Dependencies on an Ubuntu build host:
 sudo apt-get install debootstrap debian-archive-keyring qemu-user-static binfmt-support e2fsprogs gcc-arm-linux-gnueabihf cpio squashfs-tools shellcheck
 ```
 
-Enable an installed qemu-arm binfmt handler before a cross-build. On Ubuntu24.04
+Enable an installed qemu-arm binfmt handler before a cross-build. On Ubuntu 24.04
 WSL, when systemd has not registered it, the installed package's exact config can
 be registered as root:
 
@@ -42,10 +42,10 @@ python3 tools/rootfs/make_disk_image.py artifacts/q11-root.ext4 artifacts/q11-us
 ```
 
 No block device is formatted by these commands. The last command creates an MBR
-file with one Linux partition starting at1 MiB. Images and checksums stay in
+file with one Linux partition starting at 1 MiB. Images and checksums stay in
 gitignored `artifacts/`. Ext4 disables64bit, metadata_csum, metadata_csum_seed and
 orphan_file so modern e2fsprogs does not silently select features beyond3.18.
-`e2fsck -fn` checks the populated image. Label=Q11ROOT. A2 GiB image leaves the rest
+`e2fsck -fn` checks the populated image. Label=Q11ROOT. A 2 GiB image leaves the rest
 of a16 GB stick unused initially; it can be rebuilt larger after bring-up.
 
 APT Release signatures/package hashes are checked. Rootfs package versions are
@@ -112,11 +112,17 @@ pwsh -NoProfile -File tools/rootfs/write-usb.ps1 -Image artifacts/q11-usb.img -S
 
 The capacity above is the observed authorized REI stick in this session, not a
 generic Q11 value. Other media requires its own verified capacity/authorization.
+`REI` is the historical target volume label, not project branding; do not replace
+it with the website name or rename a physical disk as part of documentation edits.
 Windows cannot mount ext4 afterwards; decline formatting prompts. Booting custom
 Linux remains conditional on [BOOT_FLOW](BOOT_FLOW.md); this is not an auto-upgrade stick.
 
 The Q11 stock USB/ext4 mount was subsequently confirmed; see [BRINGUP](BRINGUP.md).
 After that trial the stick's journal recovery flag is set. `read-usb-probe.ps1`
-captures only its first2 MiB with a read-only handle; `ext4_super.py` compares the
+captures only its first 2 MiB with a read-only handle; `ext4_super.py` compares the
 superblock against a regular baseline image without mounting/replaying a journal.
 These evidence tools do not clean the stick or prove that its Debian init ran.
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

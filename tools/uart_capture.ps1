@@ -1,27 +1,26 @@
 <#
-  uart_capture.ps1 - Huawei Q11 UART log yakalayici (YALNIZCA OKUR).
+  Q11 Linux Bring-up | Batuhan Ayribas | https://batuhanayribas.com
+  uart_capture.ps1 - Receive-only raw UART capture.
 
-  Bu betik seri porta hicbir zaman veri yazmaz. DTR/RTS kapali, akis kontrolu yok.
-  Gelen baytlar oldugu gibi (ham) dosyaya yazilir. Yanina <OutFile>.timing.tsv
-  dosyasi yazilir: her okuma parcasinin zamani (ms) ve dosyadaki konumu.
+  Never transmits serial data. DTR/RTS and flow control are disabled.
+  Preserves received bytes and writes a companion <OutFile>.timing.tsv with
+  elapsed milliseconds, byte offsets and chunk sizes. Waits for the adapter,
+  reconnects after removal and resumes the same capture.
 
-  Port henuz yoksa (adaptor takili degil) takilmasini bekler; kayit sirasinda adaptor
-  cikarilirsa yeniden takilmasini bekler ve ayni dosyaya eklemeye devam eder.
-
-  Ornek:
+  Example (use a new filename; the low-level tool can overwrite output):
     pwsh -NoProfile -File tools\uart_capture.ps1 -Port auto -OutFile logs\boot_01.log
-  (-Port auto: CH341'in o anki COM numarasini kendisi bulur.)
+  -Port auto selects the currently enumerated CH341 UART port.
 #>
 param(
     [Parameter(Mandatory = $true)][string]$Port,
     [int]$Baud = 115200,
     [ValidateRange(0,3600)][int]$MaxTotalSec = 0,
     [string]$OutFile = (Join-Path $PSScriptRoot '..\logs\boot_01.log'),
-    [int]$ArmBytes = 64,            # bu kadar bayt gelmeden zamanlayicilar baslamaz (kablo takarken gelen cop baytlar)
-    [int]$ArmAfterSilenceSec = 0,   # >0 ise: once hat bu kadar sn sessiz kalmali (Q11 kapali), sonra gelen veriyle baslar
-    [int]$WaitFirstByteSec = 1200,  # veri gelmesi icin en fazla bekleme (port bekleme dahil)
-    [int]$SilenceStopSec = 120,     # veri geldikten sonra bu kadar sessizlikte dur
-    [int]$MaxAfterFirstSec = 900    # veri gelmeye basladiktan sonra en fazla kayit suresi
+    [int]$ArmBytes = 64,            # Received-byte threshold before data timers start.
+    [int]$ArmAfterSilenceSec = 0,   # Require this quiet interval before arming.
+    [int]$WaitFirstByteSec = 1200,  # Maximum wait including missing-port time.
+    [int]$SilenceStopSec = 120,     # Stop after this much post-data silence.
+    [int]$MaxAfterFirstSec = 900    # Maximum capture after the first armed bytes.
 )
 
 Set-StrictMode -Version Latest
@@ -35,7 +34,7 @@ function Say([string]$msg) {
     $tf.WriteLine("# $line"); $tf.Flush()
 }
 
-# -Port auto: CH341 (VID_1A86&PID_5523) hangi COM numarasini aldiysa onu bul (USB portu degisince numara degisir)
+# Resolve CH341 UART VID/PID; moving USB ports can change the COM number.
 function Resolve-Port([string]$p) {
     if ($p -ne 'auto') { return $p }
     $d = Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
@@ -63,17 +62,17 @@ $sw  = [System.Diagnostics.Stopwatch]::StartNew()
 $sp  = $null
 $start = Get-Date; $first = $null; $last = $null; $total = 0; $reason = ''
 $lastAny = $start; $quietSeen = ($ArmAfterSilenceSec -le 0); $armBase = 0
-Say "salt-okunur kayit: $Port $Baud 8N1 -> $OutFile"
+Say "receive-only capture: $Port $Baud 8N1 -> $OutFile"
 
 try {
     while ($true) {
-        if ($MaxTotalSec -gt 0 -and $sw.Elapsed.TotalSeconds -ge $MaxTotalSec) { $reason = 'azami toplam sure'; break }
+        if ($MaxTotalSec -gt 0 -and $sw.Elapsed.TotalSeconds -ge $MaxTotalSec) { $reason = 'total duration limit'; break }
         $now = Get-Date
         $n = 0
         if ($null -eq $sp) {
             $name = Resolve-Port $Port
             if ($name -and ([System.IO.Ports.SerialPort]::GetPortNames() -contains $name)) {
-                try { $sp = Open-Port $name; Say "$name acildi" }
+                try { $sp = Open-Port $name; Say "$name opened" }
                 catch { $sp = $null; Start-Sleep -Milliseconds 500 }
             } else {
                 Start-Sleep -Milliseconds 500
@@ -82,28 +81,28 @@ try {
             try { $n = $sp.Read($buf, 0, $buf.Length) }
             catch [System.TimeoutException] { $n = 0 }
             catch {
-                Say "$($sp.PortName) baglantisi koptu: $($_.Exception.Message)"
+                Say "$($sp.PortName) disconnected: $($_.Exception.Message)"
                 try { $sp.Dispose() } catch { }
                 $sp = $null; $n = 0
             }
         }
         $now = Get-Date
         if (-not $quietSeen -and ($now - $lastAny).TotalSeconds -ge $ArmAfterSilenceSec) {
-            $quietSeen = $true; $armBase = $total; Say "hat $ArmAfterSilenceSec sn sessiz kaldi, yeni veri bekleniyor"
+            $quietSeen = $true; $armBase = $total; Say "line quiet for $ArmAfterSilenceSec seconds; waiting for new data"
         }
         if ($n -gt 0) {
             $tf.WriteLine("$($sw.ElapsedMilliseconds)`t$total`t$n"); $tf.Flush()
             $fs.Write($buf, 0, $n); $fs.Flush()
             $total += $n; $last = $now; $lastAny = $now
-            if (-not $first -and $quietSeen -and ($total - $armBase) -ge $ArmBytes) { $first = $now; Say "veri akisi basladi" }
+            if (-not $first -and $quietSeen -and ($total - $armBase) -ge $ArmBytes) { $first = $now; Say "data stream started" }
         }
-        if (-not $first -and ($now - $start).TotalSeconds -ge $WaitFirstByteSec) { $reason = 'yeterli veri gelmedi'; break }
-        if ($first -and ($now - $last).TotalSeconds -ge $SilenceStopSec)          { $reason = "$SilenceStopSec sn sessizlik"; break }
-        if ($first -and ($now - $first).TotalSeconds -ge $MaxAfterFirstSec)       { $reason = 'azami sure'; break }
+        if (-not $first -and ($now - $start).TotalSeconds -ge $WaitFirstByteSec) { $reason = 'insufficient data'; break }
+        if ($first -and ($now - $last).TotalSeconds -ge $SilenceStopSec)          { $reason = "$SilenceStopSec seconds of silence"; break }
+        if ($first -and ($now - $first).TotalSeconds -ge $MaxAfterFirstSec)       { $reason = 'post-data duration limit'; break }
     }
 }
 finally {
     if ($sp) { try { $sp.Dispose() } catch { } }
-    Say "durdu ($reason). Toplam $total bayt"
+    Say "stopped ($reason); total $total bytes"
     $fs.Close(); $tf.Close()
 }

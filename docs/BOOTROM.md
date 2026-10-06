@@ -66,7 +66,7 @@ loader. No instruction to short the Q11 SoC or upload a package has been issued.
 reports remote OK at startup led to recovery and UART root access. [Owner g-man,
 2026-06-12, post32](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/page-2)
 reports failure with OK on another Q11. These primary accounts are not proof for
-our firmware. Our one Xiaomi IR trial on2026-10-07 reached the stock kernel and
+our firmware. Our one Xiaomi IR trial on 2026-10-07 reached the stock kernel and
 IPTV application; the user subsequently connected HDMI and reported no recovery.
 UART saw application key events, no alternate loader or console. This records a
 failed entry trial, not proof that every recovery mechanism is disabled. The
@@ -110,3 +110,7 @@ No binary protocol packet or loader image was transmitted in this session.
 No NAND pin shorts, guessed test pads, OTP operations, key extraction, signature
 patches or full firmware flashing are included. If secure boot requires signed
 images, use vendor-authorized signed loading/maintenance or document the blocker.
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

@@ -5,27 +5,32 @@ Session:2026-10-06/07. Hardware custom boot is **not** validated.
 | Check | Result / boundary |
 |---|---|
 | Python unittest suite |29 tests: previous25 plus actual loopback banner/HEAD/DIAL requests, silent deadline/absent listener, input/XML guards, CLI dry-run/missing/invalid/no-overwrite |
-| Linux host suite |Real256 MiB ext4 checked by e2fsck; actual MBR image generated; ARM static root-probe exercised under QEMU; shell tool valid dry-runs/invalid/missing checks |
+| Linux host suite |Real 256 MiB ext4 checked by e2fsck; actual MBR image generated; ARM static root-probe exercised under QEMU; shell tool valid dry-runs/invalid/missing checks |
 | ShellCheck |Build, configure, filesystem, kernel and test scripts; POSIX init separately |
 | PowerShell parser |All `.ps1` files parsed; receive-only dry-run passed |
 | UART absent-device test |COM999,5-second bound, zero bytes -> failure metadata; actual COM8 was not transmitted to |
 | Windows USB writer dry-run |REI/E:, one USB/MBR disk,15,833,497,600 bytes, non-system/non-boot,512-byte sectors, image checksum/header/capacity checks passed |
-| Windows physical USB write |2,148,532,224 bytes written and readback SHA256 matched at23:36 Istanbul; result `written-and-verified`, exit0; user-authorized REI stick only |
-| Q11 receive-only USB boot probe |COM8/115200,120 seconds,116,547 bytes; SHA256/timing continuity checked, exit0; one stock boot, USB xhci mass-storage `/dev/sda1` detected; HAL MOUNTED callback does not prove ext4 or custom boot |
-| USB prefix reader |Selection/failure tests and real REI dry-run passed; physical fixed2 MiB capture at23:45 used FileAccess.Read only, exit0. Baseline UUID matches, mount_count0→3, journal recovery bitset: stock ext4 mount/write confirmed; no host journal replay |
+| Windows physical USB write |2,148,532,224 bytes written and readback SHA256 matched at 23:36 Istanbul; result `written-and-verified`, exit 0; user-authorized REI stick only |
+| Q11 receive-only USB boot probe |COM8/115200,120 seconds,116,547 bytes; SHA256/timing continuity checked, exit 0; one stock boot, USB xhci mass-storage `/dev/sda1` detected; HAL MOUNTED callback does not prove ext4 or custom boot |
+| USB prefix reader |Selection/failure tests and real REI dry-run passed; physical fixed2 MiB capture at 23:45 used FileAccess.Read only, exit 0. Baseline UUID matches, mount_count0→3, journal recovery bitset: stock ext4 mount/write confirmed; no host journal replay |
 | PowerShell transfer regression |Int64 sizing at >2 GiB and1 TiB, zero/final512-byte chunk, invalid negative size and missing module checks passed |
 | Debian rootfs |Release signature verified; package installation completed; SysV init/SSH/serial/DHCP/key configuration checked under QEMU; no private keys in Git |
 |2 GiB populated ext4 |e2fsck -fn passed,9,072 inodes,87,630 blocks used at creation; exact files can change on a rebuild |
 |RAM archive |Uncompressed newc,1,740,288 bytes; real ARM BusyBox plus static root-probe; no stock storage modules available |
 |Kernel build |Source/defconfig and driver/DT candidates inspected; CLI guards tested; complete compilation/hardware boot unverified |
-|Isolated DHCP |Synthetic valid/malformed/foreign/relay/duplicate fixtures, reply/selection/no-routing-option tests and real UDP loopback packet-information test; three actual Q11 ACK sessions completed exit0/restored=true |
+|Isolated DHCP |Synthetic valid/malformed/foreign/relay/duplicate fixtures, reply/selection/no-routing-option tests and real UDP loopback packet-information test; three actual Q11 ACK sessions completed exit 0/restored=true |
 |TCP XML inventory |Success/coverage/timeout/wrong-target/malformed/missing fixtures; actual XML independently validated65,535 port states,7547/56789/56790 open; original wrapper error retained |
 |Service inspection |Actual private banner/HEAD reports and read-only DIAL descriptor HTTP200; identifiers kept out of Git, no application launch/control/authentication |
-|IR recovery capture |180-second RX-only COM8 log,106,805 bytes; stock boot/key events, no console; user HDMI report no recovery. Late UART loss at00:18:21 means incomplete tail despite metadata exit0 |
+|IR recovery capture |180-second RX-only COM8 log,106,805 bytes; stock boot/key events, no console; user HDMI report no recovery. Late UART loss at 00:18:21 means incomplete tail despite metadata exit 0 |
 
 Actual generated images and manifests are private/gitignored under `artifacts/`;
 build logs and device experiments under `logs/experiment_*` are not published.
 Package versions are recorded next to the Linux rootfs in `.packages.tsv`.
+
+GitHub [Host validation](https://github.com/rootcastleco/q11/actions/workflows/validate.yml)
+runs Python fixtures on Linux/Windows, the PowerShell fixture suites on Windows,
+and ShellCheck on Linux. It does not connect to Q11, build a complete Debian
+rootfs, exercise physical USB writes or establish hardware boot compatibility.
 
 Two host setup problems were corrected before preparing physical media: an edit to
 a running build script interrupted the first attempt, and direct QEMU execution of
@@ -45,3 +50,7 @@ now uses explicit Int64 operands and records write/verification progress.
 Stock startup-script names were also searched in public GitHub code without a
 matching result; this bounded search does not establish that no firmware artifact
 exists elsewhere. The stock-rootfs/loading-control dependency remains open.
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

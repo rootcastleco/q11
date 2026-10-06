@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="title description">
+  <title id="title">Q11 Linux Bring-up — Batuhan Ayrıbaş</title>
+  <desc id="description">Independent embedded Linux research. Evidence, tooling and external Linux. Custom boot remains unverified.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#25302e" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="360" rx="18" fill="#111916"/>
+  <rect x="780" y="0" width="500" height="360" fill="url(#grid)"/>
+  <path d="M48 76H1232" stroke="#36433d"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="48" y="48" fill="#e8eee7" font-size="17" font-weight="700" letter-spacing="2">BA / BATUHAN AYRIBAŞ</text>
+    <text x="1232" y="48" fill="#bec9bf" font-size="15" text-anchor="end">batuhanayribas.com</text>
+    <text x="48" y="119" fill="#b7d4a0" font-size="13" font-weight="700" letter-spacing="3">EMBEDDED LINUX / FIELD RESEARCH</text>
+    <text x="44" y="189" fill="#f4f6ee" font-size="58" font-weight="700">Q11 Linux Bring-up</text>
+    <text x="48" y="228" fill="#bec9bf" font-size="20">Evidence → tooling → external Linux</text>
+    <text x="48" y="301" fill="#e8eee7" font-size="15">Hi3798MV100</text>
+    <text x="212" y="301" fill="#bec9bf" font-size="15">ARMv7 / 4 × Cortex-A7 / 1 GiB DDR</text>
+    <rect x="902" y="125" width="256" height="132" rx="12" fill="#111916" stroke="#b7d4a0" stroke-width="2"/>
+    <text x="1030" y="175" fill="#f4f6ee" font-size="32" font-weight="700" text-anchor="middle">Q11</text>
+    <text x="1030" y="210" fill="#b7d4a0" font-size="14" text-anchor="middle">LINUX BRING-UP</text>
+    <path d="M854 155H902M854 189H902M854 223H902M1158 155H1206M1158 189H1206M1158 223H1206" stroke="#b7d4a0" stroke-width="2"/>
+    <text x="1030" y="301" fill="#bec9bf" font-size="13" text-anchor="middle">CUSTOM BOOT: UNVERIFIED</text>
+  </g>
+</svg>

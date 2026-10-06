@@ -1,278 +1,278 @@
-# Huawei Q11 — Canlı Teknik Kayıt
+# Huawei Q11 — Technical Record
 
-Durum etiketleri: CONFIRMED / LIKELY / UNKNOWN
-Kanıt referansı `Lnnn` = `logs/boot_01.clean.txt` satır numarası.
+**[Batuhan Ayrıbaş · Engineering & Research](https://batuhanayribas.com)**
 
-| Alan            | Değer                                                                                   | Durum     |
-|-----------------|-----------------------------------------------------------------------------------------|-----------|
-| Hardware        | Huawei Q11 STB, middleware `STB_model=Q11` (L504)                                       | CONFIRMED |
-| SoC             | HiSilicon **Hi3798MV100** (`CPU: hi3798mv100`, L50)                                      | CONFIRMED |
-| CPU             | 4× ARM Cortex-A7 r0p5 (`410fc075`, L3, L54), ARMv7, SMP                                  | CONFIRMED |
-| RAM             | 1 GiB DDR (`mem=1G`, `Memory: 566652K/1048576K`, L12, L21); RAM tabanı fiziksel 0x0      | CONFIRMED |
-| RAM ayrımı      | CMA 380 MiB @0x18400000 (MMZ, medya) + 4 MiB @0x3FC00000; DSP 8 MiB @0x02000000           | CONFIRMED |
-| Flash           | Ham NAND, Toshiba 256 MiB, 8-bit, 3.3 V; eMMC yok, SPI NOR görülmedi                      | CONFIRMED |
-| NAND ID         | `98 DA 90 15 F6 16 08 00` (L112); tam parça no. çip üzerinden okunmalı                     | CONFIRMED |
-| NAND geometri   | Sayfa 2 KiB, OOB 64 B, blok 128 KiB, 2048 blok, ECC 4bit/512 (HW-Auto) (L114)             | CONFIRMED |
-| NAND denetleyici| `hinfc610` (HiSilicon)                                                                    | CONFIRMED |
-| UART            | PCB: GND \| RX \| TX \| VCC (soldan sağa, cihaz tarafı)                                 | CONFIRMED |
-| UART konsol     | ttyAMA0 = PL011 @0xF8B00000 irq 81, 115200 8N1 (L12, L63). ttyAMA1 @0xF8006000, ttyAMA2 @0xF8B02000 | CONFIRMED |
-| UART seviyesi   | 3.3 V: Q11 RX pad = 3.29 V (pull-up, Q11 açık); Q11 TX'i 3.3 V'luk CH341A temiz okudu   | CONFIRMED |
-| Adaptör         | Siyah CH341A mini programmer; header `1 2 3 TX RX GND 3.3V`; jumper 2-3 = UART            | CONFIRMED |
-| Adaptör seviye  | UART modunda TX = 3.29 V, RX = 3.29 V (boşta) → 3.3 V mantık                             | CONFIRMED |
-| Bootloader      | HiSilicon **fastboot** (HiSTB SDK; bölüm adları fastboot/bootargs/loader/loaderdb)       | LIKELY    |
-| Bootloader UART | Tamamen sessiz: güç → kernel arası 16.8 s boyunca 0 bayt (timing.tsv)                   | CONFIRMED |
-| Bootloader shell| Görülmedi; autoboot/tuş mesajı yok                                                       | UNKNOWN   |
-| Kernel          | Linux 3.18.13_s40, `wanlijun@huawei-199`, gcc 4.9.2, #4 SMP 23 Haz 2017 (L2)              | CONFIRMED |
-| SDK             | HiSTBLinuxV100R003C00SPC065 (modül sürümleri)                                            | CONFIRMED |
-| Cmdline         | Bkz. "boot_01 analizi" (L12)                                                             | CONFIRMED |
-| RootFS          | SquashFS, bootloader tarafından RAM'e yüklenip initrd olarak veriliyor → `/dev/ram0` (1:0), salt-okunur (L191-192) | CONFIRMED |
-| Yazılabilir FS  | `appdata` (mtdblock16) YAFFS2 rw (L279)                                                  | CONFIRMED |
-| FS desteği      | squashfs, jffs2, yaffs, fuse, UDF, tntfs (Tuxera NTFS modülü)                            | CONFIRMED |
-| Partition map   | 18 MTD bölümü, cmdline `mtdparts=hinand:` (L12, L118-136)                                 | CONFIRMED |
-| DTB             | Device Tree kullanılıyor (`Machine model: Hisilicon`, L5). DTB'nin flash'taki yeri bilinmiyor | CONFIRMED / yer UNKNOWN |
-| Secure boot     | Göstergeler: hi_advca.ko (L229), `DieID is locked!` (L208), Verimatrix `vmx_ca` (L461), sessiz bootloader, rootfs RAM'e +0x110 başlıkla yükleniyor | LIKELY    |
-| TEE             | Hiçbir TEE/OP-TEE mesajı yok                                                              | UNKNOWN   |
-| USB             | EHCI @F9890000 (2 port), EHCI @F9930000 (1 port), OHCI @F9880000/@F9920000, xHCI @F98A0000; usb-storage, usbserial, uvc, btusb, hid derlenmiş | CONFIRMED |
-| Ethernet        | `hieth` (HiSilicon), MDIO `himii`, port 0 → PHY adres 1, Generic PHY (L137-138). MAC logda yok | CONFIRMED / MAC UNKNOWN |
-| HDMI            | hi_hdmi.ko yüklü; açılışta HDMI "UnPlug" (TV bağlı değil/kapalı) (L488)                   | CONFIRMED |
-| Grafik          | hi_fb.ko (framebuffer) + hi_tde.ko (2D) + HIGO 4.0; Mali sürücüsü yüklenmiyor            | CONFIRMED |
-| GPU             | SoC'de Mali-450 var (genel bilgi); bu firmware'de GPU sürücüsü görülmedi                 | LIKELY    |
-| Video decoder   | hi_vfmw / hi_vdec / hi_vpss / hi_svdec (HiSilicon VFMW)                                   | CONFIRMED |
-| Linux shell     | Konsolda login/prompt görülmedi; telnetd yok (L200); mgmt CLI release'te kapalı (L528)   | UNKNOWN   |
-| Middleware      | Huawei HMT V100R003C89LTRT01SPC600B001 (2 Ağu 2018) (L475), Blink tabanlı tarayıcı        | CONFIRMED |
-| Operatör        | Turkcell Superonline IPTV profili (`iptveds.mstv.superonline.com`, L688)                  | CONFIRMED |
-| Recovery method | `loader`/`loaderbak` bölümleri = HiSilicon upgrade loader (USB/OTA güncelleme)           | LIKELY    |
+Project: [Q11 Linux Bring-up](README.md) · Updated 2026-10-07
 
-## NAND bölüm haritası (boot_01, L118-136)
+This record preserves measurements, failed trials and later corrections.
+**No custom Linux boot or usable shell has been achieved on Q11.** Unless stated
+otherwise, `Lnnn` refers to a one-based line in `logs/boot_01.clean.txt`.
+Session times use Europe/Istanbul.
 
-Toplam 256 MiB = 0x10000000. Bitiş = son bayt (dahil). Numara = mtdN.
+- **CONFIRMED:** directly observed in captured output, measurements or a completed test.
+- **LIKELY:** an interpretation supported by evidence but not yet demonstrated.
+- **UNKNOWN:** missing evidence or a dependency not tested on this Q11.
+- **HOST VALIDATED:** executed on the PC/WSL/QEMU, not on the target device.
 
-| #  | Ad          | Başlangıç  | Bitiş      | Boyut (hex) | Bayt        | MiB    | İçerik / FS                         | Boot-kritik | Yedek önceliği |
-|----|-------------|------------|------------|-------------|-------------|--------|-------------------------------------|-------------|----------------|
-|  0 | fastboot    | 0x00000000 | 0x000FFFFF | 0x00100000  |   1048576   |   1.00 | Bootloader (LIKELY)                 | EVET        | 1 (yeri doldurulamaz) |
-|  1 | bootargs    | 0x00100000 | 0x0017FFFF | 0x00080000  |    524288   |   0.50 | Ortam/bootargs (LIKELY)             | EVET        | 1 |
-|  2 | bootargsBak | 0x00180000 | 0x001FFFFF | 0x00080000  |    524288   |   0.50 | bootargs yedeği (LIKELY)            | evet        | 1 |
-|  3 | reserve0    | 0x00200000 | 0x003FFFFF | 0x00200000  |   2097152   |   2.00 | UNKNOWN                             | UNKNOWN     | 1 |
-|  4 | reserve0Bak | 0x00400000 | 0x005FFFFF | 0x00200000  |   2097152   |   2.00 | UNKNOWN                             | UNKNOWN     | 1 |
-|  5 | loaderdb    | 0x00600000 | 0x0067FFFF | 0x00080000  |    524288   |   0.50 | Upgrade loader bayrakları (LIKELY)  | EVET (LIKELY) | 1 |
-|  6 | loaderdbbak | 0x00680000 | 0x006FFFFF | 0x00080000  |    524288   |   0.50 | loaderdb yedeği (LIKELY)            | evet        | 1 |
-|  7 | baseparam   | 0x00700000 | 0x007FFFFF | 0x00100000  |   1048576   |   1.00 | Ekran/çıkış parametreleri (LIKELY)  | evet        | 1 |
-|  8 | pqparam     | 0x00800000 | 0x008FFFFF | 0x00100000  |   1048576   |   1.00 | Görüntü kalitesi param. (LIKELY)    | hayır       | 2 |
-|  9 | logo        | 0x00900000 | 0x00CFFFFF | 0x00400000  |   4194304   |   4.00 | Açılış logosu (LIKELY)              | hayır       | 2 |
-| 10 | loader      | 0x00D00000 | 0x014FFFFF | 0x00800000  |   8388608   |   8.00 | Upgrade loader imajı (LIKELY)       | kurtarma    | 1 |
-| 11 | loaderbak   | 0x01500000 | 0x01CFFFFF | 0x00800000  |   8388608   |   8.00 | loader yedeği (LIKELY)              | kurtarma    | 1 |
-| 12 | kernel      | 0x01D00000 | 0x024FFFFF | 0x00800000  |   8388608   |   8.00 | Kernel imajı (+DTB?) (LIKELY)       | EVET        | 1 |
-| 13 | rootfs      | 0x02500000 | 0x088FFFFF | 0x06400000  | 104857600   | 100.00 | SquashFS (+0x110 başlık?)           | EVET        | 1 |
-| 14 | Misc        | 0x08900000 | 0x0897FFFF | 0x00080000  |    524288   |   0.50 | UNKNOWN                             | UNKNOWN     | 1 |
-| 15 | Factory     | 0x08980000 | 0x0A27FFFF | 0x01900000  |  26214400   |  25.00 | Fabrika verisi: MAC/seri/CA (LIKELY)| UNKNOWN     | 1 (cihaza özgü) |
-| 16 | appdata     | 0x0A280000 | 0x0FC7FFFF | 0x05A00000  |  94371840   |  90.00 | YAFFS2 rw (CONFIRMED)               | hayır (LIKELY) | 2 |
-| 17 | others      | 0x0FC80000 | 0x0FFFFFFF | 0x00380000  |   3670016   |   3.50 | UNKNOWN                             | UNKNOWN     | 2 |
+## Hardware and firmware inventory
 
-Not: Stok firmware her açılışta flash'a kendisi yazıyor: `updebug ... hisi_flash_write_partition,
-HI_Flash_Write, DataLen=131072` ×2 (L691-696). Hangi bölüm olduğu UNKNOWN. Bu yüzden ardışık
-açılışlar arasında bazı bölümlerin hash'i değişebilir; bu bizim yazmamız değildir.
+| Item | Evidence / value | Status |
+|---|---|---|
+| Device | Huawei Q11; middleware `STB_model=Q11` (L504) | CONFIRMED |
+| SoC | HiSilicon Hi3798MV100 (L50) | CONFIRMED |
+| CPU | 4 × Cortex-A7 r0p5, `410fc075`, ARMv7 SMP (L3, L54) | CONFIRMED |
+| RAM | 1 GiB DDR; physical base 0; `mem=1G`, `Memory: 566652K/1048576K` (L12, L21) | CONFIRMED |
+| Reservations | 380 MiB CMA/MMZ at `0x18400000`; 4 MiB at `0x3fc00000`; 8 MiB DSP at `0x02000000` | CONFIRMED |
+| Flash | Toshiba 256 MiB raw NAND, 8-bit, 3.3 V; no eMMC or SPI NOR detected in this boot | CONFIRMED observation |
+| NAND ID | `98 DA 90 15 F6 16 08 00` (L112); exact part number needs a package photo | CONFIRMED ID / part UNKNOWN |
+| NAND geometry | 2 KiB page, 64 B OOB, 128 KiB erase block, 2048 blocks; hardware-auto ECC 4-bit/512 B (L114) | CONFIRMED |
+| NAND controller | HiSilicon `hinfc610` | CONFIRMED |
+| UART header | `GND \| RX \| TX \| VCC` in the recorded board orientation | CONFIRMED on lab unit |
+| UART console | PL011 `ttyAMA0` at `0xf8b00000`, IRQ 81, 115200 8N1 (L12, L63) | CONFIRMED |
+| Other UARTs | `ttyAMA1` at `0xf8006000`, `ttyAMA2` at `0xf8b02000` | CONFIRMED |
+| UART voltage | Q11 RX pad 3.29 V while powered; Q11 TX readable by measured 3.3 V adapter | CONFIRMED |
+| Adapter | Black CH341A mini-programmer; header `1 2 3 TX RX GND 3.3V`; jumper 2–3 selects UART | CONFIRMED |
+| Adapter idle levels | UART TX 3.29 V, RX 3.29 V | CONFIRMED |
+| Bootloader family | HiSilicon fastboot, based on SDK and partition names | LIKELY |
+| Bootloader output | About 16.8 s between the initial power-associated NUL and first kernel text | CONFIRMED observation |
+| Bootloader shell | No prompt/autoboot message; Ctrl+C, space and `set` trials failed | Not obtained; configuration UNKNOWN |
+| Kernel | Linux `3.18.13_s40`, gcc 4.9.2, build #4 SMP 2017-06-23 (L2) | CONFIRMED |
+| SDK | HiSTBLinuxV100R003C00SPC065, from module versions | CONFIRMED |
+| Root filesystem | SquashFS, read-only RAM disk device 1:0, `/dev/ram` (L190–192) | CONFIRMED |
+| Application data | `appdata`, `mtdblock16`, YAFFS2 read/write (L279) | CONFIRMED |
+| Filesystem support | SquashFS, JFFS2, YAFFS, FUSE, UDF and Tuxera NTFS messages | CONFIRMED in logs |
+| Partition map | 18 MTD partitions; `mtdparts=hinand:` (L12, L118–136) | CONFIRMED |
+| Device Tree | `Machine model: Hisilicon` (L5) | CONFIRMED use / location UNKNOWN |
+| Secure-boot indicators | `hi_advca.ko` (L229), OTP `DieID is locked!` (L208), `vmx_ca` (L461) | CONFIRMED messages / enforcement UNKNOWN |
+| TEE | No TEE/OP-TEE startup message observed | UNKNOWN |
+| USB hosts | EHCI `0xf9890000`/`0xf9930000`, OHCI `0xf9880000`/`0xf9920000`, xHCI `0xf98a0000` | CONFIRMED |
+| Ethernet | `hieth`, MDIO `himii`, port 0 → PHY 1 (L137–138); later direct 100 Mbps/DHCP test | CONFIRMED stock link / MAC source UNKNOWN |
+| HDMI | `hi_hdmi.ko`; initially unplugged (L488); display connected during later IR trial | CONFIRMED stock observations / custom display untested |
+| Graphics | `hi_fb`, `hi_tde`, HIGO 4.0; no usable Mali driver observed | CONFIRMED module messages |
+| GPU | Mali-450-class block expected for this SoC family | LIKELY; acceleration unvalidated |
+| Video | `hi_vfmw`, `hi_vdec`, `hi_vpss`, `hi_svdec` | CONFIRMED module messages |
+| Shell | No login/prompt; `telnetd` missing (L200); release management CLI disabled (L528) | Not obtained |
+| Middleware | Huawei HMT V100R003C89LTRT01SPC600B001, 2018-08-02, Blink browser (L475) | CONFIRMED |
+| Operator profile | Turkcell Superonline IPTV profile (L688) | CONFIRMED |
+| Recovery partitions | `loader` / `loaderbak` appear to contain upgrade loaders | LIKELY; contents unavailable |
 
-## boot_01 analizi (özet)
+## NAND partition map
 
-- Ham log: `logs/boot_01.log` 137868 bayt, SHA-256 `a12e513b8cfd5de36ce56b9bf9106b601a2d6e6f274490a711d028cbbaff3faf`
-- Temiz log: `logs/boot_01.clean.txt` (CR, NUL ve RAMDISK spinner temizlendi)
-- Zamanlama: güç verme anı (tek 0x00 baytı) → ilk kernel metni arası **16.8 s tam sessizlik**.
-- Kernel cmdline (L12):
-  `mem=1G console=ttyAMA0,115200 root=/dev/romblock14 rootfstype=squashfs rootwait mtdparts=hinand:1M(fastboot),512K(bootargs),512K(bootargsBak),2M(reserve0),2M(reserve0Bak),512K(loaderdb),512K(loaderdbbak),1M(baseparam),1M(pqparam),4M(logo),8M(loader),8M(loaderbak),8M(kernel),100M(rootfs),512K(Misc),25M(Factory),90M(appdata),-(others) mmz=ddr,0,0,380M user_debug=31 initrd=0x2500110,0x386f800 root=/dev/ram ramdisk_size=102400 rootfstype=squashfs`
-  - Sondaki `initrd=... root=/dev/ram ...` kısmı bootloader tarafından ekleniyor (LIKELY). Son `root=` geçerli:
-    root = `/dev/ram` (CONFIRMED, "Mounted root ... on device 1:0").
-  - initrd fiziksel 0x02500110, boy 0x386F800 = 59176960 bayt (≈56.4 MiB). 0x110'luk kaydırma imza/başlık
-    olabilir (LIKELY, doğrulanmadı).
-- Init: `/etc/init.d/rcS` → S00devs, S01udev, S80network, S90modules, S99init; HiSilicon `.ko` modülleri, sonra
-  Huawei middleware (vmx_ca, stbService, logger, tarayıcı).
-- Ağ kablosu takılı değilken middleware sürekli `eth0 IP` hatası basıyor (log spam).
+Source: `boot_01.clean.txt`, L118–136. Total 256 MiB (`0x10000000`). End addresses
+are **inclusive**. This is an observed map, not a flash plan.
 
-## Güvenlik kuralları (kalıcı)
-- Q11 VCC pini hiçbir zaman adaptöre bağlanmaz; Q11 kendi adaptöründen beslenir.
-- 5 V UART yok. CH341A TXD → Q11 RX bağlantısı, ölçümle ≤3.3 V doğrulanmadan yapılmaz.
-- Güncel kullanıcı kararı (2026-10-06 devamı): tam NAND yedeği bring-up önkoşulu değil; yedek araçları oluşturulmaz. Gereksiz dahili NAND yazma/silme/saveenv/flash yok. Harici REI USB belleği hazırlamak için ayrıca izin verildi.
-- Stok firmware testi sırasında **Ethernet/İnternet bağlama**: firmware operatörün güncelleme sunucusunu arıyor
-  (L688); OTA güncelleme NAND'ı değiştirebilir.
-- Açma sırası: önce CH341A USB, sonra Q11 gücü. Kapatma: önce Q11, sonra USB.
-- Kablolama Q11 adaptörü prizden çekiliyken yapılır; CH341A'da GND'nin yanındaki 3.3V pinine dikkat.
+| MTD | Name | Start | End | Size, hex | Bytes | MiB | Interpretation |
+|---|---|---|---|---|---|---|---|
+| 0 | fastboot | 0x00000000 | 0x000fffff | 0x00100000 | 1,048,576 | 1 | Bootloader, LIKELY |
+| 1 | bootargs | 0x00100000 | 0x0017ffff | 0x00080000 | 524,288 | 0.5 | Environment, LIKELY |
+| 2 | bootargsBak | 0x00180000 | 0x001fffff | 0x00080000 | 524,288 | 0.5 | Backup environment, LIKELY |
+| 3 | reserve0 | 0x00200000 | 0x003fffff | 0x00200000 | 2,097,152 | 2 | UNKNOWN |
+| 4 | reserve0Bak | 0x00400000 | 0x005fffff | 0x00200000 | 2,097,152 | 2 | UNKNOWN |
+| 5 | loaderdb | 0x00600000 | 0x0067ffff | 0x00080000 | 524,288 | 0.5 | Loader flags/database, LIKELY |
+| 6 | loaderdbbak | 0x00680000 | 0x006fffff | 0x00080000 | 524,288 | 0.5 | Loader database backup, LIKELY |
+| 7 | baseparam | 0x00700000 | 0x007fffff | 0x00100000 | 1,048,576 | 1 | Display/output parameters, LIKELY |
+| 8 | pqparam | 0x00800000 | 0x008fffff | 0x00100000 | 1,048,576 | 1 | Picture-quality parameters, LIKELY |
+| 9 | logo | 0x00900000 | 0x00cfffff | 0x00400000 | 4,194,304 | 4 | Boot logo, LIKELY |
+| 10 | loader | 0x00d00000 | 0x014fffff | 0x00800000 | 8,388,608 | 8 | Upgrade loader, LIKELY |
+| 11 | loaderbak | 0x01500000 | 0x01cfffff | 0x00800000 | 8,388,608 | 8 | Backup loader, LIKELY |
+| 12 | kernel | 0x01d00000 | 0x024fffff | 0x00800000 | 8,388,608 | 8 | Kernel; DTB packaging UNKNOWN |
+| 13 | rootfs | 0x02500000 | 0x088fffff | 0x06400000 | 104,857,600 | 100 | SquashFS; possible 0x110 wrapper UNKNOWN |
+| 14 | Misc | 0x08900000 | 0x0897ffff | 0x00080000 | 524,288 | 0.5 | UNKNOWN |
+| 15 | Factory | 0x08980000 | 0x0a27ffff | 0x01900000 | 26,214,400 | 25 | Factory data, LIKELY; outside scope |
+| 16 | appdata | 0x0a280000 | 0x0fc7ffff | 0x05a00000 | 94,371,840 | 90 | YAFFS2 read/write, CONFIRMED |
+| 17 | others | 0x0fc80000 | 0x0fffffff | 0x00380000 | 3,670,016 | 3.5 | UNKNOWN |
 
-## Ölçüm günlüğü
-| Tarih | Ölçüm | Değer | Not |
-|-------|-------|-------|-----|
-| 2026-10-06 | belirtilmemiş nokta | 3.3 V | Adaptör o sırada programlayıcı modundaydı |
-| 2026-10-06 | CH341A TX ↔ GND (UART modu, boşta) | 3.29 V | |
-| 2026-10-06 | CH341A RX ↔ GND (UART modu, boşta) | 3.29 V | |
-| 2026-10-06 | Q11 RX pad ↔ Q11 GND (Q11 açık) | 3.29 V | Faz 5 koşulu 1 sağlandı |
+Stock firmware prints `hisi_flash_write_partition` / `HI_Flash_Write` with
+`DataLen=131072` twice (L691–696). The partition is UNKNOWN. Stock boots may
+change internal data even though this project's tools issue no NAND writes.
+No Factory/CA data was read or modified for bring-up.
 
-## Olay günlüğü
-- 2026-10-06: Proje başladı. Adaptör CH340G → CH341A olarak değişti.
-- 2026-10-06: Kullanıcı yalnız dinleme kablolamasını yaptı (Q11 GND–CH341A GND, Q11 TX–CH341A "RX").
-- 2026-10-06: PC taraması: CH341A `USB\VID_1A86&PID_5512` ("USB UART-LPT", CM_PROB_FAILED_INSTALL)
-  olarak görünüyor. Bu programlayıcı (EPP/I2C/SPI) modu; UART modu PID_5523 olur. COM portu yok.
-  COM3/COM4 Bluetooth SPP portları; adaptörle ilgisi yok.
-- Salt-okunur yakalama betiği hazırlandı: tools/uart_capture.ps1 (porta asla yazmaz).
-- 2026-10-06 21:42:22: Kullanıcı jumper'ı değiştirip USB'yi yeniden taktı. Aygıt yeniden tanındı
-  (LastArrivalDate 21:42:22) ama yine PID_5512 → hâlâ programlayıcı modu.
-- 2026-10-06: Kart fotoğrafı alındı (photos/ch341a_header_jumper12.png, yakın çekim
-  photos/ch341a_header_zoom.png). Header etiketi: `1 2 3 TX RX GND 3.3V`. Jumper fotoğrafta
-  1-2 üzerinde → PID_5512 ile tutarlı. Kullanıcıdan jumper'ı 2-3'e alması istendi.
-- 2026-10-06 21:48: Jumper 2-3 → `USB\VID_1A86&PID_5523` "USB-SERIAL CH341 (COM8)", sürücü OK.
-- 2026-10-06 21:49:58: Salt-okunur yakalama başladı: COM8, 115200 8N1 → logs/boot_01.log.
-- 2026-10-06 21:51:27: CH341A USB'den ayrıldı, geri gelmedi. Yakalama 0 baytla durdu.
-- 2026-10-06 21:53:05: Yakalama betiği dayanıklı hale getirildi (port takılınca otomatik açılır,
-  kopunca yeniden bağlanır) ve yeniden başlatıldı.
-- 2026-10-06 21:53: Kullanıcı ölçümü: CH341A TX = 3.29 V, RX = 3.29 V (UART modu).
-- 2026-10-06 21:54-21:56: Kullanıcı "taktım"/"USB tamam" dedi ama PC'de CH341A yoktu.
-- 2026-10-06 21:57:52: Kablolar sökülü, USB yeniden takıldı → COM8 geri geldi, sorunsuz.
-  Değerlendirme (LIKELY): kablolama sırasında CH341A takıldı/resetlendi; LED USB 5 V'tan yandığı için
-  yanık kaldı. Olası tetik: GND kablosunun yandaki 3.3V pinine değmesi ya da toprak farkı boşalması.
-- 2026-10-06 22:00:00: Kablolama sırasında CH341A yine koptu (COM8). 22:00:51'de başka USB portunda
-  COM10 olarak geri geldi. Kablolar bağlıyken, Q11 kapalıyken aygıt sorunsuz tanındı.
-- 2026-10-06 22:02:18: Yakalama COM10 üzerinde başladı.
-- 2026-10-06 22:02:51: Q11'e güç verildi (0x00 baytı). 22:03:08 kernel metni başladı.
-- 2026-10-06 22:06: Açılış tamamlandı, kayıt durduruldu: 137868 bayt, boot_01.log.
-  **Faz 1-3 tamam: yalnız dinleme UART çalışıyor.**
-- 2026-10-06 ~22:13: Kullanıcı ölçümü: Q11 RX pad = 3.29 V. **Faz 5'in üç koşulu da sağlandı**
-  (Q11 RX 3.3 V, CH341A TX 3.29 V, yalnız dinleme çalışıyor). Kullanıcının boş USB belleği var.
-- 2026-10-06 22:13:25 → 22:13:49: CH341A USB port 4'ten (COM10) çıkarılıp port 9'a (COM8) takıldı.
-  Betikler artık `-Port auto` ile CH341'in COM numarasını kendileri buluyor.
-- 2026-10-06: tools/uart_send.ps1 eklendi: tek satır/Enter gönderir, cevabı logs/session_01.log'a ekler.
-  Kalıcı değişiklik riski taşıyan komutları varsayılan olarak reddeder (`-DryRun` ile test edildi).
-- 2026-10-06 22:18:31: boot_02 yakalaması COM8'de hazır: hat 10 sn sessiz kalınca bir sonraki açılışı
-  150 sn kaydeder.
-- 2026-10-06 22:19:43: TX kablosu bağlandı (Q11 kapatılmadan; middleware uptime 00:16:18 sürüyordu).
-- 2026-10-06 22:20:22: Kullanıcı onayıyla tek Enter gönderildi (tools/uart_send.ps1 → logs/session_01.log).
-  Cevapta prompt ya da yankı yok, yalnızca olağan middleware mesajları. **Seri konsol etkileşimli değil.**
-- 2026-10-06: Değerlendirme: bootloader sessiz, konsol shell'i yok, telnet yok, CA/secure boot göstergeleri
-  var → firmware operatör tarafından kilitli. Bu kilitleri aşmaya yönelik çalışma yapılmayacak.
-  Cihazda bizim tarafımızdan hiçbir yazma yapılmadı (yalnızca okuma + tek Enter).
+## Baseline boot analysis
 
-## Faz 6 — Bootloader'a erişim denemesi (kullanıcının kendi cihazı, homebrew Linux amacı)
-Kapsam: yalnızca kendi OS'unu çalıştırmak için bootloader konsoluna ulaşmak. Pay-TV CA (Verimatrix)
-ve içerik/imza koruması KAPSAM DIŞI.
-Gözlem: bootloader UART çıktısı susturulmuş (16.8 s sessizlik) ama girişi okuyor olabilir.
-- 2026-10-06 22:24:56: tools/uart_interrupt.ps1 ile açılış penceresinde Ctrl+C (0x03) gönderildi,
-  35 sn. Yalnızca tek kesme baytı; komut değil. Çıktı logs/break_01.log. Sonuç bekleniyor.
-- 2026-10-06 22:25: break_01'de kutu ilk denemede yeniden başlamamıştı (uptime 00:21). ^C baytları
-  geri yankılandı → UART girişi okunuyor/yankılanıyor.
-- 2026-10-06 22:26: Çalışan OS'ta `uname -a` gönderildi: yalnızca yankı, çalışma yok. Sonuç: konsol
-  yankısı çekirdek tty katmanından; çalışan sistemde kullanılabilir shell YOK (LIKELY).
-- 2026-10-06 22:26: uptime 00:01 → kutu break_01 sırasında yeniden başlamış ama araç erken durduğu için
-  açılış penceresi kaçmış.
-- 2026-10-06 22:28:05: break_ctrlc — 120 sn boyunca Ctrl+C, erken durmadan. Kullanıcı fişi çek-tak yapacak.
-  Bootloader çıktısı kapalı olabilir (kör); işe yaramazsa space/ctrl-b/esc denenecek.
-- 2026-10-06 22:28-22:30: break_ctrlc sonucu — 120 sn Ctrl+C flood'u boyunca tam açılış yakalandı;
-  kutu sessiz bootloader penceresinden geçip doğrudan "Booting Linux"a gitti. **Ctrl+C autoboot'u
-  DURDURMUYOR.** Ctrl+C geçerli "herhangi bir tuş" olduğundan: bootloader ya özel tuş istiyor ya da
-  bootdelay=0 (UART kesme kapalı). break_ctrlc.log SHA-256 → logs/HASHES.txt.
-- 2026-10-06 22:32-22:34: break_space — 120 sn boşluk flood'u da autoboot'u durdurmadı; kutu normal
-  kernel'e geçti. İki "herhangi bir tuş" adayı (Ctrl+C, boşluk) başarısız. **UART break-in devre dışı
-  (LIKELY bootdelay=0).** break_space.log SHA-256 → logs/HASHES.txt.
+- Raw capture: `logs/boot_01.log`, 137,868 bytes.
+- SHA256: `a12e513b8cfd5de36ce56b9bf9106b601a2d6e6f274490a711d028cbbaff3faf`.
+- Readable view: `logs/boot_01.clean.txt`; CR/NUL/spinner cleanup only.
+- Timing: power-associated NUL to kernel text has about 16.8 s of silence.
+- Exact command line, spacing normalized:
 
-## Durum değerlendirmesi (2026-10-06 22:34)
-UART üzerinden bootloader'a girilemiyor. Kendi kodunu çalıştırmak için kalan gerçekçi yollar:
-  A) HiSilicon USB BootROM kurtarma modu (NAND'ı power-on'da geçici kısa devre ile atlatıp SoC'yi USB
-     indirme moduna düşürmek; HiSilicon USB aracıyla RAM'e bootloader yüklemek). RAM-only = geri
-     dönüşlü, AMA donanım kısa devre riski + vendor aracı gerekir. Secure boot OTP yanmışsa imzasız
-     bootloader reddedilebilir ("DieID is locked!" kısmi OTP işareti).
-  B) Harici NAND programlayıcı (TSOP48): tam yedek + offline analiz/değişiklik. CH341A paralel NAND
-     okuyamaz; ayrı programlayıcı gerekir. En invazif.
-  C) Farklı donanım (Raspberry Pi vb.) ile Linux hedefine gitmek.
-- 2026-10-06 22:38-22:40: flood_set — "set" dizisi (CR'siz) 120 sn boyunca tekrar tekrar gönderildi.
-  "Booting Linux" yine görüldü → **"set" de autoboot'u durdurmadı.** flood_set.log SHA-256 →
-  logs/HASHES.txt.
+```text
+mem=1G console=ttyAMA0,115200 root=/dev/romblock14 rootfstype=squashfs rootwait mtdparts=hinand:1M(fastboot),512K(bootargs),512K(bootargsBak),2M(reserve0),2M(reserve0Bak),512K(loaderdb),512K(loaderdbbak),1M(baseparam),1M(pqparam),4M(logo),8M(loader),8M(loaderbak),8M(kernel),100M(rootfs),512K(Misc),25M(Factory),90M(appdata),-(others) mmz=ddr,0,0,380M user_debug=31 initrd=0x2500110,0x386f800 root=/dev/ram ramdisk_size=102400 rootfstype=squashfs
+```
 
-## Sonuç (2026-10-06 22:40)
-Üç bağımsız "stop string"/kesme adayı (Ctrl+C, boşluk, "set") denendi; üçü de bootloader'ın
-autoboot'unu durduramadı. Bu, UART break-in'in bu imajda devre dışı bırakıldığına dair kanıtı
-güçlendiriyor (LIKELY → CONFIRMED'e yakın). UART yoluyla bootloader'a erişim için makul deneme
-alanı tükendi. Kalan yollar Faz 6 sonundaki A/B/C seçenekleri (Güvenlik Değerlendirmesi notuna bakın).
+The last `root=` is effective, confirmed by RAM-disk mounting. Firmware appending
+the final group is LIKELY. The initrd begins at `0x02500110`, size `0x0386f800` =
+59,176,960 bytes (56.44 MiB). The 0x110 displacement may be a wrapper/header;
+it does not establish a signature. Image bytes are unavailable.
 
-## Linux bring-up devamı — 2026-10-06
+Startup follows `rcS` → S00devs → S01udev → S80network → S90modules → S99init,
+then vendor middleware. USB hosts initialize after S90modules. `set_mount_new.sh`,
+`hmw_mount.sh`, `loader.rc`, `local.rc` and `init.sh` are inspection targets with
+unavailable contents. Neither tty echo nor `user_debug=31` supplied a shell.
+See [BOOT_FLOW](docs/BOOT_FLOW.md) for image/startup analysis requirements.
 
-- Kullanıcı kararı: NAND yedeği projesi yok; mümkünse stok kernel + RAM initramfs + harici rootfs.
-  REI adlı harici USB belleği silme/hazırlama izni açıkça verildi. Dahili NAND için böyle bir işlem
-  yapılmadı ve yeni araçlarda dahili NAND yazarı yok.
-- CONFIRMED (L161–163): `himciv200` sürücüsü kayıtlı; SD @0xf9820000 ve MMC @0xf9830000
-  root mount öncesi deneniyor, önceki yakalamada kart yok. Harici kart slotu kullanılabilirliği UNKNOWN.
-- CONFIRMED (L236–267): USB platform host denetleyicileri S90modules sonrasında başlıyor.
-  USB root için erken modül bağımlılığı LIKELY; kesin stok `.config` mevcut değil.
-- CONFIRMED (L276–283, L451): set_mount_new.sh, hmw_mount.sh, loader.rc, local.rc/init.sh
-  inceleme hedefleri. USB/appdata üzerinden komut çalıştıran bir hook henüz UNKNOWN.
-- Kaynak adayı doğrulandı: glinuz/hi3798mv100 @12aa0504, SDK R005 SPC041, kernel3.18.24,
-  hi3798mv100_defconfig/mach-hi3798mx/DTS. Q11 kernel3.18.13_s40 ile birebir değil.
-  Genel DTS PHY=2, Q11 logu PHY=1; DTS doğrudan Q11 board dosyası olarak kullanılamaz.
-- Düzeltme: eski değerlendirmedeki USB BootROM/NAND kısa devre önerisi doğrulanmış Q11 yöntemi
-  değildir. HiLoot kamuya açık **UART** RAM bootstrap adayıdır; native USB VID/PID ve Q11 entry
-  durumu UNKNOWN. OTP/CA mesajları secure-boot imza zorunluluğunu CONFIRMED yapmaz.
-- HOST CONFIRMED: Debian bookworm armhf/SysV rootfs yapılandırıldı; 2 GiB ext4 imajı e2fsck
-  kontrolünden geçti; 1,740,288 bayt newc initramfs üretildi. ARM programları QEMU ile kontrol
-  edildi. Bunlar Q11 üzerinde özel boot/shell/SSH/Ethernet başarısı kanıtı değildir.
-- Araçlar, offline testler ve belgeler eklendi: [docs/BRINGUP.md](docs/BRINGUP.md).
-  Yeni fiziksel adım, hazırlanmış USB veya bilinen çalışan microSD'nin salt-okunur UART kaydıyla
-  algılanmasını ölçmek. Eski UART kesme denemeleri tekrarlanmadı; NAND backup çalışması yapılmadı.
-- 2026-10-06 23:36 (İstanbul): REI harici USB'ye 2,148,532,224 bayt MBR+ext4 imajı yazıldı;
-  tamamı geri okunup SHA-256 eşleşti, exit0 (`logs/experiment_20261006_233032_usb-write.json`,
-  özel/gitignored). Bu CONFIRMED bir PC/USB hazırlık sonucudur; Q11 Linux boot başarısı değildir.
-  Dahili NAND'a yazılmadı. Sonraki işlem USB'yi Q11'e fiziksel taşımak ve USB algılama kaydı almak.
-- 2026-10-06 23:40–23:42: REI Q11'e takılıyken COM8/115200 üzerinden 120 sn salt-okunur kayıt
-  alındı; kullanıcı güç döngüsünü doğruladı. Özel kayıt: `logs/experiment_20261006_234020_media-probe.log`.
-  116.547 bayt, exit0; SHA-256 ve zamanlama kapsamı doğrulandı. LF satır numarası L182'de tek stok boot.
-  CONFIRMED (L462–495): xhci yüksek hızlı USB → Generic Flash Disk, 15.833.497.600 bayt,
-  `/dev/sda` ve `/dev/sda1`. CONFIRMED (L766/L788): uygulamanın MOUNTED callback'i var;
-  sonrasında PVR dosya/eşleştirme ve unmount hataları var. Gerçek mount tipi/yolu UNKNOWN.
-  Debian/özel initramfs/shell başarısı yok. Sonraki kontrol USB'nin yalnızca ilk 2 MiB'sini PC'de
-  okuyup ext4 superblock sayaçlarını ilk imajla karşılaştırmak; NAND'a erişim/yazma yok.
-- 2026-10-06 23:45: REI PC'ye geri takıldı; yalnızca ilk 2 MiB salt-okunur alındı (exit0).
-  `logs/experiment_20261006_234545_usb-read.json` ve özel superblock karşılaştırması:
-  UUID/etiket aynı, mount_count0→3, ext journal recovery biti0→1. CONFIRMED: stok Q11
-  hazırladığımız ext4'ü bağladı ve yazdı. Mount yolu/erken boot modülleri/hook hâlâ UNKNOWN;
-  son mount yolu boş, stok saat geçersiz. USB journal recovery bekliyor; host okuyucu onarım yapmadı.
-  Bu NAND yedeği veya özel Linux boot başarısı değildir.
-- Recovery için yeni fiziksel aday: [Q11 kullanıcısının ilk elden raporu](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/#post-7524681),
-  açılışta kumanda OK ile recovery/seri erişim bildirmiş; başka Q11 kullanıcısı başarısız olmuş.
-  Bizim yazılımda UNKNOWN; kullanıcıda kumanda olmadığından test yapılmadı. Bir defalık IR OK
-  testi ve 120 sn salt-okunur kayıt tarifi docs/BRINGUP.md'de; USB/microSD/Ethernet çıkarılır,
-  flash/reset seçilmez. UART tuş denemeleri tekrarlanmaz.
-- HiLoot çip tanıma yolu kaynakta incelendi: TYPE/BOARD sorguları mevcut; CLI chip-info-only
-  seçeneği sunmuyor, önce Bootrom start selamlamasını bekliyor. Q11 kayıtlarında bu selamlama yok.
-  Bounded identification deneyi doğrulanamadı; binary UART paket veya loader gönderilmedi.
+## Lab wiring and measurements
 
-## İzole Ethernet ve IR recovery deneyi — 2026-10-07
+Use Q11's own adapter; leave VCC unconnected. Measured 3.3 V signaling is a
+prerequisite for CH341 TX → Q11 RX. Wire with Q11 power removed. Power the UART
+adapter first, then Q11; remove Q11 power before changing leads. Stock experiments
+use no WAN. The direct PC link is isolated, without gateway/DNS/update service.
 
-- Kullanıcı Q11 LAN'ın doğrudan bu PC'nin fiziksel Ethernet portuna bağlı olduğunu doğruladı.
-  CONFIRMED:100Mbps link; yalnız bu arayüzde geçici192.168.73.1/24 DHCP sunucusu Q11'e
-  192.168.73.2 verdi. Stok udhcpc ACK/ARP çakışma kontrolü ve iki ping TTL64 yanıtı görüldü.
-  Gateway/DNS/update parametresi veya forwarding yok; Wi-Fi değiştirilmedi. Stok Ethernet
-  doğrulandı, hazırlanan Debian üzerinde Ethernet henüz denenmedi. MAC kaynağı UNKNOWN.
-- CONFIRMED: tek hedefli TCP SYN taraması65.535 portun tamamını sınıflandırdı:
-  7547,56789,56790 açık,65.532 closed/reset. İlk common-port taramasının filtered sonucu
-  closed sayılmadı. Nmap başarıyla bitti; wrapper XML-property hatasıyla exit2 verdi.
-  Orijinal hata kaydı korundu; XPath düzeltmesi ve bağımsız XML kontrolü kapsamı doğruladı.
-  SSH/telnet portları kapalı; authenticated bakım/komut yolu bulunmadı.
-- CONFIRMED:56790 `/dd.xml` HTTP200/DIAL Application-URL, aynı cihazda56789 `/apps/`.
-  Birincil Netflix referansı kullanıldı; uygulama başlatma/SOAP/kimlik bilgisi denenmedi.
-  7547 rolü LIKELY CWMP, kontrol edilmedi. Ayrıntılar [NETWORK](docs/NETWORK.md).
-  Üç DHCP oturumu exit0/restored=true bitti; son00:17:58. PC DHCP enabled/forwarding
-  disabled/APIPA durumuna döndü; geçici firewall/IP kaldırıldığı ayrıca kontrol edildi.
-- Kullanıcı Xiaomi telefonuyla Q11'i kontrol edebildiğini belirtti; HDMI sonradan bağlandı.
-  Tek salt-okunur COM8/115200 IR açılış kaydı00:15:44–00:18:44,106.805 bayt:
-  `logs/experiment_20261007_001544_recovery-probe.log` (özel/gitignored).
-  SHA256 `97274b4e70c088fac13facbc81d56a838cdc874c60e0aa88cd408d6fadf8c13c`.
-  CONFIRMED L135–146 aynı stok kernel/cmdline; L741/L1002+ browser key0x300 olayları;
-  OK eşlemesi LIKELY, ham IR kodu çözümlenmedi. Kullanıcı OK/Home göstergeleri tepki verdi,
-  recovery açılmadı dedi. Stok uygulama çalıştı; UART shell/recovery istemi yok.
-  LAN çıkarılmamıştı (00:17:10 DHCP ACK); yalnız PC, güncelleme sunucusu yok.
-  00:18:21 COM8 erişimi kesildi, son23 sn eksik; metadata exit0 tek başına tam capture
-  kanıtı değil. Önceki boot ve tuş olaylarının hash/zamanlama kapsamı doğrulandı.
-- Sonraki fiziksel bağımlılık Q11 PCB fotoğraflarıyla revizyon/pad tanımlaması;
-  mevcut `photos/` yalnız CH341 gösteriyor. Güç ve tüm kablolar çıkarılır, hiçbir
-  pad kısa devre edilmez. RAM loader/DDR/entry hâlâ UNKNOWN; [BRINGUP](docs/BRINGUP.md).
-- Kullanıcının yeni Histb/Ekoo bağlantıları kontrol edildi: Histb'de YMB0310-CW
-  sahibi "CPU1–2" yerine fiziksel107–108 düzeltmesi ve MRQCV101000 paket fotoğrafı
-  veriyor. Bu topluluk/başka kart kanıtı; Q11'e özgü pin/pad eşlemesi UNKNOWN.
-  Ekoo USB-flash tarifi otomatik eMMC yazıyor, RAM-only değil; Q11 raw NAND düzenine
-  uygunluk göstermez. HiSTB dokümanı USB_BOOT→GND/FAT32/fastboot.bin host-storage
-  mekanizmasını ve board-specific DDR/reg gereğini açıklıyor. Hazır REI USB yalnız
-  ext4 içeriyor, bu boot dosyaları yok. Firmware indirilmedi/çalıştırılmadı, USB
-  yeniden yazılmadı ve kısa devre yaptırılmadı. Ayrıntı [BOOTROM](docs/BOOTROM.md).
+| Date | Measurement | Value | Context |
+|---|---|---|---|
+| 2026-10-06 | Initially unspecified adapter point | 3.3 V | Still in programmer mode |
+| 2026-10-06 | CH341A TX → GND | 3.29 V | UART mode, idle |
+| 2026-10-06 | CH341A RX → GND | 3.29 V | UART mode, idle |
+| 2026-10-06 | Q11 RX pad → Q11 GND | 3.29 V | Q11 powered; TX-connection voltage prerequisite met |
+
+## Chronology: UART setup and completed interruption trials
+
+These entries explain historical evidence, not instructions to repeat trials.
+
+| Date/time | Action and result |
+|---|---|
+| 2026-10-06, initial setup | CH340G replaced by CH341A; receive-only GND/TX wiring prepared. |
+| Initial enumeration | `1a86:5512` was programmer mode with no UART COM port; COM3/4 were Bluetooth. |
+| 21:42:22 | Jumper/USB change still showed programmer mode; photos showed jumper 1–2. |
+| 21:48 | Jumper 2–3 enumerated `1a86:5523`, CH341 UART COM8, working driver. |
+| 21:49:58–21:51:27 | First capture waited; adapter disappeared; zero bytes. |
+| 21:53:05 | Reconnect/auto-port handling added; adapter TX/RX measured 3.29 V. |
+| 21:54–21:56 | Adapter absent on PC despite reported reconnection. |
+| 21:57:52 | Unwired adapter returned on COM8; wiring-related reset LIKELY. Adjacent supply-pin contact/ground transient was an unconfirmed explanation. |
+| 22:00:00–22:00:51 | Adapter disconnected during wiring, then returned on COM10 in another PC USB port. |
+| 22:02:18 | Receive-only capture started on COM10. |
+| 22:02:51–22:03:08 | Power-associated NUL, then kernel text after about 16.8 s. |
+| 22:06 | Baseline completed: 137,868 bytes; receive-only UART working. |
+| About 22:13 | Q11 RX measured 3.29 V; blank external USB available. |
+| 22:13:25–22:13:49 | Adapter moved COM10→COM8; auto-port selection added. |
+| 22:18:31 | Second capture armed after 10 s silence for the next boot. |
+| 22:19:43 | TX lead connected while Q11 was still running; future wiring must use power removed. |
+| 22:20:22 | One authorized Enter sent; no prompt, only stock messages (`session_01.log`). |
+| 22:24:56 | First 35-second Ctrl+C trial started (`break_01.log`). |
+| 22:25–22:26 | Runtime echo observed; `uname -a` echoed but not executed. A boot occurred outside the shortened capture window. |
+| 22:28–22:30 | Full 120-second Ctrl+C trial reached stock boot; autoboot not stopped (`break_ctrlc.log`). |
+| 22:32–22:34 | Full 120-second space trial reached stock kernel (`break_space.log`). |
+| 22:38–22:40 | `set`, without CR, repeated for 120 s; stock boot continued (`flood_set.log`). |
+
+**Confirmed result:** all three completed candidates failed to expose a bootloader.
+`bootdelay=0` or disabled UART interruption is LIKELY, not a read configuration
+value. Early NAND-short/native-USB/programmer suggestions were speculative and
+are superseded by [BOOTROM](docs/BOOTROM.md); they are not Q11 procedures.
+
+## 2026-10-06: external Linux preparation
+
+The selected path favors stock-kernel reuse, RAM initramfs and external rootfs.
+A full-NAND backup workflow is not a prerequisite. The external stick had explicit
+preparation authorization; internal NAND did not.
+
+- **CONFIRMED:** `himciv200` probes SD `0xf9820000` and MMC `0xf9830000`
+  before root mount (L161–163). No card detected; external-slot usability UNKNOWN.
+- **CONFIRMED:** USB initialization follows S90modules (L236–267).
+  Early-module dependency LIKELY; stock `.config`/matching modules missing.
+- **UNKNOWN:** a legitimate stock external-userspace hook. Script names are
+  known; no removable-media autorun/maintenance mechanism is established.
+- **SOURCE CANDIDATE:** glinuz/hi3798mv100 at `12aa0504`, SDK R005 SPC041,
+  kernel 3.18.24. Generic DTS PHY 2 differs from Q11 PHY 1; neither a drop-in board
+  file nor a module ABI match for 3.18.13_s40.
+- **HOST VALIDATED:** Debian bookworm armhf/SysV configured; 2 GiB ext4 checked
+  by e2fsck; ARM executables checked under QEMU; 1,740,288-byte newc archive
+  generated. No target boot implied. See [ROOTFS](docs/ROOTFS.md).
+
+### External USB preparation and mount evidence
+
+| Time | Experiment | Result |
+|---|---|---|
+| 23:36 | External write/readback | 2,148,532,224-byte MBR+ext4 image; full readback SHA256 matched; exit 0. |
+| 23:40–23:42 | COM8/115200 RX-only USB boot | 116,547 bytes; hash/timing checked; one stock boot. xHCI → high-speed Generic Flash Disk, 15,833,497,600 bytes, `/dev/sda` and `/dev/sda1`. |
+| 23:45 | PC read-only 2 MiB prefix comparison | Baseline UUID/label unchanged; mount_count 0→3, journal recovery 0→1. Stock Q11 mounted/wrote this ext4. |
+
+Private evidence:
+
+- `logs/experiment_20261006_233032_usb-write.json`
+- `logs/experiment_20261006_234020_media-probe.log` and timing/metadata companions
+- `logs/experiment_20261006_234545_usb-read.json`
+
+USB boot-capture SHA256:
+`452105a2e102cd1900c767a3900061d8aead805523c2550c78a52c706a9ba4e2`.
+L182 begins stock boot; L462–495 enumerate storage; L766/L788 contain MOUNTED
+callbacks, followed by PVR/open/unmount errors. Callbacks alone did not prove
+ext4; the later superblock comparison did. Mount path/options and script execution
+remain UNKNOWN. Journal recovery is pending; the host reader did not replay or
+repair it. Debian/initramfs did not run.
+
+### Recovery and BootROM research
+
+A [first-hand Q11 report](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/#post-7524681)
+claims OK at startup led to recovery/UART access on MTS/m:tel firmware; another
+owner reported failure. The initial trial was pending without an original remote;
+a Xiaomi IR profile enabled the later trial.
+
+Pinned HiLoot source has TYPE/BOARD queries but no chip-info-only CLI. Its initial
+`Bootrom start` wait is not bounded by frame timeout; the greeting is absent from
+Q11 captures. No binary UART packet or RAM image was sent. Signature enforcement
+and compatible DDR/loader identity remain UNKNOWN.
+
+## 2026-10-07: isolated Ethernet and IR recovery
+
+### Wired network
+
+Q11 LAN connected directly to the PC physical Realtek Ethernet port. Temporary
+server 192.168.73.1/24 offered Q11 address 192.168.73.2 only on that link.
+
+- **CONFIRMED:** 100 Mbps link, udhcpc ACK/ARP conflict check, reachable neighbour,
+  two ICMP replies, TTL 64 and 1–2 ms latency.
+- No gateway/DNS/update options or forwarding; Wi-Fi unchanged. Stock Ethernet
+  validated; Debian networking and persistent MAC source remain untested/UNKNOWN.
+- **CONFIRMED:** SYN inventory covered all 65,535 TCP ports: 7547,56789,56790 open;
+  65,532 closed/reset. Earlier filtered/no-response results were not called closed.
+- Nmap completed; wrapper XML-property lookup errored, exit 2. Original error
+  retained; fixed XPath reader independently verified target/completion/coverage.
+- **CONFIRMED:** 56790 `/dd.xml` returned HTTP 200 and DIAL Application-URL for
+  device port 56789 `/apps/`. No application launch/SOAP/credentials attempted.
+  Port 7547 is LIKELY CWMP; no control operation sent.
+- No SSH/telnet console or verified recovery command found.
+- Three DHCP sessions completed exit 0/restored=true; last 00:17:58. DHCP enabled,
+  forwarding disabled/APIPA and temporary IP/firewall removal checked afterward.
+  See [NETWORK](docs/NETWORK.md).
+
+### Xiaomi IR trial
+
+COM8/115200 RX-only capture ran 00:15:44–00:18:44; 106,805 bytes. Private log:
+`logs/experiment_20261007_001544_recovery-probe.log` plus companions.
+SHA256: `97274b4e70c088fac13facbc81d56a838cdc874c60e0aa88cd408d6fadf8c13c`.
+
+L135–146 show the same stock kernel/cmdline. L741/L1002 onward show browser key
+0x300 events. Association with reported OK is LIKELY; raw IR was not decoded.
+HDMI was connected afterward: OK/Home indicators responded, but no recovery was
+reported. Stock IPTV ran; no UART shell/recovery prompt appeared.
+
+Direct LAN remained connected despite removal instructions (00:17:10 DHCP ACK).
+Only the PC was connected; no update server/package. UART access was lost at
+00:18:21: incomplete tail despite metadata exit 0. Earlier boot/key evidence and
+byte/timing coverage were verified. One failed trial does not establish that all
+recovery mechanisms are disabled.
+
+### Newly supplied pin-short reports
+
+A [YMB0310-CW owner's report](https://bbs.histb.com/d/501/23) corrects informal
+"CPU 1–2" to physical 107–108 and supplies a MRQCV101000 package photo. This is
+another-board evidence; Q11 package/pad mapping remains UNKNOWN.
+
+The [Ekoo USB-flash guide](https://ecoo.top/docs/tutorial-basics/usb-flash/)
+automatically writes eMMC; not a RAM-only recipe or raw-NAND Q11 compatibility
+proof. HiSTB documentation describes USB_BOOT→GND/FAT32/`fastboot.bin` host boot
+and board-specific DDR/reg requirements. Our stick is ext4-only, without those
+boot files. No package downloaded/executed, USB rewritten or shorting performed.
+See [BOOTROM](docs/BOOTROM.md).
+
+## Current dependency
+
+Verified execution/loading control is missing. Next physical evidence is an
+unpowered Q11 PCB inspection: readable package, revision, pad and connector
+photos. Existing `photos/` shows only CH341. No Q11 shorting instruction, compatible
+RAM loader or signed loading path is established. A legitimate stock rootfs/
+firmware artifact would enable offline hook analysis; no NAND backup is required.
+Exact next steps: [BRINGUP](docs/BRINGUP.md).
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

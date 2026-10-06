@@ -5,15 +5,15 @@ SoC source candidates have distinct status. Reference log is `boot_01.clean.txt`
 
 | Function | Address / detail | Status and source |
 |---|---|---|
-| CPU | Hi3798MV100, four Cortex-A7, ARMv7/VFP; 1 GiB RAM | CONFIRMED L3, L21, L50–58 |
+| CPU | Hi3798MV100, four Cortex-A 7, ARMv7/VFP; 1 GiB RAM | CONFIRMED L3, L21, L50–58 |
 | UART0 | 0xf8b00000; Linux IRQ 81, ttyAMA0, 115200 | CONFIRMED L63 |
 | UART1 / UART2 | 0xf8006000 / 0xf8b02000 | CONFIRMED L65–66 |
 | NAND | hinfc610, Toshiba 256 MiB, 2 KiB + 64 B OOB, 128 KiB erase, ECC 4/512 | CONFIRMED L111–116 |
 | NAND registers / buffer | 0xf9810000 / 0xfe000000 | LIKELY Q11: public candidate DTS, not printed in stock log |
-| EHCI | 0xf9890000 IRQ98, 0xf9930000 IRQ94 | CONFIRMED L237–246 |
-| OHCI | 0xf9880000 IRQ99, 0xf9920000 IRQ95 | CONFIRMED L249–258 |
-| xHCI | 0xf98a0000 IRQ101 | CONFIRMED L260–267 |
-| Ethernet | hieth/himii, port0, PHY address1, Generic PHY | CONFIRMED L137–138; link, IP, routing and MAC source UNKNOWN |
+| EHCI | 0xf9890000 IRQ 98, 0xf9930000 IRQ 94 | CONFIRMED L237–246 |
+| OHCI | 0xf9880000 IRQ 99, 0xf9920000 IRQ 95 | CONFIRMED L249–258 |
+| xHCI | 0xf98a0000 IRQ 101 | CONFIRMED L260–267 |
+| Ethernet | hieth/himii, port 0, PHY address 1, Generic PHY | CONFIRMED L137–138; later stock 100 Mbps/DHCP/ARP/ICMP confirmed; routing and persistent MAC source UNKNOWN |
 | Ethernet registers | 0xf9840000 | LIKELY Q11: candidate DTS |
 | SD / MMC | 0xf9820000 / 0xf9830000; himciv200 | CONFIRMED probe addresses L161–163; no media detected |
 | GIC distributor / CPU | 0xf8a01000 / 0xf8a02000 | LIKELY Q11: candidate DTS |
@@ -24,7 +24,7 @@ SoC source candidates have distinct status. Reference log is `boot_01.clean.txt`
 Primary source: [Hi3798MV100 candidate DTS](https://github.com/glinuz/hi3798mv100/blob/12aa0504880d518a9fa15800d4f7a305a1f94dc6/HiSTBLinuxV100R005C00SPC041B020/source/kernel/linux-3.18.y/arch/arm/boot/dts/hi3798mv100.dts).
 It describes PHY address **2**, whereas Q11 reports **1**. This concrete mismatch
 prevents treating the generic DTS as a drop-in board description. GIC SPI numbers
-in DTS are not Linux IRQ numbers; e.g. UART SPI49 plus32 matches IRQ81.
+in DTS are not Linux IRQ numbers; e.g. UART SPI49 plus32 matches IRQ 81.
 
 ## DTB location
 
@@ -47,7 +47,7 @@ DTB is absent. No UART or memory access is performed.
 ## Confirmed external USB/ext4 transport
 
 The 2026-10-06 media probe enumerated the authorized REI stick through xhci-hcd at
-`5-1`, high speed, as `/dev/sda1`; reported capacity15,833,497,600 bytes. The
+`5-1`, high speed, as `/dev/sda1`; reported capacity 15,833,497,600 bytes. The
 read-only USB prefix comparison afterward found Q11ROOT's original UUID unchanged,
 mount_count0→3 and journal recovery bitset: stock3.18.13_s40 mounted/wrote this
 ext4 format. This does not establish filesystem driver availability before
@@ -74,3 +74,7 @@ buffer. No stock DRM/Mali acceleration is established. Once fb0 accepts normal
 Linux framebuffer ioctls, Xorg fbdev + LXDE is a candidate. Measure resident memory
 and idle CPU before adding a desktop. Proprietary HIGO's glibc userspace ABI is one
 reason to start with Debian rather than musl; its actual reuse remains UNKNOWN.
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

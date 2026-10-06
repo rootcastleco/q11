@@ -8,7 +8,7 @@ our initramfs remains UNKNOWN; preparing external storage does not redirect boot
 ## Q11 USB probe result — 2026-10-06 23:40–23:42 Istanbul
 
 Private capture: `logs/experiment_20261006_234020_media-probe.log` with timing and
-metadata, COM8/115200, receive-only, exit0. All 116,547 bytes have contiguous timing
+metadata, COM8/115200, receive-only, exit 0. All 116,547 bytes have contiguous timing
 coverage and the recorded SHA256 matches. Initial lines are the already-running
 stock system; the user-confirmed power cycle starts a single kernel boot at L182.
 Line references here count LF-delimited raw lines, without expanding extra CRs.
@@ -24,8 +24,8 @@ Line references here count LF-delimited raw lines, without expanding extra CRs.
   ext4 runtime compatibility, and any legitimate removable-media execution hook.
   No custom-initramfs marker, switch_root, Debian shell, or SSH success was seen.
 
-The follow-up read-only prefix capture at23:45 resolves part of that uncertainty:
-`logs/experiment_20261006_234545_usb-read.json` (2,097,152 bytes, exit0) and
+The follow-up read-only prefix capture at 23:45 resolves part of that uncertainty:
+`logs/experiment_20261006_234545_usb-read.json` (2,097,152 bytes, exit 0) and
 `artifacts/q11-usb-super_20261006_234545.json`, compared to `artifacts/q11-usb.img`.
 The filesystem UUID and Q11ROOT label match; mount_count changed from0 to3,
 mount/write times changed to1, and the ext journal recovery bit changed toset.
@@ -73,8 +73,8 @@ metadata. L135–146 show the same stock kernel/cmdline; L741 and L1002 onward s
 application key events (`0x300`; association with reported OK is likely, no raw IR
 decode). The user connected HDMI and reported OK/Home indicators but no recovery.
 No UART shell appeared. The direct PC LAN remained connected, evidenced by a
-DHCP ACK at00:17:10; no network upgrade endpoint/package was provided. At00:18:21
-UART access was lost, so the tail is incomplete despite the capture's exit0.
+DHCP ACK at 00:17:10; no network upgrade endpoint/package was provided. At00:18:21
+UART access was lost, so the tail is incomplete despite the capture's exit 0.
 The earlier boot/application evidence remains usable. Do not repeat random keys.
 
 The following is the historical recipe for the completed bounded trial, not an
@@ -89,7 +89,7 @@ never attach VCC/5 V, a PC-host A-to-A cable, or short a pad.
    select that input. HDMI is useful for identifying a recovery menu.
 2. Start the receive-only120-second capture below before powering Q11.
 3. After COM8 opens, point the remote at the front IR receiver; restore Q11's own
-   power adapter and press only OK about twice per second for20 seconds. Stop
+   power adapter and press only OK about twice per second for 20 seconds. Stop
    when a recovery menu appears. Leave it idle; do not choose update/reset/erase/
    format. This is one bounded IR trial, with no UART TX.
 4. Expected result: recovery/loader output or an alternate startup trace. If stock
@@ -102,8 +102,8 @@ cd C:\Appdev\q11
 pwsh -NoProfile -File tools/uart/capture_experiment.ps1 -Port auto -Operation recovery-probe -DurationSec 120
 ```
 
-Codex can start/collect the capture when physical setup is ready; do not start a
-second capture against an occupied port. A legitimate Q11 stock-rootfs or loading
+Start/collect the capture after physical setup is ready; do not start a second
+capture against an occupied port. A legitimate Q11 stock-rootfs or loading
 artifact remains an alternative offline dependency; none is currently available.
 
 ## Next physical evidence: identify this Q11 board
@@ -129,9 +129,9 @@ areas. This is identification only; no strap/short/upload is specified.
 ## Reproducing USB storage detection (completed once; no repeat needed)
 
 This session's REI stick was **written and fully readback-verified** at
-2026-10-06 23:36 Istanbul time. A2 GiB ext4 root partition is ready; Windows cannot
+2026-10-06 23:36 Istanbul time. A 2 GiB ext4 root partition is ready; Windows cannot
 mount it. No reformat/rewrite is needed for the next probe. The private record is
-`logs/experiment_20261006_233032_usb-write.json` (exit0, matching SHA256).
+`logs/experiment_20261006_233032_usb-write.json` (exit 0, matching SHA256).
 This validates USB preparation on the PC, not a Q11 custom boot.
 
 First validate/build the USB image and run the separately authorized media writer
@@ -220,3 +220,7 @@ existing outputs. Image parsing uses synthetic fixtures; boot parsing uses all
 captured log/timing files. `tests/test_host_tools.sh` covers shell build selections,
 root-probe fixtures, and filesystem/disk-image creation without physical devices.
 USB writer dry-run validates selection; physical success requires its readback log.
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

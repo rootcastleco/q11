@@ -1,11 +1,12 @@
 <#
-  uart_interrupt.ps1 - Acilis penceresinde bootloader'a KESME TUSU gonderir ve ciktiyi kaydeder.
+  Q11 Linux Bring-up | Batuhan Ayribas | https://batuhanayribas.com
+  uart_interrupt.ps1 - Historical boot-interruption trial and capture.
 
-  Amac: susturulmus HiSilicon bootloader'inin kendi komut satirina dusurmek (kullanicinin kendi cihazi).
-  Yalnizca TEK baytlik kesme/tus karakteri gonderir (Ctrl+C, Enter, bosluk, tek harf). Satir sonu ile
-  biten KOMUT gondermez; dolayisiyla hicbir flash/ortam degisikligi tetikleyemez.
+  Repeats one selected byte rather than a command line. Behavior depends on the
+  receiving firmware. Ctrl+C/space trials on this Q11 are complete and failed;
+  do not repeat them without new evidence.
 
-  Ornek:
+  Historical examples:
     pwsh -NoProfile -File tools\uart_interrupt.ps1 -Key ctrl-c -DurationSec 30
     pwsh -NoProfile -File tools\uart_interrupt.ps1 -Key space -DurationSec 30
 #>
@@ -14,9 +15,9 @@ param(
     [ValidateSet('ctrl-c','ctrl-b','space','enter','esc','a','x','s')]
     [string]$Key = 'ctrl-c',
     [int]$Baud = 115200,
-    [double]$DurationSec = 30,     # kesme tusu gonderilecek toplam sure
-    [int]$IntervalMs = 20,         # tuslar arasi aralik
-    [double]$IdleStopSec = 6,      # veri geldikten sonra bu kadar sessizlikte erken dur
+    [double]$DurationSec = 30,     # Total transmission duration.
+    [int]$IntervalMs = 20,         # Interval between key bytes.
+    [double]$IdleStopSec = 6,      # Early stop after post-data silence.
     [string]$HideRegex = 'HMW_network_getIpAddr|HMW_connectivity\.cpp|msgCallback execute failed|fdisk: can.t open',
     [string]$OutFile = (Join-Path $PSScriptRoot '..\logs\break_01.log')
 )
@@ -28,7 +29,7 @@ $byte = [byte]$map[$Key]
 if ($Port -eq 'auto') {
     $d = Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
         Where-Object { $_.InstanceId -match 'VID_1A86&PID_5523' } | Select-Object -First 1
-    if (-not ($d -and $d.FriendlyName -match '\((COM\d+)\)')) { throw 'CH341 (VID_1A86&PID_5523) bulunamadi.' }
+    if (-not ($d -and $d.FriendlyName -match '\((COM\d+)\)')) { throw 'CH341 UART (VID_1A86&PID_5523) not found.' }
     $Port = $Matches[1]
 }
 
@@ -46,8 +47,8 @@ $fs  = [System.IO.File]::Open($OutFile, [System.IO.FileMode]::Create, [System.IO
 $buf = New-Object byte[] 65536
 $rx  = [System.IO.MemoryStream]::new()
 $one = [byte[]]@($byte)
-Write-Output "[$(Get-Date -Format s)] $Port 115200 8N1 | tus='$Key' (0x$("{0:X2}" -f $byte)) $DurationSec sn | kayit: $OutFile"
-Write-Output "SIMDI Q11'i yeniden baslat (fisi cek-tak). Kesme tuslari gonderiliyor..."
+Write-Output "[$(Get-Date -Format s)] $Port 115200 8N1 | key='$Key' (0x$("{0:X2}" -f $byte)) $DurationSec seconds | capture: $OutFile"
+Write-Output "Interruption bytes are being sent; this is a historical transmit utility."
 
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 $lastRx = $null
@@ -59,7 +60,7 @@ try {
             try { $n = $sp.Read($buf, 0, $buf.Length) } catch [System.TimeoutException] { $n = 0 }
             if ($n -gt 0) { $fs.Write($buf, 0, $n); $fs.Flush(); $rx.Write($buf, 0, $n); $lastRx = [DateTime]::UtcNow }
         }
-        if ($lastRx -and ([DateTime]::UtcNow - $lastRx).TotalSeconds -ge $IdleStopSec) { Write-Output "[$(Get-Date -Format s)] $IdleStopSec sn sessizlik, erken durdu"; break }
+        if ($lastRx -and ([DateTime]::UtcNow - $lastRx).TotalSeconds -ge $IdleStopSec) { Write-Output "[$(Get-Date -Format s)] $IdleStopSec seconds of silence; stopped early"; break }
     }
 }
 finally {
@@ -71,7 +72,7 @@ $txt = [System.Text.Encoding]::ASCII.GetString($rx.ToArray()) -replace "`r", '' 
 $lines = $txt -split "`n"
 $prompt = $lines | Where-Object { $_ -match '(?i)(hisilicon|fastboot|U-?Boot|=>|#\s*$|\bboot\b.*#|\$\s*$)' -and $_ -notmatch $HideRegex } | Select-Object -Last 6
 $shown  = $lines | Where-Object { $_ -notmatch $HideRegex }
-Write-Output "=== alinan: $($rx.Length) bayt, $($lines.Count) satir ==="
-if ($prompt) { Write-Output "*** OLASI BOOTLOADER/PROMPT ISARETI ***"; $prompt }
-Write-Output "--- son 25 anlamli satir ---"
+Write-Output "=== received: $($rx.Length) bytes, $($lines.Count) lines ==="
+if ($prompt) { Write-Output "*** POSSIBLE BOOTLOADER/PROMPT TEXT; REQUIRES INSPECTION ***"; $prompt }
+Write-Output "--- last 25 filtered lines ---"
 $shown | Select-Object -Last 25

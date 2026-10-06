@@ -1,0 +1,53 @@
+name: Host validation
+
+on:
+  push:
+    branches: [main, codex/linux-bringup]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: host-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fixtures:
+    name: Fixtures (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.11'
+      - name: Python fixtures and CLI boundaries
+        run: python -m unittest discover -s tests -v
+      - name: PowerShell parsing and USB selection fixtures
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./tests/test_powershell.ps1
+      - name: DHCP protocol and loopback fixtures
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./tests/test_dhcp.ps1
+      - name: TCP report fixtures
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./tests/test_port_report.ps1
+      - name: Install ShellCheck
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Check shell tools
+        if: runner.os == 'Linux'
+        run: |
+          shellcheck tools/rootfs/*.sh tools/kernel/build.sh
+          shellcheck -s sh tools/rootfs/init

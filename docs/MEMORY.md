@@ -5,10 +5,10 @@ Stock log L6–8, L21:
 * Physical RAM: 1,048,576 KiB =1,024 MiB.
 * Boot-time available: 566,652 KiB =553.37 MiB.
 * Reported reserved: 481,924 KiB =470.63 MiB.
-* CMA media area:380 MiB at0x18400000, ending0x30000000 (exclusive).
-* Second CMA area:4 MiB at0x3fc00000, ending0x40000000.
-* DSP:8 MiB at0x02000000, ending0x02800000.
-* Legacy RAM disk payload: about56.43 MiB compressed SquashFS, and associated
+* CMA media area:380 MiB at 0x18400000, ending0x30000000 (exclusive).
+* Second CMA area:4 MiB at 0x3fc00000, ending0x40000000.
+* DSP:8 MiB at 0x02000000, ending0x02800000.
+* Legacy RAM disk payload: about 56.43 MiB compressed SquashFS, and associated
   copying/decompression phases. Boot-time available and later MemAvailable are
   different measurements; CMA can be usable for some movable allocations.
 
@@ -35,3 +35,7 @@ measure before/after. Never write permanent bootargs for this experiment.
 
 Framebuffer-only graphics needs a measured display-buffer allocation and working
 module ABI. A smaller MMZ is not a prerequisite for the initial serial server.
+
+---
+
+Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

@@ -1,16 +1,13 @@
 <#
-  uart_string_flood.ps1 - Acilis penceresinde bir KISA METNI tekrar tekrar UART'a gonderir.
+  Q11 Linux Bring-up | Batuhan Ayribas | https://batuhanayribas.com
+  uart_string_flood.ps1 - Historical short stop-string trial.
 
-  Amac: U-Boot "stop string" (CONFIG_AUTOBOOT_STOP_STR) testi. Bootloader acilis sirasinda
-  gelen baytlari belirli bir kelimeyle karsilastiriyorsa, dogru kelime autoboot'u durdurur.
+  Tests a possible U-Boot CONFIG_AUTOBOOT_STOP_STR. No CR/LF is appended by
+  default; receiving-firmware behavior is not guaranteed. -AppendCR requires
+  explicit authorization. Missing kernel text alone does not prove a stopped
+  bootloader or a shell. The current Q11's 'set' trial failed and is complete.
 
-  Varsayilan: sonuna CR/LF EKLEMEZ -> hicbir komut CALISMAZ, yalnizca tampon dolar.
-  -AppendCR yalnizca kullanici acikca isterse (o zaman metin + Enter gider).
-
-  Basari isareti: acilistan sonra "Booting Linux" ve middleware spam'i GORULMEZSE autoboot durmus
-  demektir (bootloader prompt'ta bekliyor, ciktisi kapali olabilir).
-
-  Ornek:
+  Historical example:
     pwsh -NoProfile -File tools\uart_string_flood.ps1 -Text set -DurationSec 120
 #>
 param(
@@ -25,17 +22,17 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-if ($Text.Length -gt 16) { throw 'Guvenlik: -Text en fazla 16 karakter.' }
-# CR olmadan hicbir komut calismaz. CR ekleniyorsa, komutun zararsiz oldugundan EMIN ol.
+if ($Text.Length -gt 16) { throw '-Text must contain at most 16 characters.' }
+# Appending CR can submit a command; apply the historical guard.
 if ($AppendCR) {
     $deny = 'saveenv','setenv','resetenv','erase','write','nand','mmc','sf ','flash','fastboot','dd ','mkfs','format','ubi','reboot','reset','boot','go ','run ','rm ','mw ','cp ','mtd','env '
-    foreach ($p in $deny) { if ($Text -match "(?i)$p") { throw "REDDEDILDI: -AppendCR ile '$Text' riskli ('$p'). CR'siz kullan." } }
+    foreach ($p in $deny) { if ($Text -match "(?i)$p") { throw "REJECTED: -AppendCR text '$Text' matches '$p'." } }
 }
 
 if ($Port -eq 'auto') {
     $d = Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
         Where-Object { $_.InstanceId -match 'VID_1A86&PID_5523' } | Select-Object -First 1
-    if (-not ($d -and $d.FriendlyName -match '\((COM\d+)\)')) { throw 'CH341 bulunamadi.' }
+    if (-not ($d -and $d.FriendlyName -match '\((COM\d+)\)')) { throw 'CH341 UART not found.' }
     $Port = $Matches[1]
 }
 
@@ -53,8 +50,8 @@ $sp.Open()
 $fs  = [System.IO.File]::Open($OutFile, [System.IO.FileMode]::Create, [System.IO.FileAccess]::Write, [System.IO.FileShare]::Read)
 $buf = New-Object byte[] 65536
 $rx  = [System.IO.MemoryStream]::new()
-Write-Output "[$(Get-Date -Format s)] $Port 115200 8N1 | gonderilen='$Text'$(if($AppendCR){'+CR'}) $DurationSec sn | kayit: $OutFile"
-Write-Output "SIMDI Q11'i yeniden baslat (fisi cek-tak)."
+Write-Output "[$(Get-Date -Format s)] $Port 115200 8N1 | text='$Text'$(if($AppendCR){'+CR'}) $DurationSec seconds | capture: $OutFile"
+Write-Output "Stop-string bytes are being sent; this is a historical transmit utility."
 
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 try {
@@ -72,8 +69,8 @@ finally { $fs.Close(); if ($sp.IsOpen) { $sp.Close() } }
 $txt = [System.Text.Encoding]::ASCII.GetString($rx.ToArray()) -replace "`r", '' -replace '[\x00-\x08\x0B\x0C\x0E-\x1F]', ''
 $booted = [bool]($txt -match 'Booting Linux')
 $lines = ($txt -split "`n") | Where-Object { $_ -notmatch $HideRegex }
-Write-Output "=== alinan: $($rx.Length) bayt ==="
-if ($booted) { Write-Output "SONUC: 'Booting Linux' GORULDU -> autoboot DURMADI ('$Text' stop-string DEGIL)." }
-else         { Write-Output "SONUC: 'Booting Linux' YOK -> autoboot DURMUS OLABILIR! (bootloader'da bekleniyor)" }
-Write-Output "--- son 20 anlamli satir ---"
+Write-Output "=== received: $($rx.Length) bytes ==="
+if ($booted) { Write-Output "RESULT: 'Booting Linux' observed; this trial did not stop autoboot ('$Text')." }
+else         { Write-Output "RESULT: no 'Booting Linux' observed; reason UNKNOWN, not proof of a shell." }
+Write-Output "--- last 20 filtered lines ---"
 $lines | Select-Object -Last 20

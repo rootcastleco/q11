@@ -1,0 +1,113 @@
+00:03:54|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:54|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:03:55|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:55|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:55|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:55|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:03:55|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:03:56|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:56|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:03:57|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:57|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:57|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:57|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:03:57|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:03:58|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:58|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:59|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:59|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:03:59|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:03:59|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:03:59|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:04:00|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:00|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:01|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:01|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:01|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:01|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:01|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:04:02|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:02|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:03|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:03|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:03|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:03|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:03|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:04:04|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:04|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:05|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:05|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:05|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:05|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:05|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:04:06|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:06|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:04:07|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:07|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:07|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:07|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:07|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:04:08|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:08|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:04:09|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:09|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:09|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:09|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:09|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:04:10|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:10|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:11|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:11|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:04:11|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:11|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:11|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:04:12|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:12|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:13|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:13|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:13|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:13|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:13|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:04:14|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:14|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:15|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:15|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:15|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:15|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:15|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:04:16|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:16|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:17|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:17|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:17|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:17|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:17|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:04:18|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:18|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+fdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:04:19|Run|ERROR|   NETWORK|0x000001da:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:19|Run|ERROR|   NETWORK|0x000001d7:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:19|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:04:19|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:04:19|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18

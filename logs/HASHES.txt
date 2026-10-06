@@ -1,0 +1,3 @@
+e3e367136db672ba8bd51ad40b8d726657780eb06badebe0cff9a863a0300d08 *logs/break_ctrlc.log
+dbaee350c2dd28c23d65f296d2ee85f9423c92951885e3eacc4941ddeae5f807 *logs/break_space.log
+467b9bd1b578ddda307a43641fa0ad66367784eb795b3f357ca0820c1944b625 *logs/flood_set.log

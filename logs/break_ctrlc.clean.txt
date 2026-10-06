@@ -1,0 +1,583 @@
+^C^C^Cfdisk: can't ope^C^C^C^C^C^C^C00:02:30|Run|ERROR|   NETWORK|0x000001d1:HMW_network.c:2^C00:02:30|Run|ERROR|   NE^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:02:31|Run|ERROR|   NETWORK|0x0000018d^C00:02:31|Run|ERROR|Connectivity|0x0000018d:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:02:31|Run|ERROR|    MODULE|0x0000018a:HMW_mod^C^C^C00:02:31|Run|ERROR|   NETWORK|0x000001d1:HMW_network.c:2554:HMW_^C00:02:31|Run|ERROR|   NETWORK|0x000001d9:HMW_network.c:2^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:02:32|Run|ERROR|   NETWORK|0x000001d1:HMW_network.c:2^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file ^C00:02:32|Run|ERROR|   NETWORK|0x000001d9:HMW_network.c:2554:HMW_^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:02:33|Run|ERROR|   NETWORK|0x0000018d:HMW_network.c:2554:HMW_network_getIpAddr|failed^C00:02:33|Run|ERROR|Connectivity|0x0000018d:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:02:33|Run|ERROR|    MODULE|0x00000189:HMW_module.cpp:1259:msgCallback|msgCallback exe^C^C^C00:02:33|Run|ERROR|   NETWORK|0x000001d1:HMW_network.c:2554:HMW_^C00:02:33|Run|ERROR|   NETWORK|0x000001d9:HMW_network.c:2554:HMW_^CBooting Linux on physical CPU 0x0
+Linux version 3.18.13_s40 (wanlijun@huawei-199) (gcc version 4.9.2 20140904 (prerelease) (gcc-4.9.2 + glibc-2.22 (Build by czyong) Tue Oct 27 16:32:03 CST 2015) ) #4 SMP Fri Jun 23 21:15:01 CST 2017
+CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+Machine model: Hisilicon
+DSP run memory space at 0x02000000, size: 0x00800000 Bytes.
+cma: Reserved 380 MiB at 0x18400000
+cma: Reserved 4 MiB at 0x3fc00000
+Memory policy: Data cache writealloc
+PERCPU: Embedded 10 pages/cpu @bf307000 s11200 r8192 d21568 u40960
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 260096
+Kernel command line: mem=1G console=ttyAMA0,115200 root=/dev/romblock14 rootfstype=squashfs rootwait mtdparts=hinand:1M(fastboot),512K(bootargs),512K(bootargsBak),2M(reserve0),2M(reserve0Bak),512K(loaderdb),512K(loaderdbbak),1M(baseparam),1M(pqparam),4M(logo),8M(loader),8M(loaderbak),8M(kernel),100M(rootfs),512K(Misc),25M(Factory),90M(appdata),-(others) mmz=ddr,0,0,380M  user_debug=31 initrd=0x2500110,0x386f800 root=/dev/ram ramdisk_size=102400 rootfstype=squashfs
+log_buf_len individual max cpu contribution: 4096 bytes
+log_buf_len total cpu_extra contributions: 12288 bytes
+log_buf_len min size: 16384 bytes
+log_buf_len: 32768 bytes
+early log buf free: 14404(87%)
+PID hash table entries: 4096 (order: 2, 16384 bytes)
+Dentry cache hash table entries: 131072 (order: 7, 524288 bytes)
+Inode-cache hash table entries: 65536 (order: 6, 262144 bytes)
+Memory: 566652K/1048576K available (6948K kernel code, 337K rwdata, 1916K rodata, 436K init, 387K bss, 481924K reserved, 0K highmem)
+Virtual kernel memory layout:
+    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+    fixmap  : 0xffc00000 - 0xffe00000   (2048 kB)
+    vmalloc : 0xc0800000 - 0xff000000   (1000 MB)
+    lowmem  : 0x80000000 - 0xc0000000   (1024 MB)
+    pkmap   : 0x7fe00000 - 0x80000000   (   2 MB)
+    modules : 0x7f000000 - 0x7fe00000   (  14 MB)
+      .text : 0x80008000 - 0x808b04e4   (8866 kB)
+      .init : 0x808b1000 - 0x8091e000   ( 436 kB)
+      .data : 0x8091e000 - 0x80972734   ( 338 kB)
+       .bss : 0x80972734 - 0x809d353c   ( 388 kB)
+SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+Hierarchical RCU implementation.
+NR_IRQS:192
+sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 178956969942ns
+Console: colour dummy device 80x30
+Calibrating delay loop... 1949.69 BogoMIPS (lpj=974848)
+pid_max: default: 32768 minimum: 301
+Mount-cache hash table entries: 2048 (order: 1, 8192 bytes)
+Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes)
+CPU: Testing write buffer coherency: ok
+ftrace: allocating 22773 entries in 67 pages
+/cpus/cpu@0 missing clock-frequency property
+/cpus/cpu@1 missing clock-frequency property
+/cpus/cpu@2 missing clock-frequency property
+/cpus/cpu@3 missing clock-frequency property
+CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+Setting up static identity map for 0x64b4e0 - 0x64b538
+CPU: hi3798mv100
+CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
+CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
+Brought up 4 CPUs
+SMP: Total of 4 processors activated (7829.50 BogoMIPS).
+CPU: All CPU(s) started in SVC mode.
+VFP support v0.3: implementor 41 architecture 2 part 30 variant 7 rev 5
+NET: Registered protocol family 16
+DMA: preallocated 256 KiB pool for atomic coherent allocations
+hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
+hw-breakpoint: maximum watchpoint size is 8 bytes.
+Serial: AMBA PL011 UART driver
+f8b00000.uart: ttyAMA0 at MMIO 0xf8b00000 (irq = 81, base_baud = 0) is a PL011 rev2
+console [ttyAMA0] enabled
+f8006000.uart: ttyAMA1 at MMIO 0xf8006000 (irq = 82, base_baud = 0) is a PL011 rev2
+f8b02000.uart: ttyAMA2 at MMIO 0xf8b02000 (irq = 83, base_baud = 0) is a PL011 rev2
+SCSI subsystem initialized
+usbcore: registered new interface driver usbfs
+usbcore: registered new interface driver hub
+usbcore: registered new device driver usb
+Linux video capture interface: v2.00
+Advanced Linux Sound Architecture Driver Initialized.
+Bluetooth: Core ver 2.19
+NET: Registered protocol family 31
+Bluetooth: HCI device and connection manager initialized
+Bluetooth: HCI socket layer initialized
+Bluetooth: L2CAP socket layer initialized
+Bluetooth: SCO socket layer initialized
+Switched to clocksource clk24M
+NET: Registered protocol family 2
+TCP established hash table entries: 8192 (order: 3, 32768 bytes)
+TCP bind hash table entries: 8192 (order: 4, 65536 bytes)
+TCP: Hash tables configured (established 8192 bind 8192)
+TCP: reno registered
+UDP hash table entries: 512 (order: 2, 16384 bytes)
+UDP-Lite hash table entries: 512 (order: 2, 16384 bytes)
+NET: Registered protocol family 1
+RPC: Registered named UNIX socket transport module.
+RPC: Registered udp transport module.
+RPC: Registered tcp transport module.
+RPC: Registered tcp NFSv4.1 backchannel transport module.
+Trying to unpack rootfs image as initramfs...
+rootfs image is not initramfs (junk in compressed archive); looks like an initrd
+Freeing initrd memory: 57792K (82500000 - 85d70000)
+NetWinder Floating Point Emulator V0.97 (double precision)
+CPU PMU: probing PMU on CPU 1
+CPU PMU: failed to probe PMU!
+CPU PMU: failed to register PMU devices!futex hash table entries: 1024 (order: 4, 65536 bytes)
+VFS: Disk quotas dquot_6.5.2
+Dquot-cache hash table entries: 1024 (order 0, 4096 bytes)
+squashfs: version 4.0 (2009/01/31) Phillip Lougher
+jffs2: version 2.2. (NAND) © 2001-2006 Red Hat, Inc.
+fuse init (API version 7.23)
+msgmni has been set to 1219
+Block layer SCSI generic (bsg) driver version 0.4 loaded (major 254)
+io scheduler noop registered
+io scheduler deadline registered (default)
+io scheduler cfq registered
+brd: module loaded
+loop: module loaded
+hinand: registerd new interface driver hinfc610.
+Nand ID: 0x98 0xDA 0x90 0x15 0xF6 0x16 0x08 0x00
+Nand: Toshiba NAND 256MiB 3,3V 8-bit 
+Nand(HW-Auto): Block:128KB Page:2KB OOB:64B ECC:4bit/512 
+nand: Toshiba NAND 256MiB 3,3V 8-bit
+Chip:256MB*1
+18 cmdlinepart partitions found on MTD device hinand
+Creating 18 MTD partitions on "hinand":
+0x000000000000-0x000000100000 : "fastboot"
+0x000000100000-0x000000180000 : "bootargs"
+0x000000180000-0x000000200000 : "bootargsBak"
+0x000000200000-0x000000400000 : "reserve0"
+0x000000400000-0x000000600000 : "reserve0Bak"
+0x000000600000-0x000000680000 : "loaderdb"
+0x000000680000-0x000000700000 : "loaderdbbak"
+0x000000700000-0x000000800000 : "baseparam"
+0x000000800000-0x000000900000 : "pqparam"
+0x000000900000-0x000000d00000 : "logo"
+0x000000d00000-0x000001500000 : "loader"
+0x000001500000-0x000001d00000 : "loaderbak"
+0x000001d00000-0x000002500000 : "kernel"
+0x000002500000-0x000008900000 : "rootfs"
+0x000008900000-0x000008980000 : "Misc"
+0x000008980000-0x00000a280000 : "Factory"
+0x00000a280000-0x00000fc80000 : "appdata"
+0x00000fc80000-0x000010000000 : "others"
+libphy: himii: probed
+hieth: attached port 0 PHY 1 to driver Generic PHY
+PPP generic driver version 2.4.2
+PPP BSD Compression module registered
+PPP Deflate Compression module registered
+PPP MPPE Compression module registered
+NET: Registered protocol family 24
+ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+usbcore: registered new interface driver cdc_wdm
+usbcore: registered new interface driver usb-storage
+usbcore: registered new interface driver usbserial
+usbcore: registered new interface driver usbserial_generic
+usbserial: USB Serial support registered for generic
+usbcore: registered new interface driver ftdi_sio
+usbserial: USB Serial support registered for FTDI USB Serial Device
+usbcore: registered new interface driver option
+usbserial: USB Serial support registered for GSM modem (1-port)
+usbcore: registered new interface driver pl2303
+usbserial: USB Serial support registered for pl2303
+mousedev: PS/2 mouse device common for all mice
+usbcore: registered new interface driver uvcvideo
+USB Video Class driver (1.1.1)
+usbcore: registered new interface driver btusb
+registered new interface driver himciv200
+f9830000.himciv200.MMC: eMMC/MMC/SD Device NOT detected!
+f9820000.himciv200.SD: eMMC/MMC/SD Device NOT detected!
+usbcore: registered new interface driver usbhid
+usbhid: USB HID core driver
+usbcore: registered new interface driver snd-usb-audio
+oprofile: no performance counters
+oprofile: using timer interrupt.
+Netfilter messages via NETLINK v0.30.
+nfnl_acct: registering with nfnetlink.
+ip_tables: (C) 2000-2006 Netfilter Core Team
+arp_tables: (C) 2002 David S. Miller
+TCP: cubic registered
+NET: Registered protocol family 10
+NET: Registered protocol family 17
+bridge: automatic filtering via arp/ip/ip6tables has been deprecated. Update your scripts to load br_netfilter if you need this.
+Bridge firewalling registered
+Bluetooth: RFCOMM TTY layer initialized
+Bluetooth: RFCOMM socket layer initialized
+Bluetooth: RFCOMM ver 1.11
+Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+Bluetooth: BNEP filters: protocol multicast
+Bluetooth: BNEP socket layer initialized
+Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+Bluetooth: HIDP socket layer initialized
+8021q: 802.1Q VLAN Support v1.8
+Registering SWP/SWPB emulation handler
+ALSA device list:
+  No soundcards found.
+RAMDISK: squashfs filesystem found at block 0
+RAMDISK: Loading 57785KiB [1 disk] into ram disk... ^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^Cdone.
+^C^C^C^CVFS: Mounted root (squashfs filesystem) readonly on device 1:0.
+Freeing unused kernel memory: 436K (808b1000 - 8091e000)
+^C^C^C^C^C^C^Cstarting pid 706, tty '': '/etc/init.d/rcS'
+^C^C[RCS]: S00devs
+[RCS]: S01udev
+^C^Crandom: nonblocking pool is initialized
+^C^C[RCS]: S80network
+[RCS]: S90modules
+^C/etc/init.d/S90modules: line 15: telnetd: not found
+Load hi_media.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_mmz.ko success.		(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_common.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Jun 21 2017, 12:12:59])
+^CLoad hi_gpio.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_gpioi2c.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+Load hi_i2c.ko success.  	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_tde.ko success.		(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^CDieID is locked!
+Load hi_otp.ko success.  	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^CLoad hi_demux.ko success.  	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:32])
+^CLoad hi_adec.ko success.  	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^C^C^CLoad hi_vfmw.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^C^CLoad hi_svdec.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:22:03])
+^CLoad hi_pq.ko success.		(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_vpss.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^CLoad hi_vdec.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:35])
+^CLoad hi_cipher.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_hdmi.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[May 30 2018, 01:07:52])
+^CLoad hi_adsp.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_aiao.ko success.  	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^C^CLoad hi_vou.ko success.     	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+[6350 ERROR-HI_DISP]:DispAddIntf[650]:DISP 1 acquire  (3) failed
+^C^CLoad hi_fb.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^Cmisc hi_dbe: hi_dbe ready
+^CLoad hi_ir.ko success.  	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[May 30 2018, 01:07:41])
+^CLoad hi_jpegdec.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_jpegenc.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^CLoad hi_png.ko success.		(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^CLoad hi_advca.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_venc.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:35])
+^CLoad hi_aenc.ko success.  	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^CLoad hi_keyled.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:33])
+^CLoad hi_vi.ko success.		(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Oct 30 2017, 22:21:34])
+^Center temperature_control_thread
+Load hi_pmoc.ko success.	(SDK_VERSION:[HiSTBLinuxV100R003C00SPC065] Build Time:[Jun 21 2017, 21:12:31])
+^Cehci-platform: EHCI generic platform driver
+ehci-platform f9890000.ehci: EHCI Host Controller
+ehci-platform f9890000.ehci: new USB bus registered, assigned bus number 1
+^Cehci-platform f9890000.ehci: irq 98, io mem 0xf9890000
+ehci-platform f9890000.ehci: USB 2.0 started, EHCI 1.00
+hub 1-0:1.0: USB hub found
+hub 1-0:1.0: 2 ports detected
+ehci-platform f9930000.ehci: EHCI Host Controller
+^Cehci-platform f9930000.ehci: new USB bus registered, assigned bus number 2
+ehci-platform f9930000.ehci: irq 94, io mem 0xf9930000
+ehci-platform f9930000.ehci: USB 2.0 started, EHCI 1.00
+hub 2-0:1.0: USB hub found
+hub 2-0:1.0: 1 port detected
+ohci-platform: OHCI generic platform driver
+^Cohci-platform f9880000.ohci: Generic Platform OHCI controller
+ohci-platform f9880000.ohci: new USB bus registered, assigned bus number 3
+ohci-platform f9880000.ohci: irq 99, io mem 0xf9880000
+^Chub 3-0:1.0: USB hub found
+hub 3-0:1.0: 2 ports detected
+^Cohci-platform f9920000.ohci: Generic Platform OHCI controller
+ohci-platform f9920000.ohci: new USB bus registered, assigned bus number 4
+ohci-platform f9920000.ohci: irq 95, io mem 0xf9920000
+hub 4-0:1.0: USB hub found
+^Chub 4-0:1.0: 1 port detected
+xhci-hcd f98a0000.xhci: xHCI Host Controller
+^Cxhci-hcd f98a0000.xhci: new USB bus registered, assigned bus number 5
+xhci-hcd f98a0000.xhci: irq 101, io mem 0xf98a0000
+hub 5-0:1.0: USB hub found
+hub 5-0:1.0: 1 port detected
+xhci-hcd f98a0000.xhci: xHCI Host Controller
+xhci-hcd f98a0000.xhci: new USB bus registered, assigned bus number 6
+^Chub 6-0:1.0: USB hub found
+hub 6-0:1.0: 1 port detected
+^Ctntfs: module license 'Commercial. For support email ntfs-support@tuxera.com.' taints kernel.
+Disabling lock debugging due to kernel taint
+^CTuxera NTFS driver 3015.6.22 [Flags: R/W MODULE].
+logger: created 256K log 'log_main'
+logger: created 256K log 'log_debug'
+^C/
+[RCS]: S99init
+can not found set_mount.sh, mount setting failed!
+start set_mount_new.sh
+^CUDF-fs: warning (device mtdblock16): udf_fill_super: No partition found (2)
+^Cyaffs: dev is 32505872 name is "mtdblock16" rw
+yaffs: passed flags ""
+^C^C^C^C^C^C^C^C0
+start hmw_mount.sh
+start user loader.rc
+^CCMD_RUNLEVEL=0
+^C^C^C^C^C^C^C^C^C^C^C^C^Cchmod: /proc/sys: Operation not permitted
+chmod: /proc/sys: Ope^Cchmod: /proc/733: Operation not permitted
+chmod: /proc/733: Operation not permitted
+chmod: /proc/735: Operation not permitted
+chmod: /proc/735: Operation not permitted
+chmod: /proc/736: Operation not permitted
+chmod: /proc/736: Operation not permitt^Cnet.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.default.accept_source_route = 0
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.all.secure_redirects = 0
+net.ipv4.conf.default.secure_red^Cnet.ipv4.tcp_timestamps = 1
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.ip_forward = 0
+^Cnet.ipv4.icmp_echo_ignore_broadcasts = 1
+net.ipv4.icmp_ignore_bogus_error_responses = 1
+net.ipv4.tcp_max_syn_backlog = 128
+net.ipv4.tcp_fin_timeout = 60
+net.ipv4.conf.all.proxy_arp = 0
+net.ipv4.conf.default.proxy_arp = 0
+net.ipv4.conf.al^Cnet.ipv4.conf.default.log_martians = 1
+kernel.randomize_va_space = 2
+net.ipv4.tcp_syn_retries = 3
+/usr/local/bin/fullapp/local.rc: ./init.sh: line 89: hav^Ccp: can't stat '/etc/passwdTelnet': No such file or directory
+Find sqmpro
+Find sqmpro.md5
+Find sqmfactor.ini
+Find sqmsign.ini
+Found resolv.conf
+Not found vrweb_client.log
+^C^C^C^C^C^C^C^C^C^CHMW_install_exception_hook success
+^C^C^Cprocess name:vmx_ca
+process name:stbService
+process name:logge^C^C^C^C^C^C^CHMW_install_exception_hook success
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^CHMW_install_exception_hook success
+^C^C^CI/O warning : failed to load external entity "/tmp/V^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^CHMW_install_exception_hook success
+^C^C^C^C^C^C^CMAIN: Start Init System.
+MAIN: seed status is [1].
+^CHMW_initSystem init curl success
+HMT V100R003C89LTRT01SPC600B001 Compile Time: Aug  2 201^C^C^C^C^C^C^C^C^C^C^CLog:LOG Module set syslog param
+HMW_logParamInit: g_iUs^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+^C^C^CSet hdcp frome reverse0
+^C^C
+ ---HDMI_Event_Proc. --- event=17  
+
+ --- Get HDMI eve^C^C^C^C^C^CHIGO Version		:4.0.0.0 SPC030 RELEASE
+HIGO Build Time		:Sep 28 2016 18:44:23
+HIGO Adp Version	:4.0.0.0 V1R2 SPC030
+HIGO Adp Build Time	:Sep 28 2016 18:44:25
+^C^Clibpng warning: iCCP: known incorrect sRGB profile
+^C***PADBoot0.img can't be opened
+***PADAuth0.img can't be opened
+***BootAnimation.zip can't be opened
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^CMAIN: Start Browser.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C^C^C^C^C^C^CReq DB keyName=Device.X_00E0FC.LogParaConfiguration.LogL^CReq DB value=3
+^C^C^C^C^CReq DB keyName=Device.X_00E0FC.LogParaConfiguration.LogType
+Req DB value=0
+Req DB keyName=Device.X_00E0FC.LogParaConfigurat^CReq DB keyName=System.STB_model
+Req DB value=Q11
+^C00:00:00|Run|ERROR|      IPTV|0x00000155:HMW_iptv.cpp:2453:TransferSysLogServer|TransferSysLogServer error.pDomainUrl=[110.1.1.204].
+00:00:00|Run|ERROR|    CfgMgr|0x00000155:HMW_configMgr.cpp:2558:HMW_config_read|^C00:00:00|Run|ERROR|   Browser|0x00000155:HMW_browser.cpp:3519:ioRead|ioRead failed
+00:00:00|Run| WARN|      IPTV|0x00000155:HMW_iptv.cpp:17412:cpeAgentNotifyCB|Open log ch^C00:00:00|Run|ERROR|    CfgMgr|0x00000155:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:AspectRatio failed!
+00:00:00|Run|ERROR|os_utility|0x00000155:HMW_os_utility.c:3041:HMW_GetEnvStr|getenv NULL
+^C00:00:00|Run|ERROR|os_utility|0x00000155:HMW_os_utility.c:3041:HMW_GetEnvStr|getenv NULL
+00:00:00|Run| WARN|   PORTING|0x70af6000:hi_adp_mpi.c:472:HIADP_AVPlay_RegADecLib|Warning, HI_UNF_AVPLAY_RegisterAcodecLib error, Ret:0xffffffff, codec:DOLBYTRUEHD
+00:00:01|Run| WARN|   PORTING|0x70af6000:hi_adp_mpi.c:503:HIADP_AVPlay_RegADecLib|Warning, HI_UNF_AVPLAY_RegisterAcodecLib error, Ret:0xffffffff, ^C^C00:00:01|Run|ERROR|  hisi_gfx|0x00000155:hisi_gfx.c:578:hisi_gfx_init| create CC surface ok 
+00:00:01|Run|ERROR|    CfgMgr|0x00000155:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:AspectRatio failed!
+00:00:01|Run|ERROR|    CfgMgr|0x00000155:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Network.ConnectMode failed!
+00:00:01|Run|ERROR|Connectivity|0x00000155:HMW_connectivity.cpp:1966:connect|The device not prepare, device:eth0
+00:00:01|Run|ERROR|Connectivity|0x00000155:HMW_connectivity.cpp:2940:connect|CConnect::connect() failed.
+00:00:01|Run|ERROR|Connectivity|0x00000155:HMW_connectivity.cpp:4408:dhcpConnect|Network connect failed.
+00:00:01|Run|ERROR|Connectivity|0x00000155:HMW_connectivity.cpp:4643:startNetworkCheck|startNetworkCheck 
+00:00:01|Run|ERROR|   NETWORK|0x^C00:00:01|Run|ERROR|Connectivity|0x0000018f:HMW_connectiv^C00:00:01|Run|ERROR|    CfgMgr|0x00000155:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:FlashKeyCount failed!
+00:00:01|Run|ERROR|     rckey|0x00000155:HMW_rckey.cpp:2^C00:00:01|Run|ERROR|     rckey|0x00000155:HMW_rckey.cpp:2568:loadLocalKeyTable|loadLocalKeyTable failed
+00:00:01|Run|ERROR|       CPE|0x00000195:hmw_mgmtCli.cpp:462:MGMT_cli_listen|MGMT_cli_init as release STBBOX,not listen 127.0.0.1:24 
+^C00:00:02|Run|ERROR|   Browser|0x00000198:HMW_browser.cpp:5170:callbackKeyEvent|The page deal with reported key failed, Key = 0x300
+00:00:03|Run|ERROR|     CGMSA|0x00000197:HMW_CP_CGMSA.cpp:85:initialize|setCGMSA error!
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:System.WSSDefault failed!
+00:00:03|Run|ERROR|    C^C00:00:03|Run|ERROR|hisi_system|0x00000197:hisi_system.c:1033:hisi_system_getChipHDRInfo|hisi_system_getChipHDRInfo ok 
+
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_DT.DiagnosticReport.Interval failed!
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_DT.Trigger.FrozenPictures failed!
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_DT.Trigger.Jerkiness failed!
+00:0^C^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_DT.Histogram.StreamingProfileHistogram failed!
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:H^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_DT.Histogram.SecondsHistogramOfErrors failed!
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HM^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_DT.Histogram.SecondsHistogramOfHoles failed!
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_DT.Histogram.MediaChangeDelayHistogram failed!
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:H^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:multicastSwitchToUnicastTag failed!
+00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_re^C00:00:03|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:03|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:ge^C00:00:03|Run|ERROR|   Browser|0x00000197:HMW_browser.cpp:3198:registerJSExt|Register Jsext failed as repeat, JsExt name
+00:00:03|Run|ERROR|      IPTV|0x00000197:HMW_iptv.cpp:3364:initialize|CModIptv::initialize registerJSExt [Display.HdrCapabilities],iRet = [-1].
+00:00:03|Run|ERROR|       CPE|0x00000197:hmw_mgmtCpe.cpp:733:initialize|Module CPEAgent init failed, cause of timer failed
+00:00:03|^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:use_sqm failed!
+00:00:03|Run| WARN|       SQM|0x00000197:HMW_sqm_mod.cpp:291:initialize|^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:SQMCapabiltiy failed!
+00:00:03|Run| WARN|       SQM|0x00000197:HMW_sqm_mod.cpp:299:initialize|^C00:00:03|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:PVRAbility.AllowConcurrent failed!
+00:00:03|Run|ERROR|       PVR|0x00000197:HMW_pvrSchedu^C00:00:03|Run|ERROR|       PVR|0x00000197:HMW_pvr.cpp:442:doCommand|Command[CmdID=18] is not allowed to excecute when not support PVR!
+00:00:03|Run|ERROR|       PVR|0x00000197:HMW_pvrSchedule^C00:00:03|Run|ERROR|    CfgMgr|0x00000164:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.LogParaConfiguration.LogOutPutModule failed!
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:05|Run|ERROR|       CPE|0x0000018e:hmw_mgmtTR135.c^C00:00:05|Run|ERROR|       CPE|0x0000018e:hmw_mgmtTR135.cpp:300:init|NULL parameter.
+00:00:05|Run|ERROR|       CPE|0x0000018e:hmw_mgmtTR135.c^C00:00:05|Run|ERROR|       CPE|0x0000018e:hmw_mgmtTR135.cpp:1788:initSPDIF|NULL parameter.
+00:00:05|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:00:05|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+^C^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+^C[341:447:0101/010006:21661367:WARNING:histograms.cc(40)]^C^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:^C00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868:cpeRead|4Read parameter from STB failed, Name = Device.X_00E0FC.Management.dataModelFilterEnable, iRet = -1.
+[341:432:0101/0^C00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868:cpeRead|4Read parameter from STB failed, Name = Device.X_00E0FC.LogParaConfiguration.LogFtpServer, iRet = -1.
+00:00:06|Run|ERROR|medialistlog|0x0000^C00:00:06|Run|ERROR|medialistlog|0x00000197:HMW_mediaList.cpp:251:Inner_ReadMediaListConfigToArray|open /usr/local/bin/setting/ScreenSave.sys failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868^C00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2660:cpeWrite|4Write parameter To STB failed, Name = QOSLogEnables, iRet = -2.
+00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config^C00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868:cpeRead|4Read parameter from STB failed, Name = platformType, iRet = -1.
+00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_^C
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868:cpeRead|4Read parameter from STB failed, Name = Device.X_00E0FC.StatisticConfiguration.LogServerUrl, iRet = -1.
+00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.LogUploadInterval failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868:cpeRead|4Read parameter from STB failed, Name = Device.X_00E0FC.StatisticConfiguration.LogUploadInterval, iRet = -1.
+00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.LogRecordInterval failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868:cpeRead|4Read parameter from STB failed, Name = Device.X_00E0FC.StatisticConfiguration.LogRecordInterval, iRet = -1.
+00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.Stati^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.PacketsLostR^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.PacketsLostR^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.PacketsLostR^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.PacketsLostR^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.PacketsLostR^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.BitRateR1 failed!
+00:00:06|Run|ERR^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.BitRateR2 failed!
+00:00:06|Run|ERROR|       CPE|0x^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.BitRateR3 failed!
+00:00:06|Run|ERROR|       CPE|0x^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.BitRateR4 failed!
+00:00:06|Run|ERROR|       CPE|0x^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.BitRateR5 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_PacketsLostR1 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmt^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_PacketsLostR2 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmt^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_PacketsLostR3 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmt^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_PacketsLostR4 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmt^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_PacketsLostR5 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmt^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_BitRateR1 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_BitRateR2 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_BitRateR3 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_BitRateR4 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.HD_BitRateR5 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.FramesLostR1 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.FramesLostR2 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.FramesLostR3 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.FramesLostR4 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Device.X_00E0FC.StatisticConfiguration.FramesLostR5 failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeD^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:platformType failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868:cpeRead|4Read paramete^C00:00:06|Run|ERROR|    CfgMgr|0x0000018e:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:Mgmt.AcsUpgrade.Reboot failed!
+00:00:06|Run|ERROR|       CPE|0x0000018e:hmw_mgmtCpeData.cpp:2868:cpeRead|4Read ^C00:00:06|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:06|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HM^C00:00:06|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:TimeIntervalForLogToFlash failed!
+00:00:06|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read^C00:00:06|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+00:00:06|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18^C00:00:06|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:HMW_config_read|configMgr read pName:StartupUrl failed!
+00:00:06|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+^C00:00:06|Run|ERROR|HMW_post_common_error_msg|0x0000018b:HMW_msgType.cpp:329:HMW_post_common_error_msg|iErrorType = 1, iErrorSource = 0, iErrorCode = 1001,pszErrorURL = (null),iHttpError = 0
+00:00:06|Run|ERROR|    MODULE|0x^C00:00:06|Run|ERROR|       SQM|0x00000197:HMW_sqm_mod.cpp:748:getSqmInitInfo|Invalid params.
+00:00:06|Run|ERROR|       SQM|0x00000197:HMW_sqm_mod.cpp:1142:sqm_start|get SqmInitInfo error
+^C00:00:06|Run|ERROR|       SQM|0x00000197:HMW_sqm_mod.cpp:600:start|sqm_start faild!
+00:00:06|Run|ERROR|      IPTV|0x0000018c:HMW_iptv.cpp:5049:onMsg|invalid input param msgData.
+^C00:00:06|Run|ERROR|    MODULE|0x00000197:HMW_module.cpp:1136:startModule|startModule theModules start,ModID=9,iRet=-1
+00:00:06|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 1
+00:00:06|Run|ERR^C00:00:06|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 9
+^C00:00:06|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 12
+00:00:06|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 22
+00:00:06|Run|ERROR|  Err^C00:00:06|Run|ERROR|  ErrorMgr|0x000001de:HMW_errorAction.cpp:335:actErrCodeReport|Error code: 102001, Description: STB Physical Network Disconnection, U^C00:00:06|Run|ERROR|HMW_post_common_error_msg|0x0000016c:HMW_msgType.cpp:329:HMW_post_common_error_msg|iErrorType = 1, iErrorSource = 0, iErrorCode = 100^C00:00:06|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 1
+00:00:06|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msg^C00:00:06|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 9
+00:00:06|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msg^C00:00:06|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 22
+00:00:06|Run|ERROR|  ErrorMgr|0x000001de:HMW_errorCodeMng.cpp:65^C00:00:06|Run|ERROR|  ErrorMgr|0x000001de:HMW_errorAction.cpp:335:actErrCodeReport|Error code: 102001, Description: STB Physical Network Disconnection, URL: ***
+00:00:07|Run| WARN|       DNS|^C00:00:07|Run|ERROR|       DNS|0x000001e0:HMW_dns.cpp:442:HMW_send_dns_request|HMW_sock_connect: iRet=-1, errno=101 [Network is unreachable]
+00:00:07|Run|ERROR|       DNS|0x000001e0:HMW_dns.c^C00:00:07|Run|ERROR|LocalConfig|0x000001e0:HMW_localConfig.cpp:2655:get_stb_upgsrv_params|HMW_dns_getHostByName failed, domain(iptveds.mstv.superonline.com)
+00:00:07|Run|ERROR|   NETW^C00:00:07|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C00:00:07|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:07|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr|^C^Cupdebug, write/p, DataLen=131072, FlashLen=131072
+^C DlnaLogInfo.txt Open Failed!!!!, errno = 30hisi_flash_write_par^Cupdebug, write/p, DataLen=131072, FlashLen=131072
+hisi_flash_write_partition, HI_Flash_Write, DataLen=131072, Writ^C^C^C^C^C^C^C^C00:00:08|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:08|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C00:00:08|Run|ERROR|    CfgMgr|0x00000197:HMW_configMgr.cpp:2558:^C00:00:08|Run|ERROR|InfoGatherMod|0x00000197:HMW_InfoGatherModLoop.cpp:201:start|CInfoGatherModLoop read [StartupCaptured] faild
+00:00:08|Run|ERROR|    MODULE|0x00000197:HMW_module.cpp:1136:sta^C00:00:08|Run|ERROR|     Blink|0x70af6000:hwb_page_manager.cc:190:DispatchKeyEvent|Render Widget Host View is NULL!
+^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C^C^C^C^C^C00:00:09|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:09|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C00:00:09|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed^C00:00:09|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+^C^C^C^C^C^C^C^C^C^C00:00:10|Run|ERROR|    CfgMgr|0x^C00:00:10|Run|ERROR|   Browser|0x00000155:HMW_browser.cpp:3519:ioRead|ioRead failed
+00:00:10|Run|ERROR|    CfgMgr|0x00000155:HMW_configMgr.cpp:2558:^C00:00:10|Run|ERROR|   Browser|0x00000155:HMW_browser.cpp:3519:ioRead|ioRead failed
+00:00:10|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read^C00:00:10|Run|ERROR|   Browser|0x000001bf:HMW_browser.cpp:5170:callbackKeyEvent|The page deal with reported key failed, Key = 0x300
+00:00:10|Run|ERROR|   Browser|0x000001bf:HMW_browser.cpp:5170:callbackKeyEvent|T^C00:00:10|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C00:00:10|Run|ERROR|     Blink|0x^C^C^C^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+00:00:11|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:11|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C00:00:11|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:^C00:00:11|Run|ERROR|   Browser|0x000001bf:HMW_browser.cpp:5170:callbackKeyEvent|The page deal with reported key failed, Key = 0x300
+^C^C^C^C^C^C^C^C^CEnter CModIptv::postAuthenticateReadyEvent
+^C^C^C00:00:12|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:12|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:13|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:13|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:13|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:00:13|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:14|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:14|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:15|Run|ERROR|HMW_post_common_error_msg|0x000001bf:HMW_msgT^C00:00:15|Run|ERROR|      IPTV|0x0000018c:HMW_iptv.cpp:5049:onMsg|invalid input param msgData.
+00:00:15|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msg^C00:00:15|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 3
+00:00:15|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msg^C00:00:15|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 12
+00:00:15|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msg^C00:00:15|Run|ERROR|  ErrorMgr|0x000001de:HMW_errorCodeMng.cpp:650:HMW_ErrCode_history|errcode record errorCode[1001]
+00:00:15|Run|ERROR|  ErrorMgr|0x000001de:HMW_errorAction.cpp:335^C00:00:15|Run|ERROR|     Blink|0x70af6000:hwb_page_manager.cc:190^C00:00:15|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:15|Run|ERROR|   NETWORK|0x000001^C^C^C^CTHROW_NEW_ERROR: TypeError at line 340
+^C^C00:00:15|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed^C00:00:15|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_^C00:00:15|Run|ERROR|    CfgMgr|0x00000155:HMW_configMgr.cpp:2558:^C00:00:15|Run|ERROR|   Browser|0x00000155:HMW_browser.cpp:3519:ioRead|ioRead failed
+^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C^C00:00:16|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:17|Run|ERROR|   NETWORK|0x000001d3^C00:00:17|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:17|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot as^C00:00:17|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:18|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:18|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:19|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:19|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C00:00:19|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:20|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:20|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+^C^C^C^C^C^C^C00:00:21|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:21|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C00:00:21|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:00:21|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+^C^C^C^C^C^C^C^C^C^C^C^C00:00:22|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:22|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^Cfdisk: can't ope^C^C00:00:23|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:23|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:23|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:00:23|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:24|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:24|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:25|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed^C00:00:25|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C00:00:25|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:00:25|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+fdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:26|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:26|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:27|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C^C00:00:27|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:00:27|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C00:00:28|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:28|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:29|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:29|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:29|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed^C00:00:29|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:30|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:30|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:31|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:31|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C00:00:31|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C00:00:31|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+^C^C^C^C^C^C^C^C^C^C^C^C00:00:32|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:32|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C^C^C^C^C^C00:00:33|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:33|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:33|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:00:33|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:33|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:34|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:34|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:35|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed^C00:00:35|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C00:00:35|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C00:00:35|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+^C^C^C^C^C^C^C^C^C^C^C^C00:00:36|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:36|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:37|Run|ERROR|   NETWORK|0x000001d3:HMW_net^C00:00:37|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:37|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:00:37|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:37|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C^C^C^C^C^C^C^C^C00:00:38|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:38|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:39|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:39|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_^C^C^C^C^C^C00:00:39|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:00:39|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:39|Run|ERROR|    MODULE|0x0000018b:HMW_mod^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C00:00:40|Run|ERROR|   NETWORK|0x000001d3:HMW_net^C00:00:40|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:41|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:41|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:41|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed^C00:00:41|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:41|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback exe^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:42|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:42|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:43|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:43|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C00:00:43|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read^C00:00:43|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:43|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback exe^C^C^C^C^C^C^C^C^C^C^C^C00:00:44|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:44|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C^C^C^C^C00:00:45|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:45|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:45|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:00:45|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:45|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msg^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:46|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:46|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:47|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:47|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C^C00:00:47|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:00:47|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:47|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:^C^C^C^C^C^C^C^C^C^C^C^C00:00:48|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:48|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:49|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:49|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:49|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:00:49|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:49|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msg^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*^C^C^C^C^C^C^C^C^C^C^C^C00:00:50|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:51|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:51|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C^C00:00:51|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:00:51|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:51|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msg^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+^C^C^C00:00:52|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:52|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:53|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:53|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:53|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:00:53|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:53|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:54|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:54|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:55|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:55|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C^C00:00:55|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed^C00:00:55|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:55|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCall^C^C^C^C^C^C^C^C^C^C^C^C00:00:56|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: C^C00:00:56|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+^C^C^C^C^C^C00:00:57|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:00:57|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:00:57|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:00:57|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:57|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msg^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:58|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:00:58|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:00:59|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:00:59|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: can't open '/dev/mmcblk*': No such file or directory
+^C^C^C^C00:00:59|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:00:59|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:00:59|Run|ERROR|    MODULE|0x0000018b:HMW_mod^C^C^C^C^C^C^C^C^C^C^C^C00:01:00|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot as^C00:01:00|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:01|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:01:01|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HM^C^C^C^C00:01:01|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:01:01|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:01:01|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C^C^C^C^C^C^C^C00:01:02|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:03|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:01:03|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^C^C^C^C00:01:03|Run|ERROR|   NETWORK|0x^C00:01:03|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:01:03|Run|ERROR|    M^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C00:01:04|Run|ERROR|   NETWORK|0x^C00:01:04|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot as^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:05|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:01:05|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C00:01:05|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read^C00:01:05|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:01:05|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute fai^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:06|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:01:06|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:07|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:01:07|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read^C^C^C^C^C^C00:01:07|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:01:07|Run|ERROR|Connectivity|0x0000^C00:01:07|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+^C^C^C^C^C^C^C^C^C^C00:01:08|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:01:08|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C^C^C^C00:01:09|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:01:09|Run|ERROR|   NETWORK|0x000001^C^C^C^C00:01:09|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:01:09|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:01:09|Run|ERROR|    MODULE|0x0000018c:HMW_mod^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:10|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:01:10|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:11|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:01:11|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C^Cfdisk: can't open '/dev/sd*': No such file or directory^C^C^C^C00:01:11|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_^C00:01:11|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:01:11|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:^C^C^C^C^C^C^C^C^C^C^C^C00:01:12|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.^C00:01:12|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:13|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2554:HMW_^C00:01:13|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C00:01:13|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:01:13|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:01:13|Run|ERROR|    MODULE|0x0000018c:HMW_mod^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C^C^C^C^C^C^C^C00:01:14|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:01:14|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:15|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:01:15|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C00:01:15|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2^C00:01:15|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cpp:556:getIpAddr| m_networkCard=[eth0] HMW_network_getIpAddr error.
+00:01:15|Run|ERROR|    MODULE|0x0000018b:HMW_module.cpp:1259:msg^C^C^C^C^C^C^C^C^C^Cfdisk: can't open '/dev/sd*': No such file or directory
+fdisk: ^C^C00:01:16|Run|ERROR|   NETWORK|0x000001d3:HMW_network.c:2^C00:01:16|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C00:01:17|Run|ERR^C00:01:17|Run|ERROR|   NETWORK|0x000001d6:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+^C^C^C^C^C^C00:01:17|Run|ERROR|   NETWORK|0x0000018f:HMW_network.c:2554:HMW_network_getIpAddr|failed to read eth0 IP, ioctl error: Cannot assign requested address.
+00:01:17|Run|ERROR|Connectivity|0x0000018f:HMW_connectivity.cp^C00:01:17|Run|ERROR|    MODULE|0x0000018c:HMW_module.cpp:1259:msgCallback|msgCallback execute failed: 18
+^C^C^C^C^C^C^C^C^C^C0

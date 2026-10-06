@@ -13,6 +13,7 @@ param(
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+Import-Module (Join-Path $PSScriptRoot 'usb-io.psm1') -Force
 $Image = [IO.Path]::GetFullPath($Image)
 if (-not (Test-Path -LiteralPath $Image -PathType Leaf)) { throw "Missing image: $Image" }
 if ((Get-Item -LiteralPath $Image).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Image symlinks are not supported.' }
@@ -45,6 +46,10 @@ $logPath = Join-Path ([IO.Path]::GetFullPath($LogDirectory)) ('experiment_' + (G
 $commit = & git -C (Join-Path $PSScriptRoot '..\..') rev-parse HEAD
 if ($LASTEXITCODE -ne 0) { throw 'Cannot determine git commit.' }
 $record = [ordered]@{ timestamp=(Get-Date -Format o); git_commit=$commit; tool_version='1.0'; port=$null; baud=$null; operation='usb-image-write'; target_label=$TargetLabel; disk_number=$disk.Number; disk_size=$disk.Size; image_sha256=$Sha256.ToLowerInvariant(); image_bytes=$imageSize; result='running'; exit_code=$null }
+$record['bytes_written'] = 0L
+$record['bytes_verified'] = 0L
+$record['stage'] = 'validated'
+function Save-Q11Record { $record | ConvertTo-Json | Set-Content -LiteralPath $logPath -Encoding utf8 }
 # Windows volume locking keeps the filesystem driver from racing the raw write.
 Add-Type -TypeDefinition @'
 using System;
@@ -58,6 +63,7 @@ public static class Q11UsbNative {
 }
 '@
 $volume = $null; $device = $null; $source = $null; $resultCode = 0
+Save-Q11Record
 try {
     $volume = [Q11UsbNative]::CreateFile("\\.\$letter`:",[uint32]3221225472,3,[IntPtr]::Zero,3,0,[IntPtr]::Zero)
     if ($volume.IsInvalid) { throw "Cannot open USB volume: $([Runtime.InteropServices.Marshal]::GetLastWin32Error())" }
@@ -72,22 +78,29 @@ try {
     $buffer = New-Object byte[] 1MB
     $deadline = [DateTime]::UtcNow.AddMinutes(15)
     [long]$written = 0
+    $record.stage = 'writing'
     while ($written -lt $imageSize) {
         if ([DateTime]::UtcNow -gt $deadline) { throw '15-minute write deadline exceeded.' }
-        $n = $source.Read($buffer,0,[int][Math]::Min($buffer.Length,$imageSize-$written))
+        $n = $source.Read($buffer,0,(Get-Q11ChunkSize -RemainingBytes ($imageSize-$written) -BufferBytes $buffer.Length))
         if ($n -le 0 -or $n % 512 -ne 0) { throw 'Image truncated/unaligned during write.' }
         $device.Write($buffer,0,$n); $written += $n
+        $record.bytes_written = $written
+        if ($written % 128MB -eq 0) { Save-Q11Record }
     }
     $device.Flush($true)
     [void]$device.Seek(0,[IO.SeekOrigin]::Begin)
     $hasher = [Security.Cryptography.SHA256]::Create()
+    $record.stage = 'verifying'
+    Save-Q11Record
     try {
         [long]$remaining = $imageSize
         while ($remaining -gt 0) {
             if ([DateTime]::UtcNow -gt $deadline) { throw '15-minute verification deadline exceeded.' }
-            $n = $device.Read($buffer,0,[int][Math]::Min($buffer.Length,$remaining))
+            $n = $device.Read($buffer,0,(Get-Q11ChunkSize -RemainingBytes $remaining -BufferBytes $buffer.Length))
             if ($n -le 0) { throw 'USB readback ended early.' }
             [void]$hasher.TransformBlock($buffer,0,$n,$buffer,0); $remaining -= $n
+            $record.bytes_verified = $imageSize-$remaining
+            if ($record.bytes_verified % 128MB -eq 0) { Save-Q11Record }
         }
         [void]$hasher.TransformFinalBlock([byte[]]@(),0,0)
         $actual = ([BitConverter]::ToString($hasher.Hash)).Replace('-','').ToLowerInvariant()
@@ -96,13 +109,14 @@ try {
     $record['readback_sha256'] = $actual
     if ($actual -ne $Sha256.ToLowerInvariant()) { throw 'USB readback SHA256 mismatch.' }
     $record.result = 'written-and-verified'
+    $record.stage = 'complete'
     Write-Output 'USB image written and verified. Windows cannot mount ext4; decline any format prompt.'
 }
 catch { $resultCode=2; $record.result='error'; $record['error']=$_.Exception.Message; Write-Error -ErrorAction Continue $_ }
 finally {
     if ($source) { $source.Dispose() }; if ($device) { $device.Dispose() }; if ($volume) { $volume.Dispose() }
     $record.exit_code=$resultCode; $record['completed_at']=(Get-Date -Format o)
-    $record | ConvertTo-Json | Set-Content -LiteralPath $logPath -Encoding utf8
+    Save-Q11Record
     Write-Output "Result log: $logPath"
 }
 exit $resultCode

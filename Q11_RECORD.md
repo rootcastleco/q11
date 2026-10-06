@@ -211,3 +211,7 @@ alanı tükendi. Kalan yollar Faz 6 sonundaki A/B/C seçenekleri (Güvenlik Değ
 - Araçlar, offline testler ve belgeler eklendi: [docs/BRINGUP.md](docs/BRINGUP.md).
   Yeni fiziksel adım, hazırlanmış USB veya bilinen çalışan microSD'nin salt-okunur UART kaydıyla
   algılanmasını ölçmek. Eski UART kesme denemeleri tekrarlanmadı; NAND backup çalışması yapılmadı.
+- 2026-10-06 23:36 (İstanbul): REI harici USB'ye 2,148,532,224 bayt MBR+ext4 imajı yazıldı;
+  tamamı geri okunup SHA-256 eşleşti, exit0 (`logs/experiment_20261006_233032_usb-write.json`,
+  özel/gitignored). Bu CONFIRMED bir PC/USB hazırlık sonucudur; Q11 Linux boot başarısı değildir.
+  Dahili NAND'a yazılmadı. Sonraki işlem USB'yi Q11'e fiziksel taşımak ve USB algılama kaydı almak.

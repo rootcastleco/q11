@@ -7,5 +7,6 @@
 *.config text eol=lf
 *.md text eol=lf
 *.ps1 text eol=crlf
+*.psm1 text eol=crlf
 /tools/rootfs/init text eol=lf
 /logs/* -text

@@ -7,6 +7,12 @@ claim that the prepared rootfs boots automatically.
 
 ## USB storage probe (user has authorized erasing the REI stick)
 
+This session's REI stick was **written and fully readback-verified** at
+2026-10-06 23:36 Istanbul time. A2 GiB ext4 root partition is ready; Windows cannot
+mount it. No reformat/rewrite is needed for the next probe. The private record is
+`logs/experiment_20261006_233032_usb-write.json` (exit0, matching SHA256).
+This validates USB preparation on the PC, not a Q11 custom boot.
+
 First validate/build the USB image and run the separately authorized media writer
 in [ROOTFS](ROOTFS.md). Do not move a stick during an active write/readback. Proceed
 only after its result says `written-and-verified`. If no write has occurred, an
@@ -84,6 +90,7 @@ Factory/CA partitions merely to retrieve it. Add HDMI/fbdev only afterwards; see
 python -m unittest discover -s tests -v
 python tools/analysis/boot_report.py logs --output artifacts/boot-report-new.json
 pwsh -NoProfile -File tools/uart/capture_experiment.ps1 -DryRun
+pwsh -NoProfile -File tests/test_powershell.ps1
 ```
 
 Linux: `shellcheck tools/rootfs/*.sh tools/kernel/build.sh` and

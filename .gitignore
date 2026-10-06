@@ -6,3 +6,4 @@ __pycache__/
 !/artifacts/.gitkeep
 /logs/experiment_*
 /logs/build_*
+/resimler/* - Copy*.jpg

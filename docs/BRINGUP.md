@@ -106,25 +106,33 @@ Start/collect the capture after physical setup is ready; do not start a second
 capture against an occupied port. A legitimate Q11 stock-rootfs or loading
 artifact remains an alternative offline dependency; none is currently available.
 
-## Next physical evidence: identify this Q11 board
+## Board identification completed; electrical entry evidence still missing
 
-Existing photos show only the CH341 adapter, not the Q11 PCB. Board-specific
-BootROM entry and a compatible DDR loader remain unknown. Obtain sharp overview
-photos of both Q11 PCB faces and close-ups of labelled buttons/test pads/header
-areas. This is identification only; no strap/short/upload is specified.
+The owner supplied [26 Q11 photographs](../resimler/README.md), reviewed on
+2026-10-07. Both PCB faces, U1/U16 package markings and UART labels are visible.
+J15 is a two-hole footprint labelled `GND BOOT`, between the two USB-A sockets.
+That is a **LIKELY** boot-strap candidate, not a verified shorting recipe. The
+actual U1 has no accessible gull-wing leads; the other-board “upper-right two
+legs / 107–108” instruction does not apply to this package.
 
-* Power: unplug Q11's own adapter first, then disconnect HDMI, LAN, UART leads,
-  USB/microSD. Disconnect the CH341 from PC while moving its leads.
-* Device: Q11 PCB itself. Photograph silkscreen revision and connectors/pad labels.
-* Connect: nothing for the photo step. Do not short pads or connect VCC/5 V/A-to-A.
-* Command: none; keep Q11 unpowered. Existing logs already cover the failed trial.
-* Expected output: two clear board overview photos plus readable label close-ups.
-  Keep serial numbers/unique labels private. Photos can establish a candidate pad
-  identity; they do not establish voltage, entry semantics or loader compatibility.
-* After identification, specify a separately justified bounded experiment only
-  if a documented entry mechanism and compatible loader/identification protocol
-  can be established. A legitimate Q11 firmware artifact can instead be inspected
-  offline with the existing rootfs/DTB tools; no NAND backup is required.
+The next dependency is measured electrical identity of J15 and a documented entry
+mechanism, followed by a board-compatible loader/identification protocol. No new
+UART transmission, USB rewrite, strap or power-cycle experiment is specified here.
+
+For resistance/continuity identification, first unplug Q11's own power adapter
+and disconnect HDMI, LAN, USB/media and UART leads; disconnect CH341 from the PC
+before moving its leads. Some supplied photos show attached DC/UART, so do not
+assume the photographed board was unpowered. Identify the hole labelled `GND`
+against the previously measured UART GND, and record meter/probe resistance and
+both J15 holes' resistance to that reference. A continuity beep alone does not
+identify the other hole as the SoC's USB_BOOT input; routing/pull-network evidence
+is still required. Do not perform these measurements while powered, bridge J15,
+connect VCC/5 V or attach a PC-host A-to-A cable.
+
+A legitimate Q11 firmware artifact remains an alternative for offline hook/DDR
+analysis. No compatible RAM loader or stock-rootfs artifact is currently supplied;
+no NAND backup is required. See [BOOTROM](BOOTROM.md) for the entry and payload
+boundaries.
 
 ## Reproducing USB storage detection (completed once; no repeat needed)
 

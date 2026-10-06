@@ -31,6 +31,7 @@ wired Ethernet. The remaining blocker is a verified execution or RAM-loading pat
 | RAM initramfs | Deterministic newc archive, bounded external-root wait and `switch_root` | **HOST VALIDATED** |
 | Custom boot / SSH | Image loading, kernel handoff and hardware compatibility | **UNKNOWN / NOT ACHIEVED** |
 | Recovery entry | One Xiaomi IR trial reached stock IPTV; HDMI showed no recovery | **FAILED IN THIS TRIAL** |
+| Board photographs | Actual Q11 PCB; J15 labelled `GND BOOT`, BGA-style U1 and NAND marking | **CONFIRMED visual evidence; strap untested** |
 
 Experiments use **CONFIRMED**, **LIKELY** and **UNKNOWN** labels. A build result,
 mounted filesystem or open TCP port is not evidence of arbitrary code execution.
@@ -53,6 +54,16 @@ See the [validation record](docs/VALIDATION.md) for test boundaries and limitati
 
 The [hardware guide](docs/HARDWARE.md) separates addresses printed in Q11 logs
 from public SDK candidates. Generic eMMC-box recipes are not Q11 NAND recipes.
+
+## Board photographs
+
+<a href="resimler/20261007_003909.jpg"><img src="resimler/20261007_003909.jpg" width="300" alt="Actual Q11 component face and connectors"></a>
+<a href="resimler/20261007_003643.jpg"><img src="resimler/20261007_003643.jpg" width="300" alt="J15 footprint labelled GND BOOT between the USB sockets"></a>
+
+The [English photo index](resimler/README.md) contains 26 supplied photographs,
+package transcriptions and image checksums. J15 is a boot-strap candidate, not a
+verified entry recipe. The Q11 package has no accessible gull-wing leads; the
+other-board “107–108 / upper-right two legs” instruction does not apply to it.
 
 ## Intended boot path
 
@@ -124,6 +135,7 @@ physical steps and expected output. Default experiment capture is receive-only.
 | [Rootfs](docs/ROOTFS.md) | Debian build, deterministic initramfs, external image and USB preparation |
 | [Bring-up](docs/BRINGUP.md) | Completed physical trials, next board-identification step and acceptance criteria |
 | [Hardware](docs/HARDWARE.md) | Register addresses, DTB detection, card slot and graphics evidence |
+| [Board photographs](resimler/README.md) | Actual PCB views, J15/UART labels, package markings and full image index |
 | [Kernel](docs/KERNEL.md) | Public vendor source candidates, configuration and build tooling |
 | [BootROM](docs/BOOTROM.md) | UART bootstrap, USB host boot, pin-short reports and loader requirements |
 | [Network](docs/NETWORK.md) | Isolated DHCP, stock Ethernet, TCP inventory and HTTP/DIAL inspection |
@@ -147,13 +159,15 @@ tools/uart/        Receive-only experiment capture with metadata
 tests/             Fixtures and host tests without a connected Q11
 logs/              Existing historical UART evidence and hash manifest
 photos/            Historical CH341A adapter photos
+resimler/          Actual Q11 PCB photos, English index and image checksums
 artifacts/         Generated outputs; ignored by Git
 ```
 
 Historical Ctrl+C, space and `set` experiments did not expose a bootloader shell.
 They are retained as evidence and are not repeated. The IR trial and isolated
-network inspection also produced no maintenance console. The next physical
-dependency is an unpowered Q11 PCB/package/pad inspection, documented in
+network inspection also produced no maintenance console. Board photos now show
+J15 labelled `GND BOOT`. Its electrical identity and entry semantics, followed by
+a board-compatible RAM loader, remain the dependencies described in
 [BRINGUP](docs/BRINGUP.md); no verified shorting instruction is available.
 
 ## Scope and publication

@@ -24,7 +24,7 @@ Session times use Europe/Istanbul.
 | RAM | 1 GiB DDR; physical base 0; `mem=1G`, `Memory: 566652K/1048576K` (L12, L21) | CONFIRMED |
 | Reservations | 380 MiB CMA/MMZ at `0x18400000`; 4 MiB at `0x3fc00000`; 8 MiB DSP at `0x02000000` | CONFIRMED |
 | Flash | Toshiba 256 MiB raw NAND, 8-bit, 3.3 V; no eMMC or SPI NOR detected in this boot | CONFIRMED observation |
-| NAND ID | `98 DA 90 15 F6 16 08 00` (L112); exact part number needs a package photo | CONFIRMED ID / part UNKNOWN |
+| NAND ID / marking | `98 DA 90 15 F6 16 08 00` (L112); U16 photograph reads `TC58BVG1S3HBAI4` | CONFIRMED log ID / visual marking |
 | NAND geometry | 2 KiB page, 64 B OOB, 128 KiB erase block, 2048 blocks; hardware-auto ECC 4-bit/512 B (L114) | CONFIRMED |
 | NAND controller | HiSilicon `hinfc610` | CONFIRMED |
 | UART header | `GND \| RX \| TX \| VCC` in the recorded board orientation | CONFIRMED on lab unit |
@@ -266,12 +266,32 @@ See [BOOTROM](docs/BOOTROM.md).
 
 ## Current dependency
 
-Verified execution/loading control is missing. Next physical evidence is an
-unpowered Q11 PCB inspection: readable package, revision, pad and connector
-photos. Existing `photos/` shows only CH341. No Q11 shorting instruction, compatible
-RAM loader or signed loading path is established. A legitimate stock rootfs/
-firmware artifact would enable offline hook analysis; no NAND backup is required.
+Verified execution/loading control is missing. Board identification photos are
+now available; electrical entry evidence and a board-compatible RAM loader remain
+missing. No Q11 shorting instruction or signed loading path is established.
+A legitimate stock rootfs/firmware artifact would enable offline hook analysis;
+no NAND backup is required.
 Exact next steps: [BRINGUP](docs/BRINGUP.md).
+
+### Q11 photographs supplied — 2026-10-07
+
+[Image index and checksums](resimler/README.md): 26 supplied JPEG files, originals
+preserved. Both PCB faces are visible. Some frames show attached DC/UART leads;
+the electrical power state cannot be determined from the photographs.
+
+- **CONFIRMED visual:** U1 `Hi3798 MRBCV100MD2`, with no accessible gull-wing leads
+  and lettered/numbered PCB coordinate markings; BGA construction is LIKELY.
+- **CONFIRMED visual:** U16 `TC58BVG1S3HBAI4`, complementing the captured NAND ID.
+- **CONFIRMED visual:** UART `GND RX TX VCC` agrees with the measured wiring record.
+- **CONFIRMED visual:** unpopulated J15 two-hole footprint between USB-A sockets,
+  labelled `GND BOOT`, beside R40. Intended boot strap is **LIKELY**; electrical
+  continuity, SoC net, pull network, voltage and selected boot mode are **UNKNOWN**.
+- **CONFIRMED visual:** J9 `VCC DM DP GND`; native USB device/download capability
+  does not follow from this label. The reverse footprint near `MAC` is not a
+  confirmed JTAG connector. The visible card-style socket is not a verified SD slot.
+- The other-board leaded-package “upper-right 107–108” recipe cannot map to this
+  Q11 package. J15 has not been bridged or measured; no entry/loader trial resulted
+  from this photographic inspection. See [BOOTROM](docs/BOOTROM.md).
 
 ---
 

@@ -1,6 +1,6 @@
 # BootROM and recovery: mechanisms versus evidence
 
-**UNKNOWN on this Q11:** ROM download entry state, straps/buttons/pads, native USB
+**UNKNOWN on this Q11:** ROM download entry state, electrical strap/pad function, native USB
 device capability/VID/PID, acceptance of a RAM image, secure-boot policy and DDR
 initialization blob. There is no confirmed board-specific RAM bootstrap recipe.
 The stock log exposes USB **host** controllers, not a native USB download interface.
@@ -26,10 +26,12 @@ corrects the informal "CPU1–2" naming to physical107–108. Its
 [annotated source photograph](https://raw.histb.eu.org/histb/pic/master/2022/09/03/91240607.jpg)
 shows `Hi3798 MRQCV101000` with visible leads and identifies the two upper pins
 on the right edge in that photograph. It also marks pin1 at the opposite corner.
-This is not a Q11 board photograph or an official electrical pinout. Package
-identity/orientation, Q11 routing and a corresponding accessible test pad remain
-UNKNOWN; USB-port/shield orientation from another board cannot identify a Q11 pad.
-There is no Q11 PCB photo in this repository, only CH341 adapter photos.
+This is not a Q11 board photograph or an official electrical pinout. The actual
+[Q11 photographs](../resimler/README.md), supplied afterward, show U1 marked
+`Hi3798 MRBCV100MD2`, no accessible gull-wing leads and lettered/numbered PCB
+coordinate labels consistent with BGA. Thus the other-board “upper-right two
+legs” instruction cannot be transferred to this Q11. Electrical ball/net mapping
+remains UNKNOWN; USB-port/shield orientation cannot supply that mapping.
 
 [Histb-mainline bootstrap documentation](https://histb-mainline.github.io/software/bootrom/bootstrap.html)
 describes USB_BOOT pulled to GND selecting a USB **host-storage** boot path:
@@ -56,9 +58,29 @@ separately. Same SoC name is insufficient: the
 [vendor-fastboot notes](https://histb-mainline.github.io/software/vendor/fastboot.html)
 require board-specific DDR/reg values as well.
 
-Next evidence remains unpowered Q11 board/package/pad photographs, then a
-documented electrical identity and an audited board-compatible, non-writing
-loader. No instruction to short the Q11 SoC or upload a package has been issued.
+The board photographs establish a candidate labelled pad; next evidence is its
+electrical identity, then an audited board-compatible, non-writing loader. No
+instruction to short the Q11 SoC or upload a package has been issued.
+
+## Actual Q11 pad candidate: J15 `GND BOOT`
+
+[20261007_003643.jpg](../resimler/20261007_003643.jpg) clearly shows an unpopulated
+two-hole J15 footprint between the USB-A sockets, beside R40, with `GND BOOT`
+silkscreen. **CONFIRMED:** location and printed label. **LIKELY:** intended
+ground/boot strap. **UNKNOWN:** ground continuity, boot-input routing, pull network,
+voltage, active level, sampling timing and resulting ROM/loader behavior.
+
+With the text upright in that image, `GND` is above the left hole and `BOOT` above
+the right. This is a visual locator only. No resistance/continuity measurement or
+strap trial has established either net. The label alone is insufficient to bridge
+J15 or promise USB/UART download entry. This candidate is also separate from J9's
+`VCC DM DP GND` footprint, whose USB role/routing are unmeasured.
+
+Some photos show attached DC/UART leads. Their power state is not established by
+the images; disconnect all power and connected peripherals before resistance or
+continuity work. The current ext4-only USB still lacks the FAT/loader files for
+the documented host-storage bootstrap. Entry testing is not useful as a blind
+automatic-flash attempt.
 
 ## Stock recovery candidate after USB detection
 
@@ -86,7 +108,7 @@ No binary protocol packet or loader image was transmitted in this session.
 | Question | Current status |
 |---|---|
 | Can ROM be interrupted by the documented binary bootstrap protocol? | UNKNOWN; different mechanism from the completed UART key tests |
-| Does Q11 require a strap, failed boot medium or button? | UNKNOWN; no pad/shorting instruction is justified |
+| Does Q11 require a strap, failed boot medium or button? | UNKNOWN; J15 `GND BOOT` is a photographed candidate, electrically unverified |
 | Does an official loader start arbitrary userspace? | UNKNOWN; inspect loader package/startup scripts when available |
 | Is arbitrary unsigned RAM code permitted? | UNKNOWN; if authorized tool reports rejection, record it and stop that path |
 | Do OTP/hi_advca/Verimatrix messages prove ROM signature enforcement? | No. Those are indicators; the actual enforcement state is UNKNOWN |

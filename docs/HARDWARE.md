@@ -57,12 +57,28 @@ recorded; do not infer mapping for every socket or SuperSpeed performance. See
 
 ## Card slot
 
-The driver is present and probes **before** the root mount. A card inserted with
-power removed is the next way to establish wiring/card detection. No card in the
-previous log does not prove absent eMMC or a disconnected slot. Photographing the
-Q11 PCB and inspecting card-detect/power routing would be necessary only if a known
-working card still fails. The supplied photos show the CH341A adapter, not the Q11
-PCB; they cannot establish SD wiring or BootROM straps.
+The SD/MMC driver is present and probes **before** the root mount. No detected
+card in the previous log does not prove absent eMMC or a disconnected controller.
+The actual [board photographs](../resimler/README.md) show a metal card-style
+connector, but do not establish its card format or SD/MMC routing. Do not infer a
+microSD/SD socket from the presence of a driver, or force a card into that connector.
+Mechanical format, contact mapping and card-detect/power routing remain UNKNOWN.
+
+## Board photographs and pad labels — 2026-10-07
+
+The [26-photo index](../resimler/README.md) now documents this lab Q11, including
+both PCB faces. U1 reads `Hi3798 MRBCV100MD2`; its lack of accessible gull-wing
+leads and PCB coordinate labels are consistent with BGA. U16 reads
+`TC58BVG1S3HBAI4`. These are package transcriptions, separate from log-confirmed
+SoC identity and NAND geometry. Visible PCB markings include `TTV054` / `160825`
+and reverse-side `BB4A3005C0`; no revision/date decoding is assumed.
+
+**CONFIRMED visual labels:** UART `GND RX TX VCC`; J15 `GND BOOT` between the USB-A
+sockets; J9 `VCC DM DP GND` near the power connector. J15 is a **LIKELY** boot-strap
+candidate, but ground continuity, SoC routing, voltage and resulting entry mode
+are **UNKNOWN**. J9's host/device role is likewise unknown. Neither footprint is
+a confirmed programming connector. The unpopulated reverse two-row footprint
+near `MAC` is not a verified JTAG pinout. See [BOOTROM](BOOTROM.md).
 
 ## Graphics after shell, storage and network
 

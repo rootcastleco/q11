@@ -18,6 +18,21 @@ if (-not $failed) { throw 'Negative remaining bytes accepted.' }
 $failed = $false
 try { Import-Module (Join-Path $PSScriptRoot 'missing-q11-module.psm1') -ErrorAction Stop } catch { $failed=$true }
 if (-not $failed) { throw 'Missing module accepted.' }
+$probeDisk = [pscustomobject]@{BusType='USB'; IsSystem=$false; IsBoot=$false; Size=15833497600L; LogicalSectorSize=512; Number=3}
+if ((Select-Q11ProbeDisk -Disks @($probeDisk) -ExpectedSizeBytes 15833497600L).Number -ne 3) { throw 'Expected USB disk was not selected.' }
+foreach ($candidates in @(@(), @($probeDisk,$probeDisk))) {
+    $failed=$false
+    try { Select-Q11ProbeDisk -Disks $candidates -ExpectedSizeBytes 15833497600L | Out-Null } catch { $failed=$true }
+    if (-not $failed) { throw 'Missing/ambiguous USB selection accepted.' }
+}
+$probeDisk.IsSystem=$true
+$failed=$false
+try { Select-Q11ProbeDisk -Disks @($probeDisk) -ExpectedSizeBytes 15833497600L | Out-Null } catch { $failed=$true }
+if (-not $failed) { throw 'System disk selected.' }
+$probeDisk.IsSystem=$false; $probeDisk.BusType='SATA'
+$failed=$false
+try { Select-Q11ProbeDisk -Disks @($probeDisk) -ExpectedSizeBytes 15833497600L | Out-Null } catch { $failed=$true }
+if (-not $failed) { throw 'Non-USB disk selected.' }
 $issues=@()
 Get-ChildItem (Join-Path $PSScriptRoot '..\tools') -Recurse -File | Where-Object { $_.Extension -in '.ps1','.psm1' } | ForEach-Object {
     $tokens=$null; $errors=$null
@@ -25,4 +40,4 @@ Get-ChildItem (Join-Path $PSScriptRoot '..\tools') -Recurse -File | Where-Object
     $issues += $errors
 }
 if ($issues.Count) { throw ($issues | Out-String) }
-Write-Output 'PASS: >2 GiB/1 TiB transfer sizes, invalid input, missing module and PowerShell parsing'
+Write-Output 'PASS: transfer sizes, unique/non-system USB selection, invalid/missing inputs and PowerShell parsing'

@@ -4,13 +4,15 @@ Session:2026-10-06. Hardware custom boot is **not** validated.
 
 | Check | Result / boundary |
 |---|---|
-| Python unittest suite |23 tests: captured boot/timing fixtures; valid/truncated/false-positive FDT; SquashFS/environment fixtures; CRC redaction; bounded I/O; newc device nodes/reproducibility; MBR; CLI success/invalid/missing/no-overwrite |
+| Python unittest suite |25 tests: captured boot/timing fixtures; valid/truncated/false-positive FDT; SquashFS/environment fixtures; CRC redaction; bounded I/O; newc device nodes/reproducibility; MBR; ext superblock comparison/UUID/short-input guards; CLI success/invalid/missing/no-overwrite |
 | Linux host suite |Real256 MiB ext4 checked by e2fsck; actual MBR image generated; ARM static root-probe exercised under QEMU; shell tool valid dry-runs/invalid/missing checks |
 | ShellCheck |Build, configure, filesystem, kernel and test scripts; POSIX init separately |
 | PowerShell parser |All `.ps1` files parsed; receive-only dry-run passed |
 | UART absent-device test |COM999,5-second bound, zero bytes -> failure metadata; actual COM8 was not transmitted to |
 | Windows USB writer dry-run |REI/E:, one USB/MBR disk,15,833,497,600 bytes, non-system/non-boot,512-byte sectors, image checksum/header/capacity checks passed |
 | Windows physical USB write |2,148,532,224 bytes written and readback SHA256 matched at23:36 Istanbul; result `written-and-verified`, exit0; user-authorized REI stick only |
+| Q11 receive-only USB boot probe |COM8/115200,120 seconds,116,547 bytes; SHA256/timing continuity checked, exit0; one stock boot, USB xhci mass-storage `/dev/sda1` detected; HAL MOUNTED callback does not prove ext4 or custom boot |
+| USB prefix reader |Unique capacity/non-system/non-boot/USB selection and missing/ambiguous/system/non-USB failures tested; real REI selection dry-run passed; physical reader uses FileAccess.Read only and a fixed2 MiB extent |
 | PowerShell transfer regression |Int64 sizing at >2 GiB and1 TiB, zero/final512-byte chunk, invalid negative size and missing module checks passed |
 | Debian rootfs |Release signature verified; package installation completed; SysV init/SSH/serial/DHCP/key configuration checked under QEMU; no private keys in Git |
 |2 GiB populated ext4 |e2fsck -fn passed,9,072 inodes,87,630 blocks used at creation; exact files can change on a rebuild |

@@ -10,4 +10,16 @@ function Get-Q11ChunkSize {
     # Both operands must be Int64: image extents can exceed Int32.MaxValue.
     return [int][Math]::Min([long]$BufferBytes,[long]$RemainingBytes)
 }
-Export-ModuleMember -Function Get-Q11ChunkSize
+function Select-Q11ProbeDisk {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)][AllowEmptyCollection()][object[]]$Disks,
+        [Parameter(Mandatory=$true)][ValidateRange(2097152,1099511627776)][long]$ExpectedSizeBytes
+    )
+    $selected = @($Disks | Where-Object { $_.BusType -eq 'USB' -and
+        -not $_.IsSystem -and -not $_.IsBoot -and $_.Size -eq $ExpectedSizeBytes })
+    if ($selected.Count -ne 1) { throw 'Exactly one non-system/non-boot USB disk of the expected capacity is required.' }
+    if ($selected[0].LogicalSectorSize -ne 512) { throw 'USB probe requires 512-byte logical sectors.' }
+    return $selected[0]
+}
+Export-ModuleMember -Function Get-Q11ChunkSize,Select-Q11ProbeDisk

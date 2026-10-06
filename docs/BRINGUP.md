@@ -2,10 +2,49 @@
 
 No usable shell or custom Linux boot is confirmed. Completed Ctrl+C, Space and
 `set` experiments are closed; none should be repeated. NAND backup work is not
-required. The next physical experiment is **removable-media detection**, not a
-claim that the prepared rootfs boots automatically.
+required. The REI USB was detected by the Q11 on 2026-10-06. Loading control for
+our initramfs remains UNKNOWN; preparing external storage does not redirect boot.
 
-## USB storage probe (user has authorized erasing the REI stick)
+## Q11 USB probe result — 2026-10-06 23:40–23:42 Istanbul
+
+Private capture: `logs/experiment_20261006_234020_media-probe.log` with timing and
+metadata, COM8/115200, receive-only, exit0. All 116,547 bytes have contiguous timing
+coverage and the recorded SHA256 matches. Initial lines are the already-running
+stock system; the user-confirmed power cycle starts a single kernel boot at L182.
+Line references here count LF-delimited raw lines, without expanding extra CRs.
+
+* CONFIRMED, L462–464: high-speed USB device on `5-1` using xhci-hcd, mass storage.
+* CONFIRMED, L486–495: Generic Flash Disk, 30,924,800 sectors of 512 bytes
+  (15,833,497,600 bytes); `/dev/sda`, one `/dev/sda1` partition.
+* CONFIRMED, L766/L788: vendor HAL emits `MOUNTED` callback for one partition.
+  L769–785 shows PVR tag/open/subscriber-matching failures; L927 onward shows
+  repeated `HMW_disk_umount` errors. These are stock application messages, not
+  proof of a particular filesystem mount, and are unrelated to our SSH configuration.
+* UNKNOWN: actual mount path/type, whether the stock firmware wrote the USB,
+  ext4 runtime compatibility, and any legitimate removable-media execution hook.
+  No custom-initramfs marker, switch_root, Debian shell, or SSH success was seen.
+
+The next host check reads just a 2 MiB prefix of this external USB and compares
+its ext superblock with the prepared image. It neither mounts the filesystem nor
+replays its journal. With Q11 power removed, move the REI stick to a normal PC USB
+socket; retain UART wiring and decline Windows formatting. No VCC, A-to-A cable,
+Ethernet connection or PCB-pad manipulation is needed. Expected output is a new
+private prefix file plus JSON, not a new boot.
+
+```powershell
+# Administrator PowerShell, after moving REI to the PC; uniquely matched USB only.
+pwsh -NoProfile -File tools/rootfs/read-usb-probe.ps1 -ExpectedDiskSizeBytes 15833497600 -DryRun
+pwsh -NoProfile -File tools/rootfs/read-usb-probe.ps1 -ExpectedDiskSizeBytes 15833497600
+# Replace the timestamp with the printed output; reads regular files only.
+python tools/analysis/ext4_super.py artifacts/q11-usb-probe_TIMESTAMP.bin --partition-offset 1048576 --baseline artifacts/q11-usb.img --output artifacts/q11-usb-super_TIMESTAMP.json
+```
+
+Return the printed `logs/experiment_TIMESTAMP_usb-read.json` and superblock report.
+Snapshots stay private/gitignored. A changed mount count/path can establish a
+stock mount, but not loading control or switch_root. If the superblock no longer
+matches the baseline UUID, stop interpreting it as the prepared filesystem.
+
+## Reproducing USB storage detection (completed once; no repeat needed)
 
 This session's REI stick was **written and fully readback-verified** at
 2026-10-06 23:36 Istanbul time. A2 GiB ext4 root partition is ready; Windows cannot

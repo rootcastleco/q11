@@ -215,3 +215,11 @@ alanı tükendi. Kalan yollar Faz 6 sonundaki A/B/C seçenekleri (Güvenlik Değ
   tamamı geri okunup SHA-256 eşleşti, exit0 (`logs/experiment_20261006_233032_usb-write.json`,
   özel/gitignored). Bu CONFIRMED bir PC/USB hazırlık sonucudur; Q11 Linux boot başarısı değildir.
   Dahili NAND'a yazılmadı. Sonraki işlem USB'yi Q11'e fiziksel taşımak ve USB algılama kaydı almak.
+- 2026-10-06 23:40–23:42: REI Q11'e takılıyken COM8/115200 üzerinden 120 sn salt-okunur kayıt
+  alındı; kullanıcı güç döngüsünü doğruladı. Özel kayıt: `logs/experiment_20261006_234020_media-probe.log`.
+  116.547 bayt, exit0; SHA-256 ve zamanlama kapsamı doğrulandı. LF satır numarası L182'de tek stok boot.
+  CONFIRMED (L462–495): xhci yüksek hızlı USB → Generic Flash Disk, 15.833.497.600 bayt,
+  `/dev/sda` ve `/dev/sda1`. CONFIRMED (L766/L788): uygulamanın MOUNTED callback'i var;
+  sonrasında PVR dosya/eşleştirme ve unmount hataları var. Gerçek mount tipi/yolu UNKNOWN.
+  Debian/özel initramfs/shell başarısı yok. Sonraki kontrol USB'nin yalnızca ilk 2 MiB'sini PC'de
+  okuyup ext4 superblock sayaçlarını ilk imajla karşılaştırmak; NAND'a erişim/yazma yok.

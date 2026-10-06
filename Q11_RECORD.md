@@ -90,8 +90,8 @@ açılışlar arasında bazı bölümlerin hash'i değişebilir; bu bizim yazmam
 ## Güvenlik kuralları (kalıcı)
 - Q11 VCC pini hiçbir zaman adaptöre bağlanmaz; Q11 kendi adaptöründen beslenir.
 - 5 V UART yok. CH341A TXD → Q11 RX bağlantısı, ölçümle ≤3.3 V doğrulanmadan yapılmaz.
-- Doğrulanmış tam yedek olmadan yazma/silme/saveenv/flash yok.
-- Yedek alınana kadar **Ethernet/İnternet bağlama**: firmware operatörün güncelleme sunucusunu arıyor
+- Güncel kullanıcı kararı (2026-10-06 devamı): tam NAND yedeği bring-up önkoşulu değil; yedek araçları oluşturulmaz. Gereksiz dahili NAND yazma/silme/saveenv/flash yok. Harici REI USB belleği hazırlamak için ayrıca izin verildi.
+- Stok firmware testi sırasında **Ethernet/İnternet bağlama**: firmware operatörün güncelleme sunucusunu arıyor
   (L688); OTA güncelleme NAND'ı değiştirebilir.
 - Açma sırası: önce CH341A USB, sonra Q11 gücü. Kapatma: önce Q11, sonra USB.
 - Kablolama Q11 adaptörü prizden çekiliyken yapılır; CH341A'da GND'nin yanındaki 3.3V pinine dikkat.
@@ -187,3 +187,27 @@ UART üzerinden bootloader'a girilemiyor. Kendi kodunu çalıştırmak için kal
 autoboot'unu durduramadı. Bu, UART break-in'in bu imajda devre dışı bırakıldığına dair kanıtı
 güçlendiriyor (LIKELY → CONFIRMED'e yakın). UART yoluyla bootloader'a erişim için makul deneme
 alanı tükendi. Kalan yollar Faz 6 sonundaki A/B/C seçenekleri (Güvenlik Değerlendirmesi notuna bakın).
+
+## Linux bring-up devamı — 2026-10-06
+
+- Kullanıcı kararı: NAND yedeği projesi yok; mümkünse stok kernel + RAM initramfs + harici rootfs.
+  REI adlı harici USB belleği silme/hazırlama izni açıkça verildi. Dahili NAND için böyle bir işlem
+  yapılmadı ve yeni araçlarda dahili NAND yazarı yok.
+- CONFIRMED (L161–163): `himciv200` sürücüsü kayıtlı; SD @0xf9820000 ve MMC @0xf9830000
+  root mount öncesi deneniyor, önceki yakalamada kart yok. Harici kart slotu kullanılabilirliği UNKNOWN.
+- CONFIRMED (L236–267): USB platform host denetleyicileri S90modules sonrasında başlıyor.
+  USB root için erken modül bağımlılığı LIKELY; kesin stok `.config` mevcut değil.
+- CONFIRMED (L276–283, L451): set_mount_new.sh, hmw_mount.sh, loader.rc, local.rc/init.sh
+  inceleme hedefleri. USB/appdata üzerinden komut çalıştıran bir hook henüz UNKNOWN.
+- Kaynak adayı doğrulandı: glinuz/hi3798mv100 @12aa0504, SDK R005 SPC041, kernel3.18.24,
+  hi3798mv100_defconfig/mach-hi3798mx/DTS. Q11 kernel3.18.13_s40 ile birebir değil.
+  Genel DTS PHY=2, Q11 logu PHY=1; DTS doğrudan Q11 board dosyası olarak kullanılamaz.
+- Düzeltme: eski değerlendirmedeki USB BootROM/NAND kısa devre önerisi doğrulanmış Q11 yöntemi
+  değildir. HiLoot kamuya açık **UART** RAM bootstrap adayıdır; native USB VID/PID ve Q11 entry
+  durumu UNKNOWN. OTP/CA mesajları secure-boot imza zorunluluğunu CONFIRMED yapmaz.
+- HOST CONFIRMED: Debian bookworm armhf/SysV rootfs yapılandırıldı; 2 GiB ext4 imajı e2fsck
+  kontrolünden geçti; 1,740,288 bayt newc initramfs üretildi. ARM programları QEMU ile kontrol
+  edildi. Bunlar Q11 üzerinde özel boot/shell/SSH/Ethernet başarısı kanıtı değildir.
+- Araçlar, offline testler ve belgeler eklendi: [docs/BRINGUP.md](docs/BRINGUP.md).
+  Yeni fiziksel adım, hazırlanmış USB veya bilinen çalışan microSD'nin salt-okunur UART kaydıyla
+  algılanmasını ölçmek. Eski UART kesme denemeleri tekrarlanmadı; NAND backup çalışması yapılmadı.

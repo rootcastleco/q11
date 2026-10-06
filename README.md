@@ -48,7 +48,7 @@ Q11 VCC     BAĞLANMAZ (cihaz kendi adaptöründen beslenir)
 - Q11 VCC hiçbir zaman adaptöre bağlanmadı; cihaz her zaman kendi güç adaptöründen beslendi.
 - TX hattı bağlanmadan önce hem CH341A hem Q11 tarafında gerilim ölçüldü, 3.3 V olduğu doğrulandı
   (5 V UART adaptörleriyle doğrudan bağlantı SoC'yi geri dönüşsüz zarar verebilir).
-- Doğrulanmış tam NAND yedeği alınmadan hiçbir yazma/silme komutu çalıştırılmadı/çalıştırılmayacak.
+- Dahili NAND'a gereksiz yazma/silme yapılmaz. Güncel kullanıcı kararı: tam NAND yedeği Linux bring-up için önkoşul değildir; yedek projesi başlatılmayacak. Açıkça izin verilen harici USB hazırlığı ayrı bir işlemdir.
 - Kablolama her zaman cihaz güçsüzken yapıldı; açma sırası önce adaptör USB'si, sonra cihaz gücü.
 
 ## Araçlar (`tools/`)
@@ -82,7 +82,44 @@ cihazın flash'ına yazmaz; "kalıcı değişiklik" riski taşıyan komutlar kod
 Tüm kanıtlar `CONFIRMED` / `LIKELY` / `UNKNOWN` etiketleriyle [`Q11_RECORD.md`](Q11_RECORD.md)
 içinde, log satır numaralarına referansla birlikte kayıtlı.
 
-## Durum ve sıradaki adımlar
+## Güncel Linux bring-up çalışması (2026-10-06)
+
+Proje devam ediyor. **Henüz Q11 üzerinde özel Linux açılışı veya kullanılabilir shell doğrulanmadı.**
+Tamamlanmış UART kesme denemeleri tekrarlanmaz; mevcut loglar korunur.
+
+- Stok cmdline sonunda `root=/dev/ram` var; yalnızca ilk `root=` değerini değiştirmek yeterli değil.
+- `himciv200` MMC/SD sürücüsü mevcut ve root mount öncesinde iki denetleyiciyi deniyor. Önceki
+  açılışlarda kart algılanmadı; microSD desteği yok sonucu çıkarılamaz.
+- USB platform denetleyicileri S90modules sonrasında açılıyor; harici USB root için gerekli modüller
+  initramfs içinde bulunmalı veya çekirdeğe gömülü olmalı.
+- Debian bookworm armhf/SysV rootfs, ext4 imajı, MBR USB imajı ve deterministik RAM initramfs
+  oluşturma araçları eklendi. Bunlar host tarafı hazırlıktır; imaj yükleme/başlatma yolu hâlâ UNKNOWN.
+- NAND yedeği çalışması yok. Factory/CA/DRM bölümleri ve imza atlatma kapsam dışı.
+
+| Belge | İçerik |
+|---|---|
+| [ARCHITECTURE](docs/ARCHITECTURE.md) | Önceliklendirilmiş yollar ve mevcut engel |
+| [BOOT_FLOW](docs/BOOT_FLOW.md) | Stok initrd, bootargs/loader ve rootfs inceleme hedefleri |
+| [ROOTFS](docs/ROOTFS.md) | Debian/initramfs oluşturma ve izinli USB hazırlığı |
+| [BRINGUP](docs/BRINGUP.md) | Kesin fiziksel deney, loglar ve kabul ölçütleri |
+| [HARDWARE](docs/HARDWARE.md) | Kanıtlı adresler, SD ve grafik/DTB adayları |
+| [KERNEL](docs/KERNEL.md) | 3.18.24/4.4.35 kaynak adayları ve build aracı |
+| [BOOTROM](docs/BOOTROM.md) | UART bootstrap ile native USB ayrımı; bilinmeyenler |
+| [MEMORY](docs/MEMORY.md) | MMZ hesabı ve RAM bölgesi doğrulama ihtiyacı |
+
+Yeni araçlar `tools/analysis`, `tools/dtb`, `tools/rootfs`, `tools/kernel`, `tools/uart`
+altında; büyük/generated dosyalar gitignored `artifacts/` altında tutulur.
+
+```powershell
+python -m unittest discover -s tests -v
+python tools/analysis/boot_report.py logs --output artifacts/boot-report.json
+```
+
+İlk yeni donanım adımı USB/microSD algılama kaydıdır; [tam bağlantı ve komut](docs/BRINGUP.md).
+Belleğe rootfs koymak tek başına boot sağlamaz. Stok mount/init betikleri veya yetkili RAM loader
+yolu incelenmeden USB üzerinde rastgele "autorun" / güncelleme dosyaları kullanılmaz.
+
+## Önceki durum değerlendirmesi (tarihsel)
 
 UART yoluyla makul deneme alanı (standart kesme tuşları + stop-string) tükendi. Kalan, daha
 invazif seçenekler:
@@ -96,8 +133,8 @@ invazif seçenekler:
 3. Hedefi bu cihazdan ayırıp resmi Linux desteği olan başka bir kart (Raspberry Pi vb.) üzerinde
    sürdürmek.
 
-Bu repo, cihaz üzerinde herhangi bir kalıcı/yazma işlemi yapılmadan **mevcut durumda** dondurulmuş
-bir kayıttır. Güncellemeler olursa `Q11_RECORD.md`'nin olay günlüğü bölümüne eklenecektir.
+Bu bölüm önceki oturumun değerlendirmesidir; yukarıdaki Linux bring-up devamı güncel çalışma
+kararlarını açıklar. Önceki USB BootROM ve NAND seçenekleri doğrulanmış yöntem olarak okunmamalıdır.
 
 ## Sorumluluk reddi
 

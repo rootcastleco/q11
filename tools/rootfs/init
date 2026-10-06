@@ -1,0 +1,92 @@
+#!/bin/sh
+# PID 1 in a NEW initramfs, not a script to execute inside the stock rootfs.
+set -eu
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+rescue() {
+    echo "Q11: handoff failed: $*; local RAM rescue shell" >/dev/console
+    while :; do
+        setsid cttyhack sh </dev/console >/dev/console 2>&1 || echo "Q11: rescue shell exited" >/dev/console
+        sleep 1
+    done
+}
+
+mount -t proc proc /proc || rescue proc
+mount -t sysfs sysfs /sys || rescue sysfs
+if ! mount -t devtmpfs devtmpfs /dev; then
+    mount -t tmpfs tmpfs /dev || rescue dev
+    mknod /dev/console c 5 1 || rescue console
+    mknod /dev/null c 1 3 || rescue null
+    mdev -s || rescue mdev
+fi
+exec </dev/console >/dev/console 2>&1
+echo "Q11: custom initramfs reached (RAM only)"
+root_spec=LABEL=Q11ROOT
+wait_sec=30
+mode=rw
+# Intentional word splitting: kernel command line consists of whitespace-delimited arguments.
+# shellcheck disable=SC2013
+for arg in $(cat /proc/cmdline); do
+    case "$arg" in
+        q11.root=*) root_spec=${arg#q11.root=} ;;
+        q11.wait=*) wait_sec=${arg#q11.wait=} ;;
+        q11.ro=1) mode=ro ;;
+        q11.rescue=1) rescue requested ;;
+    esac
+done
+case "$wait_sec" in ''|*[!0-9]*) rescue invalid-wait ;; esac
+[ "$wait_sec" -le 120 ] || rescue wait-exceeds-120
+case "$root_spec" in
+    LABEL=Q11ROOT|UUID=*) ;;
+    /dev/sd[a-z][1-9]|/dev/sd[a-z][1-9][0-9]|/dev/mmcblk[0-9]p[1-9]|/dev/mmcblk[0-9]p[1-9][0-9]) ;;
+    *) rescue invalid-external-root ;;
+esac
+if [ -f /etc/q11/modules ]; then
+    while IFS= read -r module; do
+        case "$module" in ''|'#'*) continue ;; *[!a-zA-Z0-9_-]*) rescue invalid-module ;; esac
+        modprobe "$module" || rescue "module $module"
+    done </etc/q11/modules
+fi
+elapsed=0
+device=
+while [ "$elapsed" -le "$wait_sec" ]; do
+    mdev -s || rescue mdev-scan
+    case "$root_spec" in
+        LABEL=*|UUID=*)
+            device=''
+            matches=0
+            for candidate in /dev/sd*[0-9] /dev/mmcblk[0-9]p[0-9]*; do
+                [ -b "$candidate" ] || continue
+                info=$(q11-root-probe "$candidate" 2>/dev/null || :)
+                case "$root_spec" in
+                    LABEL=*) wanted="LABEL=\"${root_spec#LABEL=}\"" ;;
+                    UUID=*) wanted="UUID=\"${root_spec#UUID=}\"" ;;
+                esac
+                case "$info" in *"$wanted"*) device=$candidate; matches=$((matches + 1)) ;; esac
+            done
+            [ "$matches" -le 1 ] || rescue duplicate-root-label-or-uuid
+            ;;
+        *) device=$root_spec ;;
+    esac
+    # Exactly one removable partition. LABEL/UUID must never resolve to NAND.
+    case "$device" in
+        /dev/sd[a-z][1-9]|/dev/sd[a-z][1-9][0-9]|/dev/mmcblk[0-9]p[1-9]|/dev/mmcblk[0-9]p[1-9][0-9])
+            [ ! -b "$device" ] || break ;;
+        '') ;;
+        *) rescue ambiguous-or-internal-root ;;
+    esac
+    sleep 1
+    elapsed=$((elapsed + 1))
+done
+if [ -z "$device" ] || [ ! -b "$device" ]; then rescue external-root-timeout; fi
+options=$mode
+[ "$mode" != ro ] || options=ro,noload
+mount -t ext4 -o "$options" "$device" /newroot || rescue ext4-mount
+[ -x /newroot/sbin/init ] || rescue missing-init
+ln -s "$device" /dev/root || rescue root-device-link
+for directory in proc sys dev; do
+    [ -d "/newroot/$directory" ] || rescue "missing $directory"
+    mount --move "/$directory" "/newroot/$directory" || rescue "move $directory"
+done
+echo "Q11: switch_root $device ($mode)"
+exec switch_root /newroot /sbin/init

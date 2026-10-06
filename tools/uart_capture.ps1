@@ -15,6 +15,7 @@
 param(
     [Parameter(Mandatory = $true)][string]$Port,
     [int]$Baud = 115200,
+    [ValidateRange(0,3600)][int]$MaxTotalSec = 0,
     [string]$OutFile = (Join-Path $PSScriptRoot '..\logs\boot_01.log'),
     [int]$ArmBytes = 64,            # bu kadar bayt gelmeden zamanlayicilar baslamaz (kablo takarken gelen cop baytlar)
     [int]$ArmAfterSilenceSec = 0,   # >0 ise: once hat bu kadar sn sessiz kalmali (Q11 kapali), sonra gelen veriyle baslar
@@ -23,6 +24,7 @@ param(
     [int]$MaxAfterFirstSec = 900    # veri gelmeye basladiktan sonra en fazla kayit suresi
 )
 
+Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $OutFile = [System.IO.Path]::GetFullPath($OutFile)
 New-Item -ItemType Directory -Force -Path (Split-Path $OutFile) | Out-Null
@@ -65,6 +67,7 @@ Say "salt-okunur kayit: $Port $Baud 8N1 -> $OutFile"
 
 try {
     while ($true) {
+        if ($MaxTotalSec -gt 0 -and $sw.Elapsed.TotalSeconds -ge $MaxTotalSec) { $reason = 'azami toplam sure'; break }
         $now = Get-Date
         $n = 0
         if ($null -eq $sp) {

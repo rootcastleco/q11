@@ -1,2 +1,8 @@
 *.tmp
 Thumbs.db
+__pycache__/
+*.pyc
+/artifacts/*
+!/artifacts/.gitkeep
+/logs/experiment_*
+/logs/build_*

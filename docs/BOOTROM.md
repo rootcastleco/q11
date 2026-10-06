@@ -18,6 +18,48 @@ options are enabled in Q11, or that a consumer USB-upgrade path is RAM-only.
 HiSilicon "fastboot" partition naming does not establish Android fastboot protocol.
 No confirmed Huawei Q11 official recovery package is locally available.
 
+## Newly supplied MV100 pin-short sources (2026-10-07)
+
+The user's two URLs provide useful **community evidence**, not Q11-specific
+validation. [Histb discussion, gbsadmin's first-hand YMB0310-CW report](https://bbs.histb.com/d/501/23)
+corrects the informal "CPU1–2" naming to physical107–108. Its
+[annotated source photograph](https://raw.histb.eu.org/histb/pic/master/2022/09/03/91240607.jpg)
+shows `Hi3798 MRQCV101000` with visible leads and identifies the two upper pins
+on the right edge in that photograph. It also marks pin1 at the opposite corner.
+This is not a Q11 board photograph or an official electrical pinout. Package
+identity/orientation, Q11 routing and a corresponding accessible test pad remain
+UNKNOWN; USB-port/shield orientation from another board cannot identify a Q11 pad.
+There is no Q11 PCB photo in this repository, only CH341 adapter photos.
+
+[Histb-mainline bootstrap documentation](https://histb-mainline.github.io/software/bootrom/bootstrap.html)
+describes USB_BOOT pulled to GND selecting a USB **host-storage** boot path:
+FAT32 root `fastboot.bin`. It separately describes fallback when no internal
+storage is found. The supplied pin-short report does not establish whether107
+or108 is USB_BOOT/GND on this package; do not describe the short as NAND data
+corruption without a pinout/measurement. No special native USB device socket or
+PC-visible VID/PID is established by this host-storage mechanism.
+
+The [Histb USB OpenWrt procedure](https://bbs.histb.com/d/501/1) requires a matching
+board `reg` loader plus bootargs/kernel on a FAT boot partition and ext4 root on
+another partition. Its authors report external boot, but its actual payload has
+not been audited here. Our current REI image has one ext4 partition and no FAT
+`fastboot.bin`/bootargs/kernel loading set; inserting it does not satisfy this
+BootROM recipe. Preserve that already prepared Debian filesystem for now.
+
+**Different payload boundary:** the supplied
+[Ekoo USB-flash guide](https://ecoo.top/docs/tutorial-basics/usb-flash/) explicitly
+performs automatic internal eMMC installation and gives `mmc write.ext4sp` in its
+boot command example. It is not a RAM-only procedure; Q11 has raw NAND, not that
+eMMC layout. No Ekoo flash package was downloaded, copied to USB or executed.
+BootROM entry itself and the subsequent loader's actions must be assessed
+separately. Same SoC name is insufficient: the
+[vendor-fastboot notes](https://histb-mainline.github.io/software/vendor/fastboot.html)
+require board-specific DDR/reg values as well.
+
+Next evidence remains unpowered Q11 board/package/pad photographs, then a
+documented electrical identity and an audited board-compatible, non-writing
+loader. No instruction to short the Q11 SoC or upload a package has been issued.
+
 ## Stock recovery candidate after USB detection
 
 [Q11 owner callagne, 2025-08-11, post29](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/#post-7524681)

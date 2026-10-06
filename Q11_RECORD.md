@@ -268,3 +268,11 @@ alanı tükendi. Kalan yollar Faz 6 sonundaki A/B/C seçenekleri (Güvenlik Değ
 - Sonraki fiziksel bağımlılık Q11 PCB fotoğraflarıyla revizyon/pad tanımlaması;
   mevcut `photos/` yalnız CH341 gösteriyor. Güç ve tüm kablolar çıkarılır, hiçbir
   pad kısa devre edilmez. RAM loader/DDR/entry hâlâ UNKNOWN; [BRINGUP](docs/BRINGUP.md).
+- Kullanıcının yeni Histb/Ekoo bağlantıları kontrol edildi: Histb'de YMB0310-CW
+  sahibi "CPU1–2" yerine fiziksel107–108 düzeltmesi ve MRQCV101000 paket fotoğrafı
+  veriyor. Bu topluluk/başka kart kanıtı; Q11'e özgü pin/pad eşlemesi UNKNOWN.
+  Ekoo USB-flash tarifi otomatik eMMC yazıyor, RAM-only değil; Q11 raw NAND düzenine
+  uygunluk göstermez. HiSTB dokümanı USB_BOOT→GND/FAT32/fastboot.bin host-storage
+  mekanizmasını ve board-specific DDR/reg gereğini açıklıyor. Hazır REI USB yalnız
+  ext4 içeriyor, bu boot dosyaları yok. Firmware indirilmedi/çalıştırılmadı, USB
+  yeniden yazılmadı ve kısa devre yaptırılmadı. Ayrıntı [BOOTROM](docs/BOOTROM.md).

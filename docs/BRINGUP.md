@@ -119,6 +119,14 @@ The next dependency is measured electrical identity of J15 and a documented entr
 mechanism, followed by a board-compatible loader/identification protocol. No new
 UART transmission, USB rewrite, strap or power-cycle experiment is specified here.
 
+The owner later reported briefly bridging/releasing J15, with Q11 lights on.
+The adapter initially enumerated as CH341 programmer `1a86:5512`, so no UART was
+available for that interval. After the owner restored jumper 2–3 and reconnected
+the adapter USB, UART enumerated as COM10 and a receive-only passive capture
+started at 00:57:32 Istanbul. It showed stock HMW middleware; the initial entry/
+power-on interval was missed. Current stock execution is confirmed, while J15
+entry behavior remains unknown. See the [trial record](../Q11_RECORD.md#owner-reported-j15-trial).
+
 For resistance/continuity identification, first unplug Q11's own power adapter
 and disconnect HDMI, LAN, USB/media and UART leads; disconnect CH341 from the PC
 before moving its leads. Some supplied photos show attached DC/UART, so do not

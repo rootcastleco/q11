@@ -35,8 +35,11 @@ as in the image above, the hole under `GND` is on the left and the hole under
 
 **LIKELY:** J15 is intended for a ground/boot strap. **UNKNOWN:** continuity to
 board ground and the SoC boot input, active level, pull resistors, sampling timing,
-selected boot mode and whether the stock loader can use it. No J15 measurement or
-shorting trial has been performed. Do not bridge it from the label alone.
+selected boot mode and whether the stock loader can use it. No electrical J15
+measurement has been supplied. After the photographic review, the owner reported
+briefly bridging/releasing J15; subsequent UART showed stock middleware, with the
+entry/power-on interval uncaptured. See the [trial record](../Q11_RECORD.md#owner-reported-j15-trial).
+Do not bridge it from the label alone.
 
 The Q11 U1 package has no accessible gull-wing leads in these photographs; its
 lettered/numbered PCB coordinate markings are consistent with a BGA package.

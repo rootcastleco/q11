@@ -71,8 +71,11 @@ ground/boot strap. **UNKNOWN:** ground continuity, boot-input routing, pull netw
 voltage, active level, sampling timing and resulting ROM/loader behavior.
 
 With the text upright in that image, `GND` is above the left hole and `BOOT` above
-the right. This is a visual locator only. No resistance/continuity measurement or
-strap trial has established either net. The label alone is insufficient to bridge
+the right. This is a visual locator only. No resistance/continuity measurement has
+established either net. The owner subsequently reported briefly bridging/releasing
+J15; a later receive-only capture showed stock middleware, but did not record the
+entry/power-on interval. See the [trial record](../Q11_RECORD.md#owner-reported-j15-trial).
+This does not establish the strap's selected mode. The label alone is insufficient to bridge
 J15 or promise USB/UART download entry. This candidate is also separate from J9's
 `VCC DM DP GND` footprint, whose USB role/routing are unmeasured.
 

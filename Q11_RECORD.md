@@ -290,8 +290,31 @@ the electrical power state cannot be determined from the photographs.
   does not follow from this label. The reverse footprint near `MAC` is not a
   confirmed JTAG connector. The visible card-style socket is not a verified SD slot.
 - The other-board leaded-package “upper-right 107–108” recipe cannot map to this
-  Q11 package. J15 has not been bridged or measured; no entry/loader trial resulted
-  from this photographic inspection. See [BOOTROM](docs/BOOTROM.md).
+  Q11 package. No entry/loader trial occurred during the photographic inspection.
+  The owner's later shorting report is recorded separately below. No electrical
+  J15 measurement has been supplied. See [BOOTROM](docs/BOOTROM.md).
+
+### Owner-reported J15 trial
+
+On 2026-10-07, after the photo review, the owner reported briefly bridging J15
+and releasing it; Q11 indicator lights were on. Exact bridge timing, power sequence
+and the resulting entry interval were not captured. No loader or boot-mode result
+can be inferred from the lights alone.
+
+The PC initially saw CH341 programmer `1a86:5512` with an error and no serial port.
+After the owner confirmed jumper 2–3 and adapter USB reconnection, CH341 UART
+returned as COM10. A 120-second receive-only capture ran **00:57:32–00:59:32**:
+`logs/experiment_20261007_005732_passive.log` and companions (private/gitignored).
+It completed with exit 0, **66,347 bytes**, 4,354 contiguous timing chunks, no
+recorded adapter disconnection and a matching SHA256:
+`814a8169b3478bbf3e0aec6418fff0cdf9fb97b70984fc9bba5cd09017c2603a`.
+Captured bytes show recurring stock `HMW_network`/`HMW_connectivity` middleware.
+Thus **CONFIRMED:** stock userspace was executing during the later capture.
+**UNKNOWN:** J15 electrical identity, sampled boot mode and behavior during the
+uncaptured power-on interval. No BootROM greeting, recovery/shell prompt or custom
+initramfs marker was observed in the completed capture; missing initial boot text
+must not be treated as a recorded failed ROM entry. No UART data was transmitted
+by the checking tools.
 
 ---
 

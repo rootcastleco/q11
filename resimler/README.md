@@ -33,10 +33,11 @@ the two USB-A sockets, labelled **`GND BOOT`**, next to R40. With that label upr
 as in the image above, the hole under `GND` is on the left and the hole under
 `BOOT` is on the right. These are silkscreen associations, not measured net names.
 
-**LIKELY:** J15 is intended for a ground/boot strap. **UNKNOWN:** continuity to
-board ground and the SoC boot input, active level, pull resistors, sampling timing,
-selected boot mode and whether the stock loader can use it. No electrical J15
-measurement has been supplied. After the photographic review, the owner reported
+**LIKELY:** J15 is intended for a ground/boot strap. The owner later reported
+ground continuity, 3.661 megohms from `BOOT` to ground while unpowered and
+3.317 V DC while powered; see the [meter record](../Q11_RECORD.md#owner-reported-j15-meter-readings).
+**UNKNOWN:** routing to the SoC boot input, active level, pull resistors, sampling
+timing, selected boot mode and whether the stock loader can use it. After the photographic review, the owner reported
 briefly bridging/releasing J15; subsequent UART showed stock middleware, with the
 entry/power-on interval uncaptured. See the [trial record](../Q11_RECORD.md#owner-reported-j15-trial).
 Do not bridge it from the label alone.

@@ -67,12 +67,14 @@ instruction to short the Q11 SoC or upload a package has been issued.
 [20261007_003643.jpg](../resimler/20261007_003643.jpg) clearly shows an unpopulated
 two-hole J15 footprint between the USB-A sockets, beside R40, with `GND BOOT`
 silkscreen. **CONFIRMED:** location and printed label. **LIKELY:** intended
-ground/boot strap. **UNKNOWN:** ground continuity, boot-input routing, pull network,
-voltage, active level, sampling timing and resulting ROM/loader behavior.
+ground/boot strap. The owner reports ground continuity and a 3.317 V DC reading
+at the `BOOT`-labelled hole; see the [meter record](../Q11_RECORD.md#owner-reported-j15-meter-readings).
+**UNKNOWN:** boot-input routing, pull network, active level, sampling timing and
+resulting ROM/loader behavior.
 
 With the text upright in that image, `GND` is above the left hole and `BOOT` above
-the right. This is a visual locator only. No resistance/continuity measurement has
-established either net. The owner subsequently reported briefly bridging/releasing
+the right. The reported meter readings support the ground association but do not
+identify the other net as the SoC boot input. The owner reported briefly bridging/releasing
 J15; a later receive-only capture showed stock middleware, but did not record the
 entry/power-on interval. See the [trial record](../Q11_RECORD.md#owner-reported-j15-trial).
 This does not establish the strap's selected mode. The label alone is insufficient to bridge

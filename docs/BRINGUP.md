@@ -127,6 +127,12 @@ started at 00:57:32 Istanbul. It showed stock HMW middleware; the initial entry/
 power-on interval was missed. Current stock execution is confirmed, while J15
 entry behavior remains unknown. See the [trial record](../Q11_RECORD.md#owner-reported-j15-trial).
 
+Subsequent owner-reported meter readings were 0 ohms for the probe baseline and
+`GND` to UART GND, 3.661 megohms for unpowered `BOOT` to UART GND, and 3.317 V
+for powered `BOOT` to UART GND with J15 open. These support the ground association
+and establish a reported voltage, but do not identify the SoC net, pull network
+or selected boot mode. See the [meter record](../Q11_RECORD.md#owner-reported-j15-meter-readings).
+
 For resistance/continuity identification, first unplug Q11's own power adapter
 and disconnect HDMI, LAN, USB/media and UART leads; disconnect CH341 from the PC
 before moving its leads. Some supplied photos show attached DC/UART, so do not

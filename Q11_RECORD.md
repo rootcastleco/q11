@@ -291,8 +291,8 @@ the electrical power state cannot be determined from the photographs.
   confirmed JTAG connector. The visible card-style socket is not a verified SD slot.
 - The other-board leaded-package “upper-right 107–108” recipe cannot map to this
   Q11 package. No entry/loader trial occurred during the photographic inspection.
-  The owner's later shorting report is recorded separately below. No electrical
-  J15 measurement has been supplied. See [BOOTROM](docs/BOOTROM.md).
+  The owner's later shorting report and meter readings are recorded separately
+  below. See [BOOTROM](docs/BOOTROM.md).
 
 ### Owner-reported J15 trial
 
@@ -315,6 +315,28 @@ uncaptured power-on interval. No BootROM greeting, recovery/shell prompt or cust
 initramfs marker was observed in the completed capture; missing initial boot text
 must not be treated as a recorded failed ROM entry. No UART data was transmitted
 by the checking tools.
+
+### Owner-reported J15 meter readings
+
+On 2026-10-07, following instructions for unpowered resistance measurements
+against UART GND, the owner reported:
+
+| Measurement | Owner-reported reading |
+| --- | --- |
+| Shorted probes / cable baseline | 0 ohms on the display |
+| J15 `GND`-labelled hole to UART GND | 0 ohms on the display |
+| J15 `BOOT`-labelled hole to UART GND | **3.661 megohms**; the owner explicitly confirmed uppercase `M` |
+| J15 `BOOT`-labelled hole to UART GND, following powered DC-voltage instructions with J15 open | **3.317 V** |
+
+These are owner-reported display readings, without meter photographs, model,
+accuracy/range information or independently recorded power/connection state.
+The resistance reading supports ground continuity at the `GND`-labelled hole
+and does not show a direct ground short at the `BOOT`-labelled hole under the
+reported measurement conditions. The DC reading is approximately 3.3 V; it
+does not identify the pull resistor, SoC connection, active level or boot mode.
+No safe shorting procedure, ROM entry or compatible RAM loader has been established.
+Resistance/continuity measurements must be unpowered; powered measurements use
+DC-voltage mode with leads in COM and V/ohms, without bridging adjacent pads.
 
 ---
 

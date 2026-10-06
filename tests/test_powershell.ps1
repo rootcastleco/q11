@@ -33,6 +33,10 @@ $probeDisk.IsSystem=$false; $probeDisk.BusType='SATA'
 $failed=$false
 try { Select-Q11ProbeDisk -Disks @($probeDisk) -ExpectedSizeBytes 15833497600L | Out-Null } catch { $failed=$true }
 if (-not $failed) { throw 'Non-USB disk selected.' }
+$capturePreview = & (Join-Path $PSScriptRoot '..\tools\uart\capture_experiment.ps1') -DryRun
+if ($capturePreview -notmatch 'Receive only: port=auto baud=115200') {
+    throw 'Default receive-only capture preview failed.'
+}
 $issues=@()
 Get-ChildItem (Join-Path $PSScriptRoot '..\tools') -Recurse -File | Where-Object { $_.Extension -in '.ps1','.psm1' } | ForEach-Object {
     $tokens=$null; $errors=$null

@@ -4,7 +4,7 @@ param(
     [string]$Port = 'auto',
     [ValidateRange(5,300)][int]$DurationSec = 120,
     [ValidateSet('media-probe','recovery-probe','passive')][string]$Operation = 'media-probe',
-    [string]$OutputDirectory = (Join-Path $PSScriptRoot '..\..\logs'),
+    [string]$OutputDirectory = '',
     [switch]$DryRun
 )
 Set-StrictMode -Version Latest
@@ -13,6 +13,9 @@ $capture = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\uart_capture.ps1'
 if (-not (Test-Path -LiteralPath $capture -PathType Leaf)) { throw "Missing capture tool: $capture" }
 if ($Port -ne 'auto' -and $Port -notmatch '^COM[1-9][0-9]*$') { throw 'Port must be auto or COMn.' }
 if ($DryRun) { Write-Output "Receive only: port=$Port baud=115200 operation=$Operation max duration=$DurationSec seconds"; return }
+if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
+    $OutputDirectory = Join-Path $PSScriptRoot '..\..\logs'
+}
 if ($Port -eq 'auto') {
     $devices = @(Get-PnpDevice -PresentOnly -Class Ports | Where-Object { $_.InstanceId -match 'VID_1A86&PID_5523' })
     if ($devices.Count -ne 1 -or $devices[0].FriendlyName -notmatch '\((COM\d+)\)') { throw 'Exactly one CH341A UART port is required.' }

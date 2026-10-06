@@ -351,6 +351,32 @@ outcome. This does not establish whether the strap was sampled, whether a transi
 ROM entry occurred or whether a loader fell back to the stock boot path. J15
 has not provided a verified recovery, ROM download or custom Linux entry.
 
+### CH341 reconnection and later UART observation
+
+The owner then reported connecting the board to the PC while J15 was bridged,
+and clarified that this meant **CH341 USB to PC, with GND/RX/TX to Q11**, rather
+than a direct Q11 USB-A-to-PC connection. The host enumerated CH341 UART as COM10
+(`1a86:5523`). The owner was advised to cut Q11 power before removing the unknown
+bridge; the subsequent physical power/bridge state was not independently recorded.
+
+A 60-second receive-only capture ran **01:22:01–01:23:02 Europe/Istanbul** on
+2026-10-07, at 115200 8N1 with flow control and DTR/RTS disabled. It completed
+with exit 0 and **33,161 bytes**, including 390 `HMW_` occurrences and no
+`Bootrom start` or `Booting Linux` marker. **CONFIRMED:** stock IPTV middleware
+was executing during this capture. It began after the reported startup and
+does not establish the earlier strap sampling or boot path. No UART command or
+loader was transmitted.
+
+Private/gitignored artifact: `logs/experiment_20261007_012201_passive.log`,
+with timing and metadata companions. SHA256:
+`b1cef12898a966ff70dd9df839b5e1613fdc8f60317726105398ebbe1f51dd62`.
+
+The initial Windows PowerShell launch failed while evaluating the default output
+directory in the parameter block, before capture began. Supplying an explicit
+directory started the completed capture. Default directory resolution was then
+moved into the script body; the receive-only dry-run regression and existing host
+fixtures passed under both Windows PowerShell 5.1 and PowerShell 7.
+
 ---
 
 Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

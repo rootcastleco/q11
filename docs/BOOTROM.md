@@ -77,6 +77,10 @@ the right. The reported meter readings support the ground association but do not
 identify the other net as the SoC boot input. The owner reported briefly bridging/releasing
 J15; a later receive-only capture showed stock middleware, but did not record the
 entry/power-on interval. See the [trial record](../Q11_RECORD.md#owner-reported-j15-trial).
+After the meter readings, the owner also reported normal HDMI boot with J15
+bridged before power-on and maintained during startup. Exact release timing and
+simultaneous UART evidence remain unavailable. See the
+[HDMI observation](../Q11_RECORD.md#owner-reported-normal-hdmi-boot-after-j15-bridging).
 This does not establish the strap's selected mode. The label alone is insufficient to bridge
 J15 or promise USB/UART download entry. This candidate is also separate from J9's
 `VCC DM DP GND` footprint, whose USB role/routing are unmeasured.

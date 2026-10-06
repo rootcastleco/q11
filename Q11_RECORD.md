@@ -338,6 +338,19 @@ No safe shorting procedure, ROM entry or compatible RAM loader has been establis
 Resistance/continuity measurements must be unpowered; powered measurements use
 DC-voltage mode with leads in COM and V/ohms, without bridging adjacent pads.
 
+### Owner-reported normal HDMI boot after J15 bridging
+
+After supplying the meter readings on 2026-10-07, the owner reported bridging
+J15 and observing a normal boot over HDMI. The owner clarified that the bridge
+was applied **before power-on and maintained during startup**. An earlier reply
+described releasing it during startup; the exact release time and whether it
+remained bridged until the normal screen appeared are not established. No
+simultaneous UART capture was started for this report.
+**OWNER-REPORTED:** normal HDMI boot was the visible
+outcome. This does not establish whether the strap was sampled, whether a transient
+ROM entry occurred or whether a loader fell back to the stock boot path. J15
+has not provided a verified recovery, ROM download or custom Linux entry.
+
 ---
 
 Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

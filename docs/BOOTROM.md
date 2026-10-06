@@ -105,6 +105,62 @@ direct LAN remained active in this actual trial (DHCP ACK during boot), despite
 the isolation instructions; no router/update service was present. No package,
 reset selection or NAND command was involved. See [BRINGUP](BRINGUP.md).
 
+## Normal-runtime maintenance menu candidate
+
+An additional **first-hand Q11 report** is distinct from the failed boot-time OK
+trial: Technopat owner `halocanaydin` reported a maintenance screen displaying
+**3.18.13_s40** and an August 2018 build, then described using Xiaomi Mi 10T IR
+remote **SET** to open the menu. Sources: [system-information report](https://www.technopat.net/sosyal/konu/tv-huawei-stb-q11-custom-rom-yukleme.2611133/post-23163888)
+and [SET-key report](https://www.technopat.net/sosyal/konu/tv-huawei-stb-q11-custom-rom-yukleme.2611133/post-23272458).
+
+This is a runtime IR button, **not** the already completed UART `set` stop-string
+experiment, a boot-time OK sequence or a verified BootROM entry. The source's
+kernel family matches our captured version; matching firmware, UI availability,
+menu contents and any legitimate execution/loading control remain **UNKNOWN**.
+The narrowly defined next observation is normal power, J15 open, UART receive
+capture running, and one IR SET press after the ordinary screen appears. Record
+the screen title/options and corresponding serial events. Do not select reset
+or upgrade, attach an unaudited update payload, or guess/use protected service
+credentials. Merely opening a menu does not establish a Linux shell.
+
+## Pinned SDK audit: console and bootstrap are separate mechanisms
+
+The related public SDK is **R005 SPC041B020**, not our exact **R003 SPC065**.
+Its implementation provides these useful boundaries, without proving Q11 build flags:
+
+* [miniboot.mak](https://github.com/glinuz/hi3798mv100/blob/12aa0504880d518a9fa15800d4f7a305a1f94dc6/HiSTBLinuxV100R005C00SPC041B020/source/boot/miniboot.mak)
+  maps `CFG_HI_USER_MODE` to `CONFIG_DISABLE_CONSOLE_INPUT` and separately controls
+  boot logging. In [console.c](https://github.com/glinuz/hi3798mv100/blob/12aa0504880d518a9fa15800d4f7a305a1f94dc6/HiSTBLinuxV100R005C00SPC041B020/source/boot/miniboot/libs/console.c),
+  that option makes both input routines return zero; the Ctrl+C check depends on
+  those routines. This is consistent with our failed key trials, not proof of
+  their cause. No further random-key experiments follow from it.
+* [bootstrap.c](https://github.com/glinuz/hi3798mv100/blob/12aa0504880d518a9fa15800d4f7a305a1f94dc6/HiSTBLinuxV100R005C00SPC041B020/source/boot/miniboot/common/bootstrap.c)
+  implements a **miniboot-stage** command protocol, distinct from the ROM image
+  transfer reviewed in HiLoot. One build path requires a start-flag magic;
+  another offers an early handshake using repeated `0x20` bytes and an `0xAA`
+  acknowledgement. Both depend on build options and the startup/input path.
+  Their command frames reach `run_cmd`, so they are not automatically read-only.
+  No such acknowledgement, command frame or loader has been sent to Q11.
+* The historical raw UART captures were rechecked offline for `Bootrom start`,
+  `begin to download boot`, `start download process`, `[EOT]` and `miniboot`;
+  none occur. The ordinary boot capture has one initial NUL before kernel text,
+  without a recorded miniboot handshake. A missing marker cannot establish a
+  particular compiled-out feature or actual ROM signature policy.
+* [cpu.c](https://github.com/glinuz/hi3798mv100/blob/12aa0504880d518a9fa15800d4f7a305a1f94dc6/HiSTBLinuxV100R005C00SPC041B020/source/boot/miniboot/arm/hi3798mx/boot/cpu.c)
+  can derive the normal boot-medium selection from pins or OTP configuration.
+  This does not identify J15, establish its relation to USB_BOOT, or justify
+  changing any OTP value.
+* The SDK [loader main.c](https://github.com/glinuz/hi3798mv100/blob/12aa0504880d518a9fa15800d4f7a305a1f94dc6/HiSTBLinuxV100R005C00SPC041B020/source/component/loader/app/main.c)
+  leads from upgrade processing into burn callbacks and persistent loader-state
+  updates. A generic recovery/USB upgrade package therefore cannot be treated
+  as a RAM-only shell loader.
+
+Firmware searches on 2026-10-07 did not produce an audited, downloadable Huawei
+Q11 package. [Benchmark's owner report](https://forum.benchmark.rs/threads/huawei-stb-q11.486226/page-2)
+offers an MTS recovery artifact through contact; no public download was found in
+the inspected page. No contact was made. Other Q11-labelled firmware results
+include unrelated phones/TV boxes; their model names do not establish compatibility.
+
 The pinned [HiLoot implementation](https://github.com/histb-mainline/hiloot/blob/56b598ab7fd62a2b7ddce6e7b3770d93c40f4801/hiloot.py)
 was reviewed for an identification-only path: TYPE/BOARD query methods exist, but
 CLI has no chip-info-only mode; it requires a boot-image argument even for `--break`.

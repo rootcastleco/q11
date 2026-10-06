@@ -53,13 +53,29 @@ def environment(data: bytes) -> list[dict[str, Any]]:
     return results
 
 
+def environment_region(data: bytes, offset: int, size: int) -> bytes:
+    """Select an explicit offline image window; never guess a partition layout."""
+    if offset < 0 or size < 8 or offset > len(data) or size > len(data) - offset:
+        raise ValueError("environment region must contain at least 8 bytes and fit entirely in the input")
+    return data[offset:offset + size]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("image", type=Path)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--extract-squashfs", type=Path, help="write a new file; requires exactly one payload")
+    parser.add_argument("--env-offset", help="explicit environment byte offset, decimal or 0x; requires --env-size")
+    parser.add_argument("--env-size", help="exact environment byte size, decimal or 0x; requires --env-offset")
     args = parser.parse_args()
     data = read_file(args.image)
+    if (args.env_offset is None) != (args.env_size is None):
+        raise ValueError("--env-offset and --env-size must be supplied together")
+    env_data = data
+    env_offset = 0
+    if args.env_offset is not None:
+        env_offset = int(args.env_offset, 0)
+        env_data = environment_region(data, env_offset, int(args.env_size, 0))
     matches = squashfs(data)
     if args.extract_squashfs:
         if len(matches) != 1:
@@ -69,7 +85,9 @@ def main() -> None:
         with args.extract_squashfs.open("xb") as stream:
             stream.write(data[match["offset"]:match["offset"] + match["size"]])
     emit({**metadata("stock-image"), "input_sha256": sha256(data), "squashfs": matches,
-          "environment_candidates": environment(data), "result": "ok", "exit_code": 0,
+          "environment_candidates": environment(env_data),
+          "environment_region": {"offset": env_offset, "size": len(env_data), "sha256": sha256(env_data)},
+          "result": "ok", "exit_code": 0,
           "header": "Bytes before detected payload remain uninterpreted; no signature inference."}, args.output)
 
 

@@ -127,6 +127,18 @@ class LabTests(unittest.TestCase):
         self.assertNotIn("do-not-output", json.dumps(stock.environment(fixture)))
         self.assertFalse(stock.environment(fixture[:-1]))
 
+    def test_embedded_environment_bounds(self):
+        payload = b"bootargs=root=/dev/ram\0password=private\0\0" + bytes(32)
+        env = struct.pack("<I", zlib.crc32(payload)) + payload
+        image = b"package-prefix" + env + b"package-suffix"
+        self.assertFalse(stock.environment(image))
+        self.assertEqual(stock.environment_region(image, 14, len(env)), env)
+        self.assertEqual(stock.environment(stock.environment_region(image, 14, len(env)))[0]["keys"],
+                         ["bootargs", "password"])
+        for offset, size in ((-1, 8), (0, 7), (len(image), 8), (14, len(image)), (len(image) + 1, 8)):
+            with self.assertRaises(ValueError):
+                stock.environment_region(image, offset, size)
+
     def test_static_elf_reject_dynamic_wrong_arch(self):
         initramfs.validate_busybox(elf_fixture())
         for offset, number in ((18, 62), (52, 3), (52, 2)):
@@ -221,6 +233,25 @@ class CliTests(unittest.TestCase):
             self.assertEqual(output.read_bytes(), squash_fixture())
             path.write_bytes(b"bad")
             self.run_tool("tools/analysis/stock_image.py", path, "--extract-squashfs", output, expected=2)
+
+    def test_stock_environment_window_cli(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "firmware.bin"
+            payload = b"bootargs=root=/dev/ram\0password=private\0\0" + bytes(32)
+            env = struct.pack("<I", zlib.crc32(payload)) + payload
+            path.write_bytes(bytes(16) + env + bytes(16))
+            result = self.run_tool("tools/analysis/stock_image.py", path,
+                                   "--env-offset", "0x10", "--env-size", str(len(env)))
+            report = json.loads(result.stdout)
+            self.assertEqual(report["environment_region"]["sha256"], sha256(env))
+            self.assertEqual(report["environment_candidates"][0]["keys"], ["bootargs", "password"])
+            self.assertNotIn("private", result.stdout)
+            for flags in (("--env-offset", "0"), ("--env-size", "8"),
+                          ("--env-offset", "-1", "--env-size", "8"),
+                          ("--env-offset", "bad", "--env-size", "8"),
+                          ("--env-offset", "16", "--env-size", "99999")):
+                self.assertEqual(json.loads(self.run_tool("tools/analysis/stock_image.py", path,
+                                                         *flags, expected=2).stderr)["exit_code"], 2)
 
     def test_initramfs_cli_success_bad_checksum(self):
         with tempfile.TemporaryDirectory() as folder:

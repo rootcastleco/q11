@@ -45,9 +45,18 @@ Do not invalidate a primary copy to force fallback.
 
 Primary source: [candidate env_common.c](https://github.com/glinuz/hi3798mv100/blob/12aa0504880d518a9fa15800d4f7a305a1f94dc6/HiSTBLinuxV100R005C00SPC041B020/source/boot/fastboot/common/env_common.c).
 `tools/analysis/stock_image.py` checks conventional 4/5-byte CRC headers against the
-whole supplied file, reports keys only, and never writes an environment. If an
-environment is smaller than its partition, carve the exact candidate first;
-failure of the whole-file CRC does not disprove an environment within the partition.
+whole supplied file by default, reports keys only, and never writes an environment.
+For an embedded or smaller environment, supply **both** `--env-offset` and
+`--env-size` (decimal or `0x` byte values) from an inspected artifact layout. The
+tool checks bounds and records the exact window's SHA256 before CRC validation;
+it does not guess offsets from Q11 partition names. Failure of the whole-file CRC
+does not disprove an environment within the partition.
+
+The candidate [miniboot env_set.c](https://github.com/glinuz/hi3798mv100/blob/12aa0504880d518a9fa15800d4f7a305a1f94dc6/HiSTBLinuxV100R005C00SPC041B020/source/boot/miniboot/common/env_set.c)
+also reads a leading CRC32 over the complete configured data region. Its older
+standalone `miniboot/tools/mkbootargs.c` instead emits data followed by length/CRC
+fields; that helper's different layout must not be assumed compatible with the
+inspected reader or Q11. Actual Q11 environment bytes and selection remain UNKNOWN.
 
 ## Stock image analysis when an artifact becomes available
 

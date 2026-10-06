@@ -377,6 +377,62 @@ directory started the completed capture. Default directory resolution was then
 moved into the script body; the receive-only dry-run regression and existing host
 fixtures passed under both Windows PowerShell 5.1 and PowerShell 7.
 
+### J15 power-on captures with timing (2026-10-07, 01:41–02:03)
+
+Three receive-only COM10 captures (115200 8N1, nothing transmitted), all
+private/gitignored under `logs/`:
+
+| Capture | Owner action | Result |
+|---|---|---|
+| `experiment_20261007_014154_passive.log` (SHA256 `26b2f142…890f`, at analysis time) | J15 bridged before power-on, held 15 s | One NUL at 01:43:20, then COM10 vanished from Windows 01:43:23–01:44:17 (`Access … denied`); stock middleware afterwards. Owner reports not touching adapter/wiring. |
+| `experiment_20261007_014752_passive.log` (SHA256 `c07a03a6…797c`) | Owner reported a 30 s J15 trial | **No power cycle in the capture**: middleware uptime advanced continuously `00:03:44`→`00:08:43`. The report and capture do not match; no conclusion drawn. |
+| `experiment_20261007_015850_passive.log` (SHA256 `502fb113…3f53`) | J15 bridged before power-on, held 30 s | Complete power-on captured, no adapter drop. NULs at 49.7/53.5/53.7/55.2 s, then **16.8 s silence**, `Booting Linux` at 72.0 s, middleware `00:00:20` 53.6 s after the last NUL. No `Bootrom`, fastboot banner or other ROM/loader text. |
+
+Baseline `experiment_20261006_235843_passive.log` (no J15): NUL → `Booting Linux`
+16.8 s; NUL → middleware `00:00:20` 53.3 s.
+
+**CONFIRMED:** a 30 s J15 bridge at power-on produced no UART-visible ROM/loader
+output and no measurable boot delay (within ~2 s), followed by the stock kernel and IPTV.
+**Retracted:** an apparent ~15 s delay in the 01:43 capture was computed from the
+only pre-drop NUL; the 30 s run did not reproduce any hold-dependent delay, so
+that NUL most likely did not mark the actual power-on. The 01:43 adapter drop
+was not reproduced. **UNKNOWN:** J15's function. A ROM USB-storage strap that
+silently falls back when no bootable FAT32 `fastboot.bin` is present remains
+consistent with all observations; benchmark.rs owner g-man also reported that
+bridging `GND`/`Boot` before power-on "did not work".
+
+### Donor/reference artifacts reviewed offline (2026-10-07)
+
+Nothing below was sent to Q11. Files were kept in the session scratchpad only.
+
+* **`lqinyli/hi3798mv100-openwrt` kernel** `hi_kernel-4.4.y-EC6018V9-openwrt.bin`
+  (5,982,056 B, SHA256 `b919714c…1689`): legacy uImage, header/data CRC valid,
+  load/entry `0x02000000`, `Linux-4.4.35_s40`, gzip zImage + **appended DTB**
+  (8,720 B, model `Hisilicon`, compatible `hi3798mv100-series`, `bootargs = "rw"`).
+  Built from HiSTBLinuxV100R005C00SPC050; `hinfc610` (`hi3798mv100.hinfc610`),
+  usb-storage, ext4 and squashfs present; no embedded initramfs; built-in default
+  cmdline `mem=128M console=ttyAMA0,115200 console=ttyMTD,blackbox`. The DTB's
+  internal PHY is `reg = <2>`, while the stock Q11 kernel attaches **PHY 1** (L138).
+  The repository README names a different rootfs file than it ships.
+* **`hi3798mdmo1a_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_nand.reg`** (6,272 B,
+  SHA256 `24870f18…cc2a`) exists in `source/boot/sysreg/hi3798mv100/` of the
+  public SPC050/SPC060/SPC041B020 SDK copies, byte-identical across all three; it
+  differs from the eMMC variant in 24 bytes. `mdmo1a` is the SDK demo-board
+  default. **Correction:** no captured Q11 log contains `Reg Name` or any fastboot
+  banner, so the Q11 board/reg name remains **UNKNOWN**.
+* **User-downloaded `EC6108V9 Hi3798MV100 1+4&1+8 CN.7z`** (SHA256 `137dd539…e4ef`):
+  an EC6108V9 **eMMC** USB-recovery package whose `update.zip` rewrites eMMC
+  partitions — **not applicable to Q11 and not to be used on it**. Its Huawei
+  `fastboot.bin` (Fastboot 3.3.0, HiSTBAndroidV600R001C00SPC063, 2016) declares
+  reg `hi3798mdmo1g_…_4layers_emmc.reg` (not `mdmo1a`), contains
+  `sw_ir_detect_recovery`, USB `bootargs.bin`/`recovery.img` loading,
+  `[HMT] RSA Verify the kernel Error` and OTP secure-chipset burn functions. Its
+  `bootargs.bin` environment (CRC valid over 64 KiB) sets
+  `signature_check=sign:recovery,… sign:kernel,…`. Its instructions use the
+  **standby key or alternating left/right** at power-on, not OK. If Q11's Huawei
+  fastboot is similar, an unsigned kernel written to `kernel` would be rejected.
+  This is a family indicator, not Q11 evidence.
+
 ---
 
 Maintained by [Batuhan Ayrıbaş](https://batuhanayribas.com) · Q11 Linux Bring-up

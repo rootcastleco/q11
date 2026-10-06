@@ -7,3 +7,8 @@ __pycache__/
 /logs/experiment_*
 /logs/build_*
 /resimler/* - Copy*.jpg
+
+# Local-only: downloaded vendor packages and board photographs (not published)
+/dowlad/
+/resimler/
+/photos/

@@ -44,8 +44,6 @@ v17 header/block bounds, reservations and structure/property tokens. Compressed
 kernel payloads require separate decompression; an empty scan is not proof that
 DTB is absent. No UART or memory access is performed.
 
-## Card slot
-
 ## Confirmed external USB/ext4 transport
 
 The 2026-10-06 media probe enumerated the authorized REI stick through xhci-hcd at
